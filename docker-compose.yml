@@ -1,0 +1,15 @@
+services:
+    haoma:
+        build: 
+            context: ./code
+            dockerfile: Dockerfile
+        ports: 
+            - "80:80"
+        environment: 
+            - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+        networks:
+            - default
+            - bridge_network
+networks:
+    bridge_network:
