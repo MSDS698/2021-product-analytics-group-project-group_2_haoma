@@ -10,6 +10,7 @@ Welcome to Haoma's documentation!
    :maxdepth: 2
    :caption: Contents:
    
+   tutorial
    code
 
 
