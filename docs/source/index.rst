@@ -11,7 +11,9 @@ Welcome to Haoma's documentation!
    :caption: Contents:
    
    tutorial
-   code
+   requirements
+   code_routes
+   code_funcs
 
 
 

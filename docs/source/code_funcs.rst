@@ -1,5 +1,5 @@
-Auto Generated Code Documentation
+Auto Generated Doc: Funcs
 =================================
-.. automodule:: app
+.. automodule:: app.funcs
 	:members:
 	:undoc-members:
