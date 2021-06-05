@@ -15,7 +15,9 @@
 		<p>Home Health Agencies in {{ zipcode }}</p>
 	{% endif %}
 
-	{% for agency in hh_data %}
-		<b>{{ agency }}</b><br>
+	{% for entry in entries %}
+		{{ entry|safe }}
 	{% endfor %}
+
+
 </center>
