@@ -21,8 +21,11 @@ def zipcode_search():
 	form = StringForm()
 	if form.validate_on_submit():
 		zipcode = form.data['field']
-		hh_data = funcs.get_hh_agencies(zipcode)
+		df = funcs.get_hh_agencies(zipcode)
 
-		return render_template('zipcode.html', form=form, zipcode=zipcode, hh_data=hh_data)
+		return render_template('zipcode.html', 
+                               form=form, 
+                               zipcode=zipcode, 
+                               entries=[df.to_html()])
 
 	return render_template('zipcode.html', form=form)
