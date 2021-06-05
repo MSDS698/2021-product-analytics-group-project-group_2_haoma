@@ -1,0 +1,26 @@
+name: Test Application
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up python 3
+      uses: actions/setup-python@v2
+    - name: Install libs
+      run: |
+        pip install pytest
+        pip install pandas
+        pip install numpy
+    - name: Test with pytest
+      run: |
+        pytest test_application.py
