@@ -1,11 +1,9 @@
-import pandas as pd
-from app import app
+from app import app, funcs
 from flask import render_template, url_for
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired
 
-HH_DATA_URL = "https://data.cms.gov/provider-data/sites/default/files/resources/1ee6a6e80907bf13661aa2f099415fcd_1620794404/HH_Provider_Oct2020.csv"
 
 class StringForm(FlaskForm):
 	"Class for a string field form"
@@ -23,8 +21,7 @@ def zipcode_search():
 	form = StringForm()
 	if form.validate_on_submit():
 		zipcode = form.data['field']
-		df = pd.read_csv(HH_DATA_URL)
-		hh_data = df.loc[df.ZIP == int(zipcode), 'Provider Name']
+		hh_data = funcs.get_hh_agencies(zipcode)
 
 		return render_template('zipcode.html', form=form, zipcode=zipcode, hh_data=hh_data)
 

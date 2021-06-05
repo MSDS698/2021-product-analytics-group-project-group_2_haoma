@@ -1,16 +1,21 @@
-<a href="{{ url_for('index') }}">Home Page</a>
-<div>
-	<form method="POST">
-		{{ form.csrf_token }}
-		{{ form.field }}
-		<input type="submit" name="Enter">
-	</form>
-</div>
+<br><br><br><br><br><br><br>
+<center>
+	<a href="{{ url_for('index') }}">Home Page</a>
+	<br>
+	<br>
+	<div>
+		<form method="POST">
+			{{ form.csrf_token }}
+			{{ form.field }}
+			<input type="submit" name="Enter">
+		</form>
+	</div>
 
-{% if zipcode %}
-	<p>Home Health Agencies in {{ zipcode }}</p>
-{% endif %}
+	{% if zipcode %}
+		<p>Home Health Agencies in {{ zipcode }}</p>
+	{% endif %}
 
-{% for agency in hh_data %}
-	<b>{{ agency }}</b><br>
-{% endfor %}
+	{% for agency in hh_data %}
+		<b>{{ agency }}</b><br>
+	{% endfor %}
+</center>
