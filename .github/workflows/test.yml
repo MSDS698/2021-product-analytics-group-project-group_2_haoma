@@ -18,9 +18,8 @@ jobs:
       uses: actions/setup-python@v2
     - name: Install libs
       run: |
-        pip install pytest
-        pip install pandas
-        pip install numpy
+        pip install --upgrade pip
+        pip install -r requirements.txt
     - name: Test with pytest
       run: |
         pytest code/test_application.py
