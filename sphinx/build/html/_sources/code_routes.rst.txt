@@ -1,4 +1,4 @@
-Auto-Generated Doc: Routes 
+API Reference: Routes 
 =================================
 .. automodule:: app.routes
 	:members:

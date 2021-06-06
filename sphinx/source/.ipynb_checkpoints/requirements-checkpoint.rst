@@ -1,0 +1,25 @@
+Requirements
+=====================================
+   
+|     attrs==21.2.0
+|     click==8.0.1
+|     Flask==1.1.2
+|     Flask-WTF==0.15.1
+|     iniconfig==1.1.1
+|     itsdangerous==2.0.1
+|     Jinja2==3.0.1
+|     MarkupSafe==2.0.1
+|     numpy==1.20.3
+|     packaging==20.9
+|     pandas==1.2.4
+|     pluggy==0.13.1
+|     py==1.10.0
+|     pyparsing==2.4.7
+|     pytest==6.2.4
+|     python-dateutil==2.8.1
+|     python-dotenv==0.17.1
+|     pytz==2021.1
+|     six==1.16.0
+|     toml==0.10.2
+|     Werkzeug==2.0.1
+|     WTForms==2.3.3
