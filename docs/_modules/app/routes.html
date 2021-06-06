@@ -85,10 +85,11 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../requirements.html">Requirements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../code_routes.html">Auto-Generated Doc: Routes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../code_funcs.html">Auto Generated Doc: Funcs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code_routes.html">API Reference: Routes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code_funcs.html">API Reference: Funcs</a></li>
 </ul>
 
             
@@ -178,9 +179,12 @@
 	<span class="n">form</span> <span class="o">=</span> <span class="n">StringForm</span><span class="p">()</span>
 	<span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
 		<span class="n">zipcode</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]</span>
-		<span class="n">hh_data</span> <span class="o">=</span> <span class="n">funcs</span><span class="o">.</span><span class="n">get_hh_agencies</span><span class="p">(</span><span class="n">zipcode</span><span class="p">)</span>
+		<span class="n">df</span> <span class="o">=</span> <span class="n">funcs</span><span class="o">.</span><span class="n">get_hh_agencies</span><span class="p">(</span><span class="n">zipcode</span><span class="p">)</span>
 
-		<span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;zipcode.html&#39;</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="n">zipcode</span><span class="o">=</span><span class="n">zipcode</span><span class="p">,</span> <span class="n">hh_data</span><span class="o">=</span><span class="n">hh_data</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;zipcode.html&#39;</span><span class="p">,</span> 
+                               <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> 
+                               <span class="n">zipcode</span><span class="o">=</span><span class="n">zipcode</span><span class="p">,</span> 
+                               <span class="n">entries</span><span class="o">=</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">to_html</span><span class="p">()])</span>
 
 	<span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;zipcode.html&#39;</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">)</span></div>
 </pre></div>
