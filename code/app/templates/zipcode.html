@@ -11,8 +11,8 @@
 		</form>
 	</div>
 
-	{% if zipcode %}
-		<p>Home Health Agencies in {{ zipcode }}</p>
+	{% if zipcode or request.args.get('zipcode') %}
+		<p>Home Health Agencies in {{ zipcode or request.args.get('zipcode') }}</p>
 	{% endif %}
 
 	{% for agency in hh_data %}

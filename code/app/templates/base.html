@@ -178,7 +178,11 @@
           <h3>Find Home Health Agencies!</h3>
           <p> Insert your zip code below and we will find home health agencies with ratings in your area!</p>
           <div class="form-group">
-            <input name="zipcode" id="zipcode" placeholder="Zip Code" required>
+            <form 
+            onsubmit="window.location.href = 'zipcode_search?zipcode='+document.getElementsByName('zipcode')[0].value; return false;">
+              <input name="zipcode" id="zipcode" placeholder="Zip Code" required>
+              <input type="submit">
+            </form>
           </div>
         </div>
       </div>
