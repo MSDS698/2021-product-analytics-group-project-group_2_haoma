@@ -1,13 +1,17 @@
 from app import app, funcs
 from flask import render_template, url_for
 from flask_wtf import FlaskForm
-from wtforms import StringField
-from wtforms.validators import DataRequired
+from wtforms import StringField, IntegerField
+from wtforms.validators import DataRequired, NumberRange
 
 
 class StringForm(FlaskForm):
 	"Class for a string field form"
 	field = StringField('name', validators=[DataRequired()])
+
+class MiniZipForm(FlaskForm):
+	"Form for zipcode input displayed in index.html"
+	field = IntegerField(label="Zipcode")
 
 @app.route('/')
 @app.route('/index')

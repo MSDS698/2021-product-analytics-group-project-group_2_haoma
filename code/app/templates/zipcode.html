@@ -1,21 +1,35 @@
-<br><br><br><br><br><br><br>
+{% extends "headerbase.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<br><br>
 <center>
-	<a href="{{ url_for('index') }}">Home Page</a>
-	<br>
-	<br>
-	<div>
-		<form method="POST">
-			{{ form.csrf_token }}
-			{{ form.field }}
-			<input type="submit" name="Enter">
-		</form>
-	</div>
+	
+	<section id="service" class="service">
 
-	{% if zipcode or request.args.get('zipcode') %}
-		<p>Home Health Agencies in {{ zipcode or request.args.get('zipcode') }}</p>
-	{% endif %}
+		<div class="section-title">
+		<h2>Find Home Health Agencies Near You</h2>
+		</div>
 
-	{% for agency in hh_data %}
-		<b>{{ agency }}</b><br>
-	{% endfor %}
+		<div>
+			<form method="POST">
+				{{ form.csrf_token }}
+				{{ form.field }}
+				<input type="submit" name="Enter">
+			</form>
+		</div>
+
+		<div>
+		{% if zipcode or request.args.get('zipcode') %}
+			<p>Home Health Agencies in {{ zipcode or request.args.get('zipcode') }}</p>
+		{% endif %}
+		</div>
+
+		<div>
+		{% for agency in hh_data %}
+			<b>{{ agency }}</b><br>
+		{% endfor %}
+		</div>
+
+	</section>
 </center>
+{%endblock%}
