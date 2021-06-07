@@ -85,10 +85,11 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../requirements.html">Requirements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../code_routes.html">Auto-Generated Doc: Routes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../code_funcs.html">Auto Generated Doc: Funcs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code_routes.html">API Reference: Routes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code_funcs.html">API Reference: Funcs</a></li>
 </ul>
 
             
@@ -167,10 +168,9 @@
 
 
 <div class="viewcode-block" id="get_hh_agencies"><a class="viewcode-back" href="../../code_funcs.html#app.funcs.get_hh_agencies">[docs]</a><span class="k">def</span> <span class="nf">get_hh_agencies</span><span class="p">(</span><span class="n">zipcode</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-	<span class="s2">&quot;Get a pd.Series of Home Health agencies from given zipcode.&quot;</span>
+	<span class="s2">&quot;Get a df of Home Health agencies from given zipcode.&quot;</span>
 	<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">HH_DATA_URL</span><span class="p">)</span>
-	<span class="n">hh_data</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">ZIP</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">zipcode</span><span class="p">),</span> <span class="s1">&#39;Provider Name&#39;</span><span class="p">]</span>
-
+	<span class="n">hh_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">ZIP</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">zipcode</span><span class="p">)][[</span><span class="s1">&#39;Provider Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Address&#39;</span><span class="p">,</span> <span class="s1">&#39;City&#39;</span><span class="p">,</span> <span class="s1">&#39;Phone&#39;</span><span class="p">]]</span>
 	<span class="k">return</span> <span class="n">hh_data</span></div>
 </pre></div>
 

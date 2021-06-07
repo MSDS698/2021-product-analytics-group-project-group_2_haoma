@@ -1,4 +1,4 @@
-Auto Generated Doc: Funcs
+API Reference: Funcs
 =================================
 .. automodule:: app.funcs
 	:members:

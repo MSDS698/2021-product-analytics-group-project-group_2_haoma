@@ -10,11 +10,11 @@ Welcome to Haoma's documentation!
    :maxdepth: 2
    :caption: Contents:
    
-   tutorial
+   introduction
    requirements
+   tutorial
    code_routes
    code_funcs
-
 
 
 Indices and tables
