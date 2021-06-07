@@ -3,21 +3,13 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 <br><br>
 <center>
-	
+
 	<section id="service" class="service">
 
 		<div class="section-title">
 		<h2>Find Home Health Agencies Near You</h2>
 		</div>
 
-<<<<<<< HEAD
-	{% for entry in entries %}
-		{{ entry|safe }}
-	{% endfor %}
-
-
-</center>
-=======
 		<div>
 			<form method="POST">
 				{{ form.csrf_token }}
@@ -38,7 +30,13 @@
 		{% endfor %}
 		</div>
 
+		<table class="table">
+			{% for entry in entries %}
+				{{ entry|safe }}
+			{% endfor %}
+		</table>
+
 	</section>
 </center>
 {%endblock%}
->>>>>>> frontend
+

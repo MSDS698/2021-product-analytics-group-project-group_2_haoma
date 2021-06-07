@@ -112,26 +112,26 @@
 
         <div class="section-title">
           <h2>About Haoma</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. </p>
+
         </div>
 
         <div class="row content">
-          <div class="col-lg-6">
+          <div class="col-lg-6 pt-4 pt-lg-0">
             <p>
-              An integrated home health referral system aimed to mitigate existing inefficient communication streams, enable a streamlined discharge process, and optimize the time for a patient to get care, as well as the quality. The system will primarily be a recommendation dashboard for discharge planners to quickly and seamlessly generate home health agency recommendations personalized to the patient, with clear and relevant comparison metrics. However, it will also act as a platform where all parties are integrated, having access to the same platform and database to eliminate prior discrepancies. Most of all, it’s a platform enabling patients to get personalized recommendations, faster care, and true transparency. <br><br>
-                
-                Haoma is built on the three fundamental pillars: 
+              An integrated home health referral system aimed to mitigate existing inefficient communication streams, enable a streamlined discharge process, and optimize the time for a patient to get care, as well as the quality. The system will primarily be a recommendation dashboard for discharge planners to quickly and seamlessly generate home health agency recommendations personalized to the patient, with clear and relevant comparison metrics. <br><br>
+              However, it will also act as a platform where all parties are integrated, having access to the same platform and database to eliminate prior discrepancies. Most of all, it’s a platform enabling patients to get personalized recommendations, faster care, and true transparency. <br><br>
             </p>
-            <ul>
-              <li><i class="ri-check-double-line"></i> Efficiency</li>
-              <li><i class="ri-check-double-line"></i> Transparency</li>
-              <li><i class="ri-check-double-line"></i> Personalization</li>
-            </ul>
 
               
           </div>
           <div class="col-lg-6 pt-4 pt-lg-0">
             <p>
+              Haoma is built on the three fundamental pillars:
+            <ul>
+              <li><i class="ri-check-double-line"></i> Efficiency</li>
+              <li><i class="ri-check-double-line"></i> Transparency</li>
+              <li><i class="ri-check-double-line"></i> Personalization</li>
+            </ul><br>
               Check us out on GitHub!
             </p>
             <a href="https://github.com/MSDS698/2021-product-analytics-group-project-group_2_haoma" class="btn-learn-more">GitHub</a>
@@ -174,18 +174,18 @@
       </div>
     </section><!-- End Counts Section -->
 
-        <!-- ======= Cta Section ======= -->
-    <section id="cta" class="cta">
+        <!-- ======= Zipcode Section ======= -->
+    <section id="zipcode" class="cta">
       <div class="container" data-aos="zoom-in">
         <div class="text-center">
-          <h3>Find Home Health Agencies!</h3>
-          <p> Insert your zip code below and we will find home health agencies with ratings in your area!</p>
-          <div class="form-group">
-            <form 
-            onsubmit="window.location.href = 'zipcode_search?zipcode='+document.getElementsByName('zipcode')[0].value; return false;">
-              <input name="zipcode" id="zipcode" placeholder="Zip Code" required>
-              <input type="submit">
-            </form>
+          <a href="{{ url_for('zipcode_search')}}"><h3>Find Home Health Agencies!</h3></a>
+          <p> Click above to find home health agencies with ratings in your area!</p>
+<!--          <div class="form-group">-->
+<!--&lt;!&ndash;            <form method="POST"; action="zipcode_search?zipcode='+document.getElementsByName('zipcode')[0].value'">&ndash;&gt;-->
+<!--            <form action="{{ url_for('zipcode_search')}}" method="post">-->
+<!--              <input name="zipcode" id="zipcode" placeholder="Zip Code" required>-->
+<!--              <input type="submit">-->
+<!--            </form>-->
           </div>
         </div>
       </div>
@@ -375,13 +375,13 @@
       </div>
     </section><!-- End Frequently Asked Questions Section -->
 
-    <!-- ======= Contact Section ======= -->
+    <!-- ======= Services Section ======= -->
     <section id="service" class="service">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
           <h2>Service</h2>
-          <p> *ADD DESC*</p>
+          <p> </p>
         </div>
 
         <div>
