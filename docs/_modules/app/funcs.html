@@ -86,6 +86,7 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../team.html">Team Members and Roles</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../requirements.html">Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code_routes.html">API Reference: Routes</a></li>
@@ -164,14 +165,19 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
+<span class="n">HH_ZIP_DATA_URL</span> <span class="o">=</span> <span class="s2">&quot;https://data.cms.gov/provider-data/sites/default/files/resources/35759790ad0a207f47ba2a079eb51a0f_1620794404/HH_Zip_Oct2020.csv&quot;</span>
+
 <span class="n">HH_DATA_URL</span> <span class="o">=</span> <span class="s2">&quot;https://data.cms.gov/provider-data/sites/default/files/resources/1ee6a6e80907bf13661aa2f099415fcd_1620794404/HH_Provider_Oct2020.csv&quot;</span>
 
 
 <div class="viewcode-block" id="get_hh_agencies"><a class="viewcode-back" href="../../code_funcs.html#app.funcs.get_hh_agencies">[docs]</a><span class="k">def</span> <span class="nf">get_hh_agencies</span><span class="p">(</span><span class="n">zipcode</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-	<span class="s2">&quot;Get a df of Home Health agencies from given zipcode.&quot;</span>
-	<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">HH_DATA_URL</span><span class="p">)</span>
-	<span class="n">hh_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">ZIP</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">zipcode</span><span class="p">)][[</span><span class="s1">&#39;Provider Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Address&#39;</span><span class="p">,</span> <span class="s1">&#39;City&#39;</span><span class="p">,</span> <span class="s1">&#39;Phone&#39;</span><span class="p">]]</span>
-	<span class="k">return</span> <span class="n">hh_data</span></div>
+    <span class="s2">&quot;Get a df of Home Health agencies from given zipcode.&quot;</span>
+    <span class="n">df_zip</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">HH_ZIP_DATA_URL</span><span class="p">)</span>
+    <span class="n">df_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">HH_DATA_URL</span><span class="p">)</span>
+    <span class="n">cms_nums</span> <span class="o">=</span> <span class="n">df_zip</span><span class="p">[</span><span class="n">df_zip</span><span class="p">[</span><span class="s1">&#39; ZIP Code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">zipcode</span><span class="p">)][</span><span class="s1">&#39;CMS Certification Number (CCN)&#39;</span><span class="p">]</span>
+    <span class="n">hh_data</span> <span class="o">=</span> <span class="n">df_data</span><span class="p">[</span><span class="n">df_data</span><span class="p">[</span><span class="s1">&#39;CMS Certification Number (CCN)&#39;</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">cms_nums</span><span class="p">)][[</span><span class="s1">&#39;Provider Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Address&#39;</span><span class="p">,</span> <span class="s1">&#39;City&#39;</span><span class="p">,</span> <span class="s1">&#39;Phone&#39;</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">hh_data</span></div>
 </pre></div>
 
            </div>
