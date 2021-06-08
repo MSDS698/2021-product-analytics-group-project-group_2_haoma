@@ -33,6 +33,7 @@ def zipcode_search():
         return render_template('zipcode.html',
                                form=form,
                                zipcode=zipcode,
-                               entries=[df.to_html(classes=["table-hover-center"])])
+                               entries=[df.to_html(
+                                   classes=["table-hover-center"])])
 
     return render_template('zipcode.html', form=form)
