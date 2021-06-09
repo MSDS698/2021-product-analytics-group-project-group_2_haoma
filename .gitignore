@@ -6,3 +6,5 @@
 .env
 env
 code/app/__pycache__
+code/app/config.py
+
