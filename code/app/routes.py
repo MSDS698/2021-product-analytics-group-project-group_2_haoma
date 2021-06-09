@@ -1,8 +1,9 @@
 from app import app, funcs
-from flask import render_template, url_for
+from flask import render_template, url_for, jsonify, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, NumberRange
+import json
 
 
 class StringForm(FlaskForm):
@@ -22,18 +23,15 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/zipcode_search', methods=['GET', 'POST'])
+@app.route('/zipcode_search')
 def zipcode_search():
-    "Page for finding Home Health agencies in given zipcode."
-    form = StringForm()
-    if form.validate_on_submit():
-        zipcode = form.data['field']
-        df = funcs.get_hh_agencies(zipcode)
+    return render_template('zipcode.html')
 
-        return render_template('zipcode.html',
-                               form=form,
-                               zipcode=zipcode,
-                               entries=[df.to_html(
-                                   classes=["table-hover-center"])])
 
-    return render_template('zipcode.html', form=form)
+@app.route('/_get_table', methods=['GET', 'POST'])
+def get_table():
+    zipcode = request.args.get('a', type=int)
+    df = funcs.get_hh_agencies(zipcode)
+    json_df = json.loads(df.to_json(orient="split"))
+    return jsonify(my_table=json_df["data"],
+                   columns=[{"title": str(col)} for col in json_df["columns"]])

@@ -1,42 +1,91 @@
+  
 {% extends "headerbase.html" %}
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 <br><br>
-<center>
 
-	<section id="service" class="service">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-		<div class="section-title">
-		<h2>Find Home Health Agencies Near You</h2>
-		</div>
+  <title></title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
 
-		<div>
-			<form method="POST">
-				{{ form.csrf_token }}
-				{{ form.field }}
-				<input type="submit" name="Enter">
-			</form>
-		</div>
+  <!-- Favicons -->
+<!--  <link href="assets/img/favicon.png" rel="icon">-->
+<!--  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">-->
 
-		<div>
-		{% if zipcode or request.args.get('zipcode') %}
-			<p>Home Health Agencies in {{ zipcode or request.args.get('zipcode') }}</p>
-		{% endif %}
-		</div>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Fira+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-		<div>
-		{% for agency in hh_data %}
-			<b>{{ agency }}</b><br>
-		{% endfor %}
-		</div>
+  <!-- Vendor CSS Files -->
+  <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendor/aos/aos.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendor/remixicon/remixicon.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
 
-		<table class="table">
-			{% for entry in entries %}
-				{{ entry|safe }}
-			{% endfor %}
-		</table>
+  <!-- Template Main CSS File -->
+<!--  <link href="assets/css/style.css" rel="stylesheet">-->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-	</section>
-</center>
+  <!-- =======================================================
+  * Template Name: OnePage - v4.3.0
+  * Template URL: https://bootstrapmade.com/onepage-multipurpose-bootstrap-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+    
+  <body>
+      <center><br><br><br>
+    <div class="container">
+      <div class="header">
+        <h3 class="text-muted">Haoma Recommendations</h3>
+      </div>
+
+      <div>
+        <p>Enter Zipcode</p>
+        <input type="text" size="5" name="a" value="94015">
+        
+
+        <p><a href="javascript:void();" id="calculate">Search</a></p>
+         <p></p>
+        <p></p>
+          <span id="elements"></span><br>
+          <table id="a_nice_table"></table>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-1.12.4.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        var table = null;
+        $('a#calculate').bind('click', function() {
+          $.getJSON('/_get_table', {
+            a: $('input[name="a"]').val(),
+            b: $('input[name="b"]').val()
+          }, function(data) {
+            $("#elements").text(data.number_elements);
+            if (table !== null) {
+              table.destroy();
+              table = null;
+              $("#a_nice_table").empty();
+            }
+            table = $("#a_nice_table").DataTable({
+              data: data.my_table,
+              columns: data.columns
+            });
+          });
+          return false;
+        });
+      });
+    </script>
+  </body>
+</html>
+
 {%endblock%}
-
