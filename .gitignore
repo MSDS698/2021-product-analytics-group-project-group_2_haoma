@@ -6,5 +6,6 @@
 .env
 env
 code/app/__pycache__
+code/__pycache__
 code/app/config.py
-
+*.DS_Store
