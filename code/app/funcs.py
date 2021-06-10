@@ -6,28 +6,28 @@ readability and help with debugging.
 """
 import pandas as pd
 from urllib.parse import urlencode
+import boto3
 import requests
+import re
 import os
 
-
-# Contains xipcodes that HH agencies cover
-HH_ZIP_DATA_URL = "https://data.cms.gov/provider-data/sites/default/files/" \
-    "resources/35759790ad0a207f47ba2a079eb51a0f_1620794404/" \
-                  "HH_Zip_Oct2020.csv"
-
-# Contains information on HH agencies
-HH_DATA_URL = "https://data.cms.gov/provider-data/sites/default/files/" \
-              "resources/1ee6a6e80907bf13661aa2f099415fcd_1620794404/" \
-              "HH_Provider_Oct2020.csv"
-
 GEOCODE_ENDPOINT = "https://maps.googleapis.com/maps/api/geocode/json?"
+s3 = boto3.client(
+    's3',
+    region_name='us-west-2',
+    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+)
 
 
 def get_hh_agencies(zipcode: str):
     "Get a df of Home Health agencies that cover a given zipcode."
+    response = s3.get_object(Bucket="haoma", Key="HH_Zip_Oct2020.csv")
+    df_zip = pd.read_csv(response.get("Body"))
 
-    df_zip = pd.read_csv(HH_ZIP_DATA_URL)
-    df_data = pd.read_csv(HH_DATA_URL)
+    response = s3.get_object(Bucket="haoma", Key="HH_Provider_Oct2020.csv")
+    df_data = pd.read_csv(response.get("Body"))
+
     cms_nums = df_zip[df_zip[' ZIP Code'] ==
                       int(zipcode)]['CMS Certification Number (CCN)']
     hh_data = df_data[df_data['CMS Certification Number (CCN)']
@@ -37,10 +37,10 @@ def get_hh_agencies(zipcode: str):
                                         'Phone']]
     return hh_data
 
-def geocode_address(address: str="1 Waterford Ct Ringwood NJ 07546") -> dict:
+def geocode_address(address: str) -> dict:
     "Return a tuple of lon, lat coordinates for a given address."
     params = {
-        'address': address, 'key': os.environ['HAOMA_GCP_API_KEY']
+        'address': address, 'key': os.getenv('HAOMA_GCP_API_KEY')
     }
 
     url = GEOCODE_ENDPOINT + urlencode(params)
@@ -49,3 +49,5 @@ def geocode_address(address: str="1 Waterford Ct Ringwood NJ 07546") -> dict:
     lat_lon = res_dict['results'][0]['geometry']['location']
 
     return lat_lon
+
+# get_hh_agencies()
