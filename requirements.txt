@@ -1,4 +1,5 @@
 attrs==21.2.0
+awsebcli
 blis==0.7.4
 boto3==1.17.91
 botocore==1.20.91
@@ -9,7 +10,9 @@ click==7.1.2
 cycler==0.10.0
 cymem==2.0.5
 Flask==1.1.2
+Flask-SQLAlchemy
 Flask-WTF==0.15.1
+flask-login
 idna==2.10
 iniconfig==1.1.1
 itsdangerous==2.0.1
@@ -27,6 +30,7 @@ pdf2image==1.15.1
 Pillow==8.2.0
 pluggy==0.13.1
 preshed==3.0.5
+psycopg2
 py==1.10.0
 pydantic==1.7.4
 pyparsing==2.4.7
