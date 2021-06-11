@@ -54,11 +54,11 @@ def login():
 @app.route('/discharge', methods=['GET', 'POST'])
 @login_required
 def discharge():
-    return render_template('discharge.html', username=current_user.username)
+    return render_template('discharge.html', loggedin=current_user.is_authenticated, username=current_user.username)
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
     username = current_user.username
     logout_user()
-    return render_template('logout.html', username=username)
+    return render_template('logout.html', loggedin=current_user.is_authenticated, username=username)
