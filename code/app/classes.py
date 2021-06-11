@@ -5,7 +5,16 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, NumberRange, Length
 
+class HHCare_Zipcodes(db.Model):
+    "Class for the 'hhcare_zipcodes' table."
+    __tablename__ = "hhcare_zipcodes"
+    __table_args__ = {"schema" : "public"}
+    state = db.Column(db.String(2), nullable=False)
+    cms_certification_number = db.Column(db.Integer, nullable=False, primary_key=True)
+    zip_code = db.Column(db.Integer, nullable=False, primary_key=True)
+
 class User(db.Model, UserMixin):
+    "Class for the 'user' table."
     __table_name__ = "user"
     schema = "user"
     id = db.Column(db.Integer, primary_key=True)

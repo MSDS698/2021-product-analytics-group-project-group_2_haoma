@@ -5,7 +5,8 @@ DROP TABLE IF EXISTS hhcare_zipcodes;
 CREATE TABLE hhcare_zipcodes (
 	state CHAR(2) NOT NULL,
 	cms_certification_number INT NOT NULL,
-	zip_code INT NOT NULL
+	zip_code INT NOT NULL,
+	PRIMARY KEY (cms_certification_number, zip_code)
 );
 
 SELECT aws_s3.table_import_from_s3(
