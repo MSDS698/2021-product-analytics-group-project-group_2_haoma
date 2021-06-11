@@ -41,7 +41,12 @@
 </head>
     
   <body>
-      <center><br><br><br>
+    <center><br><br><br>
+    {% if loggedin %}
+      <div class="container">
+        Already logged in
+      </div>
+    {% else %}
     <div class="container">
       <div class="header">
         <h3 class="text-muted">Registration</h3>
@@ -61,6 +66,7 @@
         </div>
       </div>
     </div>
+    {% endif %}
   </body>
 </html>
 

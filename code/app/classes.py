@@ -6,6 +6,8 @@ from wtforms import StringField, IntegerField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, NumberRange, Length
 
 class User(db.Model, UserMixin):
+    __table_name__ = "user"
+    schema = "user"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(100), nullable=False)

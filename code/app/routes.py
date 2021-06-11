@@ -7,13 +7,11 @@ import json
 @app.route('/index')
 def index():
     "Home Page."
-    return render_template('index.html')
-
+    return render_template('index.html', loggedin=current_user.is_authenticated)
 
 @app.route('/zipcode_search')
 def zipcode_search():
-    return render_template('zipcode.html')
-
+    return render_template('zipcode.html', loggedin=current_user.is_authenticated)
 
 @app.route('/_get_table', methods=['GET', 'POST'])
 def get_table():
@@ -35,12 +33,11 @@ def register():
             user = classes.User(username, password)
             db.session.add(user)
             db.session.commit()
-            # add auto login on register
+            login_user(user)
             return redirect(url_for('discharge'))
         else:
             user_exists = True
-    return render_template('register.html', form=form, user_exists=user_exists)
-
+    return render_template('register.html', form=form, loggedin=current_user.is_authenticated, user_exists=user_exists)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -52,7 +49,7 @@ def login():
         if user is not None and user.check_password(password):
             login_user(user)
             return redirect(url_for('discharge'))
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=form, loggedin=current_user.is_authenticated)
 
 @app.route('/discharge', methods=['GET', 'POST'])
 @login_required
