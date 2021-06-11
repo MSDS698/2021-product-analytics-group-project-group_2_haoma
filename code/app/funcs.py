@@ -22,10 +22,10 @@ s3 = boto3.client(
 
 def get_hh_agencies(zipcode: str):
     "Get a df of Home Health agencies that cover a given zipcode."
-    response = s3.get_object(Bucket="haoma", Key="HH_Zip_Oct2020.csv")
+    response = s3.get_object(Bucket="haoma-bucket", Key="HH_Zip_Oct2020.csv")
     df_zip = pd.read_csv(response.get("Body"))
 
-    response = s3.get_object(Bucket="haoma", Key="HH_Provider_Oct2020.csv")
+    response = s3.get_object(Bucket="haoma-bucket", Key="HH_Provider_Oct2020.csv")
     df_data = pd.read_csv(response.get("Body"))
 
     cms_nums = df_zip[df_zip[' ZIP Code'] ==
