@@ -1,10 +1,12 @@
 import os
+from dotenv import load_dotenv
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from flask_login import LoginManager
 
+load_dotenv()
 app = Flask(__name__)
 app.config.from_object(Config)
 
