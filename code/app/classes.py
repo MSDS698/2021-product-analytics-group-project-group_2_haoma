@@ -15,8 +15,8 @@ class HHCare_Zipcodes(db.Model):
 
 class User(db.Model, UserMixin):
     "Class for the 'user' table."
-    __table_name__ = "user"
-    schema = "user"
+    __tablename__ = "user"
+    __table_args__ = {"schema": "public"}
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(100), nullable=False)
