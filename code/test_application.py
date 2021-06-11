@@ -3,6 +3,7 @@ Testing script for our application.
 """
 from app.funcs import get_hh_agencies
 import numpy as np
+from app.classes import HHCare_Zipcodes
 
 
 def test_zipcode_matches():
@@ -141,3 +142,10 @@ def test_zipcode_matches():
                          'ALLIANCE HOME HEALTH',
                          'SOUTH BAY HOME HEALTH CARE, LLC',
                          'HOME HEALTH BAY AREA INC.']))
+
+def test_database_connection():
+     "Test the connection to our RDS database."
+     record = HHCare_Zipcodes.query.get((27001, 99501)).state
+     assert record == 'AK'
+
+
