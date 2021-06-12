@@ -7,25 +7,11 @@ readability and help with debugging.
 import pandas as pd
 from urllib.parse import urlencode
 from app.classes import HHCare_Zipcodes
-import boto3
+from config import GEOCODE_ENDPOINT
+from app import s3
 import requests
 import re
 import os
-
-GEOCODE_ENDPOINT = "https://maps.googleapis.com/maps/api/geocode/json?"
-if(os.getenv("PYTHON_ENV") == "dev"):
-    s3 = boto3.client(
-        's3',
-        region_name='us-west-2',
-        aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-    )
-else:
-    s3 = boto3.client(
-        's3',
-        region_name='us-west-2'
-    )
-
 
 def get_hh_agencies(zipcode: str):
     "Get a df of Home Health agencies that cover a given zipcode."
