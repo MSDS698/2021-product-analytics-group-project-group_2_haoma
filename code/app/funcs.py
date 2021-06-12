@@ -13,12 +13,18 @@ import re
 import os
 
 GEOCODE_ENDPOINT = "https://maps.googleapis.com/maps/api/geocode/json?"
-s3 = boto3.client(
-    's3',
-    region_name='us-west-2',
-    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-)
+if(os.getenv("PYTHON_ENV") == "dev"):
+    s3 = boto3.client(
+        's3',
+        region_name='us-west-2',
+        aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+    )
+else:
+    s3 = boto3.client(
+        's3',
+        region_name='us-west-2'
+    )
 
 
 def get_hh_agencies(zipcode: str):
