@@ -86,7 +86,6 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../team.html">Team Members and Roles</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../requirements.html">Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code_routes.html">API Reference: Routes</a></li>
@@ -157,44 +156,70 @@
            <div itemprop="articleBody">
             
   <h1>Source code for app.routes</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">app</span><span class="p">,</span> <span class="n">funcs</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">url_for</span>
-<span class="kn">from</span> <span class="nn">flask_wtf</span> <span class="kn">import</span> <span class="n">FlaskForm</span>
-<span class="kn">from</span> <span class="nn">wtforms</span> <span class="kn">import</span> <span class="n">StringField</span><span class="p">,</span> <span class="n">IntegerField</span>
-<span class="kn">from</span> <span class="nn">wtforms.validators</span> <span class="kn">import</span> <span class="n">DataRequired</span><span class="p">,</span> <span class="n">NumberRange</span>
-
-
-<div class="viewcode-block" id="StringForm"><a class="viewcode-back" href="../../code_routes.html#app.routes.StringForm">[docs]</a><span class="k">class</span> <span class="nc">StringForm</span><span class="p">(</span><span class="n">FlaskForm</span><span class="p">):</span>
-    <span class="s2">&quot;Class for a string field form&quot;</span>
-    <span class="n">field</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">DataRequired</span><span class="p">()])</span></div>
-
-
-<div class="viewcode-block" id="MiniZipForm"><a class="viewcode-back" href="../../code_routes.html#app.routes.MiniZipForm">[docs]</a><span class="k">class</span> <span class="nc">MiniZipForm</span><span class="p">(</span><span class="n">FlaskForm</span><span class="p">):</span>
-    <span class="s2">&quot;Form for zipcode input displayed in index.html&quot;</span>
-    <span class="n">field</span> <span class="o">=</span> <span class="n">IntegerField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Zipcode&quot;</span><span class="p">)</span></div>
-
+<span></span><span class="kn">from</span> <span class="nn">flask_login.utils</span> <span class="kn">import</span> <span class="n">login_user</span><span class="p">,</span> <span class="n">logout_user</span><span class="p">,</span> <span class="n">current_user</span><span class="p">,</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">app</span><span class="p">,</span> <span class="n">funcs</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">redirect</span>
+<span class="kn">import</span> <span class="nn">json</span>
 
 <div class="viewcode-block" id="index"><a class="viewcode-back" href="../../code_routes.html#app.routes.index">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
 <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/index&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
     <span class="s2">&quot;Home Page.&quot;</span>
-    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;index.html&#39;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;index.html&#39;</span><span class="p">,</span> <span class="n">loggedin</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="zipcode_search"><a class="viewcode-back" href="../../code_routes.html#app.routes.zipcode_search">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/zipcode_search&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="zipcode_search"><a class="viewcode-back" href="../../code_routes.html#app.routes.zipcode_search">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/zipcode_search&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">zipcode_search</span><span class="p">():</span>
-    <span class="s2">&quot;Page for finding Home Health agencies in given zipcode.&quot;</span>
-    <span class="n">form</span> <span class="o">=</span> <span class="n">StringForm</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;zipcode.html&#39;</span><span class="p">,</span> <span class="n">loggedin</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="get_table"><a class="viewcode-back" href="../../code_routes.html#app.routes.get_table">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/_get_table&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">get_table</span><span class="p">():</span>
+    <span class="n">zipcode</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">funcs</span><span class="o">.</span><span class="n">get_hh_agencies</span><span class="p">(</span><span class="n">zipcode</span><span class="p">)</span>
+    <span class="n">json_df</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;split&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">my_table</span><span class="o">=</span><span class="n">json_df</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">],</span>
+                   <span class="n">columns</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">)}</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">json_df</span><span class="p">[</span><span class="s2">&quot;columns&quot;</span><span class="p">]])</span></div>
+
+<div class="viewcode-block" id="register"><a class="viewcode-back" href="../../code_routes.html#app.routes.register">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/register&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">register</span><span class="p">():</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">RegisterForm</span><span class="p">()</span>
+    <span class="n">user_exists</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
-        <span class="n">zipcode</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">funcs</span><span class="o">.</span><span class="n">get_hh_agencies</span><span class="p">(</span><span class="n">zipcode</span><span class="p">)</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">username</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">password</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">matching_user_count</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">matching_user_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">User</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="n">login_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;discharge&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">user_exists</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;register.html&#39;</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="n">loggedin</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">,</span> <span class="n">user_exists</span><span class="o">=</span><span class="n">user_exists</span><span class="p">)</span></div>
 
-        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;zipcode.html&#39;</span><span class="p">,</span>
-                               <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span>
-                               <span class="n">zipcode</span><span class="o">=</span><span class="n">zipcode</span><span class="p">,</span>
-                               <span class="n">entries</span><span class="o">=</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">classes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;table-hover-center&quot;</span><span class="p">])])</span>
+<div class="viewcode-block" id="login"><a class="viewcode-back" href="../../code_routes.html#app.routes.login">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">login</span><span class="p">():</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">LoginForm</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">username</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">password</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">check_password</span><span class="p">(</span><span class="n">password</span><span class="p">):</span>
+            <span class="n">login_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;discharge&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;login.html&#39;</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="n">loggedin</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">)</span></div>
 
-    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;zipcode.html&#39;</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">)</span></div>
+<div class="viewcode-block" id="discharge"><a class="viewcode-back" href="../../code_routes.html#app.routes.discharge">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/discharge&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">discharge</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;discharge.html&#39;</span><span class="p">,</span> <span class="n">loggedin</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="logout"><a class="viewcode-back" href="../../code_routes.html#app.routes.logout">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/logout&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">logout</span><span class="p">():</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">username</span>
+    <span class="n">logout_user</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;logout.html&#39;</span><span class="p">,</span> <span class="n">loggedin</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
