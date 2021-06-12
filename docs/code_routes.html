@@ -88,7 +88,6 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="team.html">Team Members and Roles</a></li>
 <li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference: Routes</a></li>
@@ -162,27 +161,15 @@
             
   <div class="section" id="module-app.routes">
 <span id="api-reference-routes"></span><h1>API Reference: Routes<a class="headerlink" href="#module-app.routes" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
-<dt id="app.routes.MiniZipForm">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">MiniZipForm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#MiniZipForm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.MiniZipForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Form for zipcode input displayed in index.html</p>
-<dl class="py attribute">
-<dt id="app.routes.MiniZipForm.field">
-<code class="sig-name descname"><span class="pre">field</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(IntegerField,</span> <span class="pre">(),</span> <span class="pre">{'label':</span> <span class="pre">'Zipcode'})&gt;</span></em><a class="headerlink" href="#app.routes.MiniZipForm.field" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt id="app.routes.discharge">
+<code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">discharge</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#discharge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.discharge" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</dd></dl>
-
-<dl class="py class">
-<dt id="app.routes.StringForm">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">StringForm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#StringForm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.StringForm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class for a string field form</p>
-<dl class="py attribute">
-<dt id="app.routes.StringForm.field">
-<code class="sig-name descname"><span class="pre">field</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;UnboundField(StringField,</span> <span class="pre">('name',),</span> <span class="pre">{'validators':</span> <span class="pre">[&lt;wtforms.validators.DataRequired</span> <span class="pre">object&gt;]})&gt;</span></em><a class="headerlink" href="#app.routes.StringForm.field" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt id="app.routes.get_table">
+<code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">get_table</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#get_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.get_table" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-</dd></dl>
 
 <dl class="py function">
 <dt id="app.routes.index">
@@ -191,10 +178,24 @@
 </dd></dl>
 
 <dl class="py function">
+<dt id="app.routes.login">
+<code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">login</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.login" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="app.routes.logout">
+<code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">logout</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#logout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.logout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="app.routes.register">
+<code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">register</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.register" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt id="app.routes.zipcode_search">
 <code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">zipcode_search</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#zipcode_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.zipcode_search" title="Permalink to this definition">¶</a></dt>
-<dd><p>Page for finding Home Health agencies in given zipcode.</p>
-</dd></dl>
+<dd></dd></dl>
 
 </div>
 

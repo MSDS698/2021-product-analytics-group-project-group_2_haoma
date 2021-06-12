@@ -1,9 +1,0 @@
-Team Members and Roles
-=====================================
-| Victor Nazlukhanyan: CEO, Data Scientist 
-| Christabelle Pabalan: Product Strategist, Data Scientist 
-| Patrick Poon: Product Manager, Full-Stack Developer, 
-| Nicolas Decavel-Bueff: CTO, DBA, Data Scientist 
-| Zachary Dougherty: DBA, Data Scientist 
-| Noah Matsuyoshi: Full-Stack Developer 
-| Grant Phillips: Data Scientist 

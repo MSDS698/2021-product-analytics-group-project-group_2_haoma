@@ -87,7 +87,6 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="team.html">Team Members and Roles</a></li>
 <li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="code_routes.html">API Reference: Routes</a></li>
@@ -162,13 +161,25 @@
   <div class="section" id="module-app.funcs">
 <span id="api-reference-funcs"></span><h1>API Reference: Funcs<a class="headerlink" href="#module-app.funcs" title="Permalink to this headline">¶</a></h1>
 <p>Script containing all necessary functions
-for our application. These are kept 
+for our application. These are kept
 separate from routes to improve
 readability and help with debugging.</p>
 <dl class="py function">
+<dt id="app.funcs.geocode_address">
+<code class="sig-prename descclassname"><span class="pre">app.funcs.</span></code><code class="sig-name descname"><span class="pre">geocode_address</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="reference internal" href="_modules/app/funcs.html#geocode_address"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.funcs.geocode_address" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dict of lon, lat coordinates for a given address.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="app.funcs.get_hh_agencies">
 <code class="sig-prename descclassname"><span class="pre">app.funcs.</span></code><code class="sig-name descname"><span class="pre">get_hh_agencies</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zipcode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/funcs.html#get_hh_agencies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.funcs.get_hh_agencies" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a df of Home Health agencies from given zipcode.</p>
+<dd><p>Get a df of Home Health agencies that cover a given zipcode.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="app.funcs.get_hh_agencies_rds">
+<code class="sig-prename descclassname"><span class="pre">app.funcs.</span></code><code class="sig-name descname"><span class="pre">get_hh_agencies_rds</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zipcode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/funcs.html#get_hh_agencies_rds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.funcs.get_hh_agencies_rds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as get_hh_agencies but with the RDS rather than S3.</p>
 </dd></dl>
 
 </div>
