@@ -16,28 +16,14 @@ import re
 
 pdf_path = 'referral_example.pdf'
 
-pages = convert_from_path(pdf_path)
+def get_text_from_pdf(path):
+    with open(pdf_path, 'rb') as f:
+        file = f.read()
+    pages = convert_from_path(pdf_path, fmt='jpeg')
+    text = ''.join(map(lambda x: pytesseract.image_to_string(x).replace('-\n', ''), pages))
+    return text
 
-im_count = 0
-for page in pages:
-    fname = f'page_{str(im_count)}.jpg'
-    page.save(f'images/{fname}', 'JPEG')
-    im_count += 1
-
-filelimit = im_count-1
-
-output = 'output.txt'
-with open(output, 'a') as f:
-    for i in range(0, filelimit):
-        fname = f'images/page_{str(i)}.jpg'
-        image = Image.open(fname)
-        text = str(((pytesseract.image_to_string(image))))
-        text = text.replace('-\n', '')    
-        f.write(text)
-
-output = 'output.txt'
-with open(output, 'r')  as f:
-    text = f.read()
+text = get_text_from_pdf(pdf_path)
 
 # Initalize ordinal translations
 translation_ws = {ord(c): ' ' for c in string.whitespace}
