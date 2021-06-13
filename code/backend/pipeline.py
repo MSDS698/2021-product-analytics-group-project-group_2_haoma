@@ -55,6 +55,7 @@ class FilterByService():
         for service in services:
             if services_dict[service]:
                 X = X[X[service] == 'Yes']
+        X = X.drop(columns = services)
         return X
 
     def fit(self, X, y=None, **fit_params):
@@ -68,7 +69,8 @@ class Recommend():
         self.num_agencies = num_agencies
 
     def transform(self, X, **transform_params): 
-        X.sort_values(by=self.Q_flagged)
+        sort_cols = self.Q_flagged + ['star']
+        X = X.sort_values(by=sort_cols, ascending = False)
         return X.iloc[:self.num_agencies]
 
     def fit(self, X, y=None, **fit_params):
@@ -101,3 +103,13 @@ def renamed_qcols(df):
             new_columns.append(short_questions[i-16])
     df.columns = new_columns
     return df
+
+def load_df(zipcode):
+    df = pd.read_csv('data/HH_Provider_Oct2020.csv')
+    df_cal = df[df['State'] == 'CA']
+    df_cal.reset_index(drop=True, inplace=True)
+    df_cal = df_cal.loc[:, ~df_cal.columns.str.startswith('Footnote')]
+    df_zip = pd.read_csv('data/HH_Zip_Oct2020.csv')
+    cms_nums = df_zip[df_zip[' ZIP Code'] == zipcode]['CMS Certification Number (CCN)']
+    df_cal = df_cal[df_cal['CMS Certification Number (CCN)'].isin(list(cms_nums))]
+    return df_cal
