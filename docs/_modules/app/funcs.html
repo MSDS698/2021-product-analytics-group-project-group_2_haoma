@@ -165,25 +165,11 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urlencode</span>
 <span class="kn">from</span> <span class="nn">app.classes</span> <span class="kn">import</span> <span class="n">HHCare_Zipcodes</span>
-<span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">from</span> <span class="nn">config</span> <span class="kn">import</span> <span class="n">GEOCODE_ENDPOINT</span>
+<span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">s3</span>
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">os</span>
-
-<span class="n">GEOCODE_ENDPOINT</span> <span class="o">=</span> <span class="s2">&quot;https://maps.googleapis.com/maps/api/geocode/json?&quot;</span>
-<span class="k">if</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PYTHON_ENV&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;dev&quot;</span><span class="p">):</span>
-    <span class="n">s3</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
-        <span class="s1">&#39;s3&#39;</span><span class="p">,</span>
-        <span class="n">region_name</span><span class="o">=</span><span class="s1">&#39;us-west-2&#39;</span><span class="p">,</span>
-        <span class="n">aws_access_key_id</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;AWS_ACCESS_KEY_ID&#39;</span><span class="p">),</span>
-        <span class="n">aws_secret_access_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;AWS_SECRET_ACCESS_KEY&#39;</span><span class="p">)</span>
-    <span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">s3</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
-        <span class="s1">&#39;s3&#39;</span><span class="p">,</span>
-        <span class="n">region_name</span><span class="o">=</span><span class="s1">&#39;us-west-2&#39;</span>
-    <span class="p">)</span>
-
 
 <div class="viewcode-block" id="get_hh_agencies"><a class="viewcode-back" href="../../code_funcs.html#app.funcs.get_hh_agencies">[docs]</a><span class="k">def</span> <span class="nf">get_hh_agencies</span><span class="p">(</span><span class="n">zipcode</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="s2">&quot;Get a df of Home Health agencies that cover a given zipcode.&quot;</span>
