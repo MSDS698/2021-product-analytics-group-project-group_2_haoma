@@ -47,7 +47,6 @@ def get_hh_agencies_rds(zipcode: str):
 
     return hh_data
 
-
 def geocode_address(address: str) -> dict:
     "Return a dict of lon, lat coordinates for a given address."
     params = {
@@ -60,5 +59,14 @@ def geocode_address(address: str) -> dict:
     lat_lon = res_dict['results'][0]['geometry']['location']
 
     return lat_lon
+
+def extract_patient_info(instance_path, filename, file) -> dict:
+    file.save(os.path.join(
+        instance_path, filename
+    ))
+    extracted_info = {}
+    extracted_info['insurance'] = "insurance example type"
+    extracted_info['summary'] = "summary example"
+    return extracted_info
 
 # get_hh_agencies()

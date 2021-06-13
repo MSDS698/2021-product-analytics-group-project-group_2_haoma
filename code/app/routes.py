@@ -1,6 +1,7 @@
 from flask_login.utils import login_user, logout_user, current_user, login_required
-from app import app, funcs, classes, db
-from flask import render_template, url_for, jsonify, request, redirect
+from werkzeug.utils import secure_filename
+from app import app, funcs, classes, db, recommender_instance
+from flask import render_template, url_for, jsonify, request, redirect, abort
 import json
 
 @app.route('/')
@@ -54,7 +55,53 @@ def login():
 @app.route('/discharge', methods=['GET', 'POST'])
 @login_required
 def discharge():
-    return render_template('discharge.html', loggedin=current_user.is_authenticated, username=current_user.username)
+    patient_upload_form = classes.PatientUploadForm()
+    if patient_upload_form.validate_on_submit():
+        file = patient_upload_form.file.data
+        filename = secure_filename(file.filename)
+        patient_info = funcs.extract_patient_info(app.instance_path, filename, file)
+
+        planner_username = current_user.username
+        first = patient_upload_form.first.data
+        last = patient_upload_form.last.data
+        insurance = patient_info['insurance']
+        summary = patient_info['summary']
+        recommendations = recommender_instance.recommend(patient_info['summary'])
+        patient = classes.Patient(planner_username=planner_username,
+                                  first=first,
+                                  last=last,
+                                  insurance=insurance,
+                                  summary=summary,
+                                  recommendations=recommendations)
+        db.session.add(patient)
+        db.session.commit()
+        return redirect(url_for('discharge'))
+
+    patients = classes.Patient.query.filter_by(planner_username=current_user.username).all()
+    return render_template('discharge.html', 
+                           loggedin=current_user.is_authenticated, 
+                           username=current_user.username, 
+                           patients=patients, 
+                           table_keys=[c.name for c in classes.Patient.__table__.columns],
+                           table_names=classes.Patient.get_column_names(),
+                           patient_upload_form=patient_upload_form)
+
+@app.route('/patient', methods=['GET', 'POST'])
+@login_required
+def patient():
+    id = request.args.get('id', type=int)
+    patient = classes.Patient.query.filter_by(id=id).first()
+    if(patient.planner_username != current_user.username):
+        abort(401)
+    scores = recommender_instance.get_metrics(patient.recommendations, patient.summary)
+    score_keys = recommender_instance.score_keys
+    score_names = recommender_instance.get_column_names()
+    return render_template('patient.html', 
+                           loggedin=current_user.is_authenticated, 
+                           patient=patient, 
+                           scores=scores, 
+                           score_keys=score_keys,
+                           score_names=score_names)
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required

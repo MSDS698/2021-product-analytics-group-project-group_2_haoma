@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
+from app import recommender
 from flask_login import LoginManager
 import boto3
 
@@ -31,6 +32,7 @@ else:
         region_name='us-west-2'
     )
 
+recommender_instance = recommender.Recommender()
 
 from app import classes
 from app import routes

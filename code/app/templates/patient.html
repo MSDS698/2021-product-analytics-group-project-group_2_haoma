@@ -1,0 +1,32 @@
+{% extends "headerbase.html" %}
+{% block content %}
+<html>
+    <body><center>
+        <div class="container">
+            <div class="header">
+                <h3 class="text-muted">{{patient.first}}'s recommendations</h3>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Agency Name</th>
+                        {% for name in score_names %}
+                            <th scope="col">{{name}}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agency in scores %}
+                        <tr>
+                            <td>{{agency}}</td>
+                            {% for k in score_keys %}
+                                <td>{{scores[agency][k]}}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
+{%endblock%}

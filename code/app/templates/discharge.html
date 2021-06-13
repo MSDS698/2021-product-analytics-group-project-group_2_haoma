@@ -2,8 +2,69 @@
 {% block content %}
 <html>
     <body>
-        <center><br><br><br>
-        Hello {{username}}
+        <center>
+        <div class="container">
+            <div class="header">
+                <h3 class="text-muted">Patients for {{username}}</h3>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        {% for col_name in table_names %}
+                            <th scope="col">{{col_name}}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient in patients %}
+                        <tr data-bs-target="#patientViewModal" data-bs-toggle="modal" onclick='(function(){
+                            window.location.href = "/patient?id={{patient.id}}";
+                            return false;
+                        })();return false;'>
+                            {% for k in table_keys %}
+                                <td>{{patient[k]}}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#patientUploadModal">
+            Add Patient
+        </button>
+
+        <div class="modal fade" id="patientUploadModal" tabindex="-1" aria-labelledby="patientUploadModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="patientUploadModalLabel">Add Patient</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" enctype="multipart/form-data">
+                    {{patient_upload_form.csrf_token}}
+                    <div class="modal-body">
+                        <div class="file-upload-wrapper">
+                            <div class="mb-3">
+                                {{patient_upload_form.first.label}}
+                                {{patient_upload_form.first()}}
+                            </div>
+                            <div class="mb-3">
+                                {{patient_upload_form.last.label}}
+                                {{patient_upload_form.last()}}
+                            </div>
+                            <div class="mb-3">
+                                {{patient_upload_form.file.label}}
+                                {{patient_upload_form.file()}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        {{patient_upload_form.submit()}}
+                    </div>
+                </form>
+              </div>
+            </div>
+        </div>
     </body>
 </html>
 {%endblock%}
