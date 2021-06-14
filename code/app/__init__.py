@@ -30,7 +30,7 @@ else:
         's3',
         region_name='us-west-2'
     )
-    
+
 from app import recommender
 
 recommender_instance = recommender.Recommender()
