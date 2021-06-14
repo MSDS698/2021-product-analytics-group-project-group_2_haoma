@@ -3,10 +3,12 @@ class Recommender():
 
     def __init__(self):
         ...
-    
+
     def recommend(self, summary):
         ...
-        recommendations = ['1ST CHOICE HOME HEALTH CARE', 'ANX HOME HEALTHCARE', 'MERIDIAN HOME HEALTH']
+        recommendations = ['1ST CHOICE HOME HEALTH CARE',
+                           'ANX HOME HEALTHCARE',
+                           'MERIDIAN HOME HEALTH']
         return recommendations
 
     def get_metrics(self, recommendations, summary):

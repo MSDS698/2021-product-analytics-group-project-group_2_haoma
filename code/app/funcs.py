@@ -13,14 +13,14 @@ import requests
 import re
 import os
 
+
 def get_hh_agencies(zipcode: str):
     "Get a df of Home Health agencies that cover a given zipcode."
     response = s3.get_object(Bucket="haoma-bucket", Key="HH_Zip_Oct2020.csv")
     df_zip = pd.read_csv(response.get("Body"))
-
-    response = s3.get_object(Bucket="haoma-bucket", Key="HH_Provider_Oct2020.csv")
+    response = s3.get_object(Bucket="haoma-bucket",
+                             Key="HH_Provider_Oct2020.csv")
     df_data = pd.read_csv(response.get("Body"))
-
     cms_nums = df_zip[df_zip[' ZIP Code'] ==
                       int(zipcode)]['CMS Certification Number (CCN)']
     hh_data = df_data[df_data['CMS Certification Number (CCN)']
@@ -30,15 +30,18 @@ def get_hh_agencies(zipcode: str):
                                         'Phone']]
     return hh_data
 
+
 def get_hh_agencies_rds(zipcode: str):
     "Same as get_hh_agencies but with the RDS rather than S3."
-    cms_nums = HHCare_Zipcodes.query.with_entities(HHCare_Zipcodes.cms_certification_number) \
+    cms_nums = HHCare_Zipcodes.query.with_entities(HHCare_Zipcodes.
+                                                   cms_certification_number) \
         .filter_by(zip_code=zipcode).all()
-    cms_nums = [tup[0] for tup in cms_nums]  # cms_nums is list of tuples, want list of values
 
-    response = s3.get_object(Bucket="haoma-bucket", Key="HH_Provider_Oct2020.csv")
+    # cms_nums is list of tuples, want list of values
+    cms_nums = [tup[0] for tup in cms_nums]
+    response = s3.get_object(Bucket="haoma-bucket",
+                             Key="HH_Provider_Oct2020.csv")
     df_data = pd.read_csv(response.get("Body"))
-
     hh_data = df_data[df_data['CMS Certification Number (CCN)']
                       .isin(cms_nums)][['Provider Name',
                                         'Address',
@@ -46,6 +49,7 @@ def get_hh_agencies_rds(zipcode: str):
                                         'Phone']]
 
     return hh_data
+
 
 def geocode_address(address: str) -> dict:
     "Return a dict of lon, lat coordinates for a given address."
@@ -59,6 +63,7 @@ def geocode_address(address: str) -> dict:
     lat_lon = res_dict['results'][0]['geometry']['location']
 
     return lat_lon
+
 
 def extract_patient_info(instance_path, filename, file) -> dict:
     file.save(os.path.join(

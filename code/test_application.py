@@ -143,9 +143,8 @@ def test_zipcode_matches():
                          'SOUTH BAY HOME HEALTH CARE, LLC',
                          'HOME HEALTH BAY AREA INC.']))
 
+
 def test_database_connection():
-     "Test the connection to our RDS database."
-     record = HHCare_Zipcodes.query.get((27001, 99501)).state
-     assert record == 'AK'
-
-
+    "Test the connection to our RDS database."
+    record = HHCare_Zipcodes.query.get((27001, 99501)).state
+    assert record == 'AK'
