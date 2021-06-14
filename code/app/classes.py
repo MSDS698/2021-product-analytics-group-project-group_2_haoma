@@ -6,7 +6,7 @@ from app import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import StringField, IntegerField, SubmitField, PasswordField
+from wtforms import StringField, IntegerField, SubmitField, PasswordField, SelectMultipleField, widgets
 from wtforms.validators import DataRequired, NumberRange, Length
 
 
@@ -83,14 +83,25 @@ class LoginForm(FlaskForm):
     username = StringField(label='Username', validators=[DataRequired()])
     password = PasswordField(label='Password', validators=[DataRequired()])
     submit = SubmitField(label='Login')
+    
+    
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
 
 
 class PatientUploadForm(FlaskForm):
     "Form for adding a patient"
     first = StringField(label='First Name', validators=[DataRequired()])
     last = StringField(label='Last Name', validators=[DataRequired()])
+    zipcode = IntegerField(label='Zip Code', validators=[DataRequired()])
+    service = MultiCheckboxField('Services',
+                                 choices=[('1', 'Nursing'), ('2', 'PT'), ('3', 'OT'),
+                                          ('4', 'ST'), ('5', 'Social Worker'), ('6', 'CHHA')])
     file = FileField(label='Referral Form PDF', validators=[FileRequired()])
     submit = SubmitField(label='Submit')
+    
+
 
 
 @login_manager.user_loader

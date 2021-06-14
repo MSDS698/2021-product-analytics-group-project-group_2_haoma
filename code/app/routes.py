@@ -77,31 +77,31 @@ def discharge():
         
         file.save(os.path.join('code/app/upload_temp', filename))
         pdf_path = f'code/app/upload_temp/{filename}'
-        
+    
         patient_info = funcs.extract_patient_info(app.instance_path,
                                                   filename, file)
 
         planner_username = current_user.username
         first = patient_upload_form.first.data
         last = patient_upload_form.last.data
+        zipcode = patient_upload_form.zipcode.data
+        services = patient_upload_form.service.data
+        # Change e.g. ['1', '3', '4'] to [True, False, True, True, False, False]
+        bool_services = [False]*6
+        for i in services:
+            bool_services[int(i)-1] = True
+        
         insurance = patient_info['insurance']
         summary = patient_info['summary']
         
-        # zipcode, bool list defined
-        zipcode = 94080
-        bool_services = [True]*6 
-        
         df = recommender_instance.filter_zipcode(zipcode)
-        
         recommendations = recommender_instance.recommend(df, bool_services, pdf_path)
-        
         patient = classes.Patient(planner_username=planner_username,
                                   first=first,
                                   last=last,
                                   insurance=insurance,
                                   summary=summary,
                                   recommendations=recommendations)
-
         db.session.add(patient)
         db.session.commit()
         return redirect(url_for('discharge'))
