@@ -1,18 +1,24 @@
-from flask_login.utils import login_user, logout_user, current_user, login_required
+from flask_login.utils import login_user, logout_user, \
+                              current_user, login_required
 from werkzeug.utils import secure_filename
 from app import app, funcs, classes, db, recommender_instance
 from flask import render_template, url_for, jsonify, request, redirect, abort
 import json
 
+
 @app.route('/')
 @app.route('/index')
 def index():
     "Home Page."
-    return render_template('index.html', loggedin=current_user.is_authenticated)
+    return render_template('index.html',
+                           loggedin=current_user.is_authenticated)
+
 
 @app.route('/zipcode_search')
 def zipcode_search():
-    return render_template('zipcode.html', loggedin=current_user.is_authenticated)
+    return render_template('zipcode.html',
+                           loggedin=current_user.is_authenticated)
+
 
 @app.route('/_get_table', methods=['GET', 'POST'])
 def get_table():
@@ -22,6 +28,7 @@ def get_table():
     return jsonify(my_table=json_df["data"],
                    columns=[{"title": str(col)} for col in json_df["columns"]])
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = classes.RegisterForm()
@@ -29,7 +36,8 @@ def register():
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
-        matching_user_count = classes.User.query.filter_by(username=username).count()
+        matching_user_count = classes.User.query.filter_by(username=username) \
+                                                .count()
         if(matching_user_count == 0):
             user = classes.User(username, password)
             db.session.add(user)
@@ -38,7 +46,10 @@ def register():
             return redirect(url_for('discharge'))
         else:
             user_exists = True
-    return render_template('register.html', form=form, loggedin=current_user.is_authenticated, user_exists=user_exists)
+    return render_template('register.html', form=form,
+                           loggedin=current_user.is_authenticated,
+                           user_exists=user_exists)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -50,7 +61,10 @@ def login():
         if user is not None and user.check_password(password):
             login_user(user)
             return redirect(url_for('discharge'))
-    return render_template('login.html', form=form, loggedin=current_user.is_authenticated)
+    return render_template('login.html',
+                           form=form,
+                           loggedin=current_user.is_authenticated)
+
 
 @app.route('/discharge', methods=['GET', 'POST'])
 @login_required
@@ -59,14 +73,16 @@ def discharge():
     if patient_upload_form.validate_on_submit():
         file = patient_upload_form.file.data
         filename = secure_filename(file.filename)
-        patient_info = funcs.extract_patient_info(app.instance_path, filename, file)
+        patient_info = funcs.extract_patient_info(app.instance_path,
+                                                  filename, file)
 
         planner_username = current_user.username
         first = patient_upload_form.first.data
         last = patient_upload_form.last.data
         insurance = patient_info['insurance']
         summary = patient_info['summary']
-        recommendations = recommender_instance.recommend(patient_info['summary'])
+        recommendations = recommender_instance \
+            .recommend(patient_info['summary'])
         patient = classes.Patient(planner_username=planner_username,
                                   first=first,
                                   last=last,
@@ -77,14 +93,17 @@ def discharge():
         db.session.commit()
         return redirect(url_for('discharge'))
 
-    patients = classes.Patient.query.filter_by(planner_username=current_user.username).all()
-    return render_template('discharge.html', 
-                           loggedin=current_user.is_authenticated, 
-                           username=current_user.username, 
-                           patients=patients, 
-                           table_keys=[c.name for c in classes.Patient.__table__.columns],
+    patients = classes.Patient.query. \
+        filter_by(planner_username=current_user.username).all()
+    return render_template('discharge.html',
+                           loggedin=current_user.is_authenticated,
+                           username=current_user.username,
+                           patients=patients,
+                           table_keys=[c.name for c in
+                                       classes.Patient.__table__.columns],
                            table_names=classes.Patient.get_column_names(),
                            patient_upload_form=patient_upload_form)
+
 
 @app.route('/patient', methods=['GET', 'POST'])
 @login_required
@@ -93,19 +112,23 @@ def patient():
     patient = classes.Patient.query.filter_by(id=id).first()
     if(patient.planner_username != current_user.username):
         abort(401)
-    scores = recommender_instance.get_metrics(patient.recommendations, patient.summary)
+    scores = recommender_instance.get_metrics(patient.recommendations,
+                                              patient.summary)
     score_keys = recommender_instance.score_keys
     score_names = recommender_instance.get_column_names()
-    return render_template('patient.html', 
-                           loggedin=current_user.is_authenticated, 
-                           patient=patient, 
-                           scores=scores, 
+    return render_template('patient.html',
+                           loggedin=current_user.is_authenticated,
+                           patient=patient,
+                           scores=scores,
                            score_keys=score_keys,
                            score_names=score_names)
+
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
     username = current_user.username
     logout_user()
-    return render_template('logout.html', loggedin=current_user.is_authenticated, username=username)
+    return render_template('logout.html',
+                           loggedin=current_user.is_authenticated,
+                           username=username)

@@ -9,13 +9,16 @@ from flask_wtf.file import FileField, FileRequired
 from wtforms import StringField, IntegerField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, NumberRange, Length
 
+
 class HHCare_Zipcodes(db.Model):
     "Class for the 'hhcare_zipcodes' table."
     __tablename__ = "hhcare_zipcodes"
-    __table_args__ = {"schema" : "public"}
+    __table_args__ = {"schema": "public"}
     state = db.Column(db.String(2), nullable=False)
-    cms_certification_number = db.Column(db.Integer, nullable=False, primary_key=True)
+    cms_certification_number = db.Column(db.Integer,
+                                         nullable=False, primary_key=True)
     zip_code = db.Column(db.Integer, nullable=False, primary_key=True)
+
 
 class User(db.Model, UserMixin):
     "Class for the 'user' table."
@@ -34,6 +37,7 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
 
 class Patient(db.Model):
     "Class for the patients table"
@@ -54,19 +58,25 @@ class Patient(db.Model):
             names += [" ".join(k.name.split("_")).title()]
         return names
 
+
 class StringForm(FlaskForm):
     "Class for a string field form"
     field = StringField('name', validators=[DataRequired()])
+
 
 class MiniZipForm(FlaskForm):
     "Form for zipcode input displayed in index.html"
     field = IntegerField(label="Zipcode")
 
+
 class RegisterForm(FlaskForm):
     "Form for user registration"
-    username = StringField(label='Username', validators=[DataRequired(), Length(min=4)])
-    password = PasswordField(label='Password', validators=[DataRequired(), Length(min=8)])
+    username = StringField(label='Username',
+                           validators=[DataRequired(), Length(min=4)])
+    password = PasswordField(label='Password',
+                             validators=[DataRequired(), Length(min=8)])
     submit = SubmitField(label='Register')
+
 
 class LoginForm(FlaskForm):
     "Form for user login"
@@ -74,12 +84,14 @@ class LoginForm(FlaskForm):
     password = PasswordField(label='Password', validators=[DataRequired()])
     submit = SubmitField(label='Login')
 
+
 class PatientUploadForm(FlaskForm):
     "Form for adding a patient"
     first = StringField(label='First Name', validators=[DataRequired()])
     last = StringField(label='Last Name', validators=[DataRequired()])
     file = FileField(label='Referral Form PDF', validators=[FileRequired()])
     submit = SubmitField(label='Submit')
+
 
 @login_manager.user_loader
 def load_user(id):

@@ -13,15 +13,17 @@ import spacy
 import re
 
 
-
 pdf_path = 'referral_example.pdf'
+
 
 def get_text_from_pdf(path):
     with open(pdf_path, 'rb') as f:
         file = f.read()
     pages = convert_from_path(pdf_path, fmt='jpeg')
-    text = ''.join(map(lambda x: pytesseract.image_to_string(x).replace('-\n', ''), pages))
+    text = ''.join(map(lambda x: pytesseract
+                       .image_to_string(x).replace('-\n', ''), pages))
     return text
+
 
 text = get_text_from_pdf(pdf_path)
 
