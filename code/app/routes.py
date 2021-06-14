@@ -23,9 +23,8 @@ def zipcode_search():
 
 @app.route('/_get_table', methods=['GET', 'POST'])
 def get_table():
-    zipcode = request.args.get('a', type=int)
-    df = funcs.get_hh_agencies(zipcode)
-    json_df = json.loads(df.to_json(orient="split"))
+    df_rec = request.args.get('df_rec')
+    json_df = json.loads(df_rec.to_json(orient="split"))
     return jsonify(my_table=json_df["data"],
                    columns=[{"title": str(col)} for col in json_df["columns"]])
 
@@ -75,8 +74,8 @@ def discharge():
         file = patient_upload_form.file.data        
         filename = secure_filename(file.filename)
         
-        file.save(os.path.join('code/app/upload_temp', filename))
-        pdf_path = f'code/app/upload_temp/{filename}'
+        file.save(os.path.join('app/upload_temp', filename))
+        path = f'app/upload_temp/{filename}'
     
         patient_info = funcs.extract_patient_info(app.instance_path,
                                                   filename, file)
@@ -87,21 +86,27 @@ def discharge():
         zipcode = patient_upload_form.zipcode.data
         services = patient_upload_form.service.data
         # Change e.g. ['1', '3', '4'] to [True, False, True, True, False, False]
-        bool_services = [False]*6
+        boolservices = [False]*6
         for i in services:
-            bool_services[int(i)-1] = True
+            boolservices[int(i)-1] = True
         
         insurance = patient_info['insurance']
         summary = patient_info['summary']
         
+        
         df = recommender_instance.filter_zipcode(zipcode)
-        recommendations = recommender_instance.recommend(df, bool_services, pdf_path)
+        recommendations, df_rec = recommender_instance.recommend(df, boolservices, path)
+        
         patient = classes.Patient(planner_username=planner_username,
                                   first=first,
                                   last=last,
                                   insurance=insurance,
                                   summary=summary,
-                                  recommendations=recommendations)
+                                  recommendations=recommendations,
+                                  boolservices = boolservices,
+                                  zipcode = zipcode,
+                                  path = path)
+        
         db.session.add(patient)
         db.session.commit()
         return redirect(url_for('discharge'))
@@ -125,6 +130,12 @@ def patient():
     patient = classes.Patient.query.filter_by(id=id).first()
     if(patient.planner_username != current_user.username):
         abort(401)
+        
+    df = recommender_instance.filter_zipcode(patient.zipcode)
+    recommendations, df_rec = recommender_instance.recommend(df, 
+                                                     patient.boolservices, 
+                                                     patient.path)
+    
     scores = recommender_instance.get_metrics(patient.recommendations,
                                               patient.summary)
     score_keys = recommender_instance.score_keys
@@ -134,7 +145,8 @@ def patient():
                            patient=patient,
                            scores=scores,
                            score_keys=score_keys,
-                           score_names=score_names)
+                           score_names=score_names,
+                           data = df_rec.to_html(table_id="example"))
 
 
 @app.route('/logout', methods=['GET', 'POST'])

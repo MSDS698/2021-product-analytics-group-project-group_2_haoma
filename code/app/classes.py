@@ -51,7 +51,12 @@ class Patient(db.Model):
     insurance = db.Column(db.String(100), nullable=False)
     summary = db.Column(db.Text(), nullable=False)
     recommendations = db.Column(db.ARRAY(db.String(100)))
-
+    
+    boolservices = db.Column(db.ARRAY(db.Boolean),nullable = False)
+    zipcode =db.Column(db.Integer, nullable=False)
+    path = db.Column(db.String(100), nullable=False)
+                          
+        
     def get_column_names():
         names = []
         for k in Patient.__table__.columns:

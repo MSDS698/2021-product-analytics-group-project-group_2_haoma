@@ -117,7 +117,15 @@ class Recommend():
         
         X = X.rename(columns=rename_dict)
         return_cols = ['name', 'ppr', 'dtc'] + renamed_cols + ['score']
-        return X, X[return_cols]
+        
+        df_rec = X[return_cols]
+        
+        denominator = 3
+        df_rec[renamed_cols] = round(df_rec[renamed_cols]/denominator,2)
+        df_rec['score'] = round((df_rec.score/df_rec.score.max())*100, 2)
+        df_rec['ppr'] = round(df_rec.ppr/2,2)
+
+        return X, df_rec
 
     def fit(self, X, y=None, **fit_params):
         return self
@@ -167,18 +175,6 @@ class change_ascending_cols():
 
     
     
-    
-    
-def text_process(s):
-    """Text-Preprocessing"""
-    nlp = spacy.load('en_core_web_sm')
-    string = nlp(s)
-    filtered_list = []
-    for token in string:
-        if token.is_stop or len(token) < 3:
-            continue
-        filtered_list.append(token.text.lower())
-    return filtered_list
 
 
 def renamed_qcols(df):

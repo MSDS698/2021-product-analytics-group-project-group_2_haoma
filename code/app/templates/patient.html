@@ -1,32 +1,38 @@
 {% extends "headerbase.html" %}
 {% block content %}
 <html>
+      <head>
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+  </head>
+    
     <body><center>
         <div class="container">
             <div class="header">
                 <h3 class="text-muted">{{patient.first}}'s recommendations</h3>
             </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Agency Name</th>
-                        {% for name in score_names %}
-                            <th scope="col">{{name}}</th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for agency in scores %}
-                        <tr>
-                            <td>{{agency}}</td>
-                            {% for k in score_keys %}
-                                <td>{{scores[agency][k]}}</td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+
+         <div class="container">
+          <div class="header">
+          </div>
+          <div>
+            {{data | safe}}
+          </div>
+
         </div>
+        <script src="https://code.jquery.com/jquery-1.12.4.js" type="text/javascript"></script>
+        <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js" type="text/javascript"></script>
+            
+
+         <script type="text/javascript">
+              $(document).ready(function() {
+                  $('#example').DataTable();
+                });
+    
+            </script>
+
+        </div>
+        </center>
     </body>
 </html>
 {%endblock%}

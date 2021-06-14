@@ -11,6 +11,7 @@ from pdf2image import convert_from_path
 import pytesseract
 import spacy
 import re
+import en_core_web_sm
 
 from app.pipeline import *
 
@@ -80,3 +81,16 @@ def return_text(pdf_path):
     return text
 
 
+    
+   
+ 
+def text_process(s):
+    """Text-Preprocessing"""
+    nlp = en_core_web_sm.load()
+    string = nlp(s)
+    filtered_list = []
+    for token in string:
+        if token.is_stop or len(token) < 3:
+            continue
+        filtered_list.append(token.text.lower())
+    return filtered_list
