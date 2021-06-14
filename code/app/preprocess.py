@@ -11,23 +11,17 @@ from pdf2image import convert_from_path
 import pytesseract
 import spacy
 import re
-from pipeline import *
 
-
-pdf_path = 'referral_example.pdf'
+from app.pipeline import *
 
 
 def get_text_from_pdf(path):
-    with open(pdf_path, 'rb') as f:
+    with open(path, 'rb') as f:
         file = f.read()
-    pages = convert_from_path(pdf_path, fmt='jpeg')
+    pages = convert_from_path(path, fmt='jpeg')
     text = ''.join(map(lambda x: pytesseract
                        .image_to_string(x).replace('-\n', ''), pages))
     return text
-
-def return_flag(zipcode):
-    df_cal = load_df(zipcode)
-    flagged_qtopic = return_flagged(return_text(pdf_path), df_cal)
     
 
 def return_flagged(pdf_path, df_cal):

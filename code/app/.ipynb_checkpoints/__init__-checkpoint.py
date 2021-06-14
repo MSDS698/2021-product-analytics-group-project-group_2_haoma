@@ -7,6 +7,8 @@ from config import Config
 from flask_login import LoginManager
 import boto3
 
+from app.preprocess import *
+
 load_dotenv()
 app = Flask(__name__)
 app.config.from_object(Config)
