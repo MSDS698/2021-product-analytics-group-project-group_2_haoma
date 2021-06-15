@@ -1,0 +1,36 @@
+{% extends "headerbase.html" %}
+{% block content %}
+<html>
+  <body>
+    <center>
+    {% if loggedin %}
+      <div class="container">
+        Already logged in
+      </div>
+    {% else %}
+<!--    <div class="container-fluid">-->
+<!--		<div class="row main-content bg-success text-center">-->
+      <div class="container-fluid">
+        <div class="row main-content bg-success text-center">
+          <h3 class="text-muted">Login</h3>
+        </div>
+
+        <div>
+          <form method="POST">
+              {{form.csrf_token}}
+              {{form.username.label}}
+              {{form.username()}}
+              {{form.password.label}}
+              {{form.password()}}
+              {{form.submit()}}
+          </form>
+        </div>
+        <div>
+            Don't have an account? <a href="/register">Register</a>
+        </div>
+      </div>
+    {% endif %}
+  </body>
+</html>
+
+{%endblock%}

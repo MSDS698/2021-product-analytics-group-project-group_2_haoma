@@ -11,8 +11,17 @@ Welcome to Haoma's documentation!
    :caption: Contents:
    
    tutorial
+<<<<<<< Updated upstream:docs/build/html/_sources/index.rst.txt
    code
 
+=======
+   code_routes
+   code_funcs
+   code_pipeline
+   code_preprocess
+   code_recommender
+   code_classes
+>>>>>>> Stashed changes:docs/_sources/index.rst.txt
 
 
 Indices and tables

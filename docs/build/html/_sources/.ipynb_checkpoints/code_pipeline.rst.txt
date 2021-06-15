@@ -1,0 +1,5 @@
+API Reference: Pipeline 
+=================================
+.. automodule:: app.pipeline
+	:members:
+	:undoc-members:

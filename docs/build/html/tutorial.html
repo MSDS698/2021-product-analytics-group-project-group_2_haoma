@@ -38,8 +38,13 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+<<<<<<< Updated upstream:docs/build/html/tutorial.html
     <link rel="next" title="Auto Generated Code Documentation" href="code.html" />
     <link rel="prev" title="Welcome to Haoma’s documentation!" href="index.html" /> 
+=======
+    <link rel="next" title="API Reference: Pipeline" href="code_pipeline.html" />
+    <link rel="prev" title="API Reference: Routes" href="code_routes.html" /> 
+>>>>>>> Stashed changes:docs/code_funcs.html
 </head>
 
 <body class="wy-body-for-nav">
@@ -86,8 +91,20 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<<<<<<< Updated upstream:docs/build/html/tutorial.html
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial: Running the Application</a></li>
 <li class="toctree-l1"><a class="reference internal" href="code.html">Auto Generated Code Documentation</a></li>
+=======
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_routes.html">API Reference: Routes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference: Funcs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_pipeline.html">API Reference: Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_preprocess.html">API Reference: Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_recommender.html">API Reference: Recommender</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_classes.html">API Reference: Classes</a></li>
+>>>>>>> Stashed changes:docs/code_funcs.html
 </ul>
 
             
@@ -155,9 +172,41 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
+<<<<<<< Updated upstream:docs/build/html/tutorial.html
   <div class="section" id="tutorial-running-the-application">
 <h1>Tutorial: Running the Application<a class="headerlink" href="#tutorial-running-the-application" title="Permalink to this headline">¶</a></h1>
 <p>Run $python app.py on your terminal.</p>
+=======
+  <div class="section" id="module-app.funcs">
+<span id="api-reference-funcs"></span><h1>API Reference: Funcs<a class="headerlink" href="#module-app.funcs" title="Permalink to this headline">¶</a></h1>
+<p>Script containing all necessary functions
+for our application. These are kept
+separate from routes to improve
+readability and help with debugging.</p>
+<dl class="py function">
+<dt id="app.funcs.extract_patient_info">
+<code class="sig-prename descclassname"><span class="pre">app.funcs.</span></code><code class="sig-name descname"><span class="pre">extract_patient_info</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="reference internal" href="_modules/app/funcs.html#extract_patient_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.funcs.extract_patient_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="app.funcs.geocode_address">
+<code class="sig-prename descclassname"><span class="pre">app.funcs.</span></code><code class="sig-name descname"><span class="pre">geocode_address</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="reference internal" href="_modules/app/funcs.html#geocode_address"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.funcs.geocode_address" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dict of lon, lat coordinates for a given address.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="app.funcs.get_hh_agencies">
+<code class="sig-prename descclassname"><span class="pre">app.funcs.</span></code><code class="sig-name descname"><span class="pre">get_hh_agencies</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zipcode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/funcs.html#get_hh_agencies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.funcs.get_hh_agencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a df of Home Health agencies that cover a given zipcode.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="app.funcs.get_hh_agencies_rds">
+<code class="sig-prename descclassname"><span class="pre">app.funcs.</span></code><code class="sig-name descname"><span class="pre">get_hh_agencies_rds</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zipcode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/funcs.html#get_hh_agencies_rds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.funcs.get_hh_agencies_rds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as get_hh_agencies but with the RDS rather than S3.</p>
+</dd></dl>
+
+>>>>>>> Stashed changes:docs/code_funcs.html
 </div>
 
 
@@ -166,8 +215,13 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+<<<<<<< Updated upstream:docs/build/html/tutorial.html
         <a href="code.html" class="btn btn-neutral float-right" title="Auto Generated Code Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Haoma’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+=======
+        <a href="code_pipeline.html" class="btn btn-neutral float-right" title="API Reference: Pipeline" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="code_routes.html" class="btn btn-neutral float-left" title="API Reference: Routes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+>>>>>>> Stashed changes:docs/code_funcs.html
     </div>
 
   <hr/>

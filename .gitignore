@@ -5,4 +5,14 @@
 !.elasticbeanstalk/*.global.yml
 .env
 env
+<<<<<<< Updated upstream
 code/app/__pycache__
+=======
+code/app/__pycache__
+code/__pycache__
+code/app/config.py
+code/app/db/credentials.csv
+*.DS_Store
+.idea/workspace.xml
+.idea/workspace.xml
+>>>>>>> Stashed changes

@@ -20,8 +20,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="05b5c410-5bdc-438a-8d20-6307c467c2d2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/code/app/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/templates/base.html" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/code/app/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/static/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/templates/discharge.html" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/templates/discharge.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/templates/login.html" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

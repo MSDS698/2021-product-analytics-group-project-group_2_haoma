@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>app.preprocess &mdash; Haoma v0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/requirements.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #053b36" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/haoma_logo_only.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code_routes.html">API Reference: Routes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code_funcs.html">API Reference: Funcs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code_pipeline.html">API Reference: Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code_preprocess.html">API Reference: Preprocess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code_recommender.html">API Reference: Recommender</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code_classes.html">API Reference: Classes</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Haoma</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>app.preprocess</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for app.preprocess</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">pdf2image</span> <span class="kn">import</span> <span class="n">convert_from_path</span>
+<span class="kn">import</span> <span class="nn">pytesseract</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">en_core_web_sm</span>
+<span class="kn">from</span> <span class="nn">app.pipeline</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="get_text_from_pdf"><a class="viewcode-back" href="../../code_preprocess.html#app.preprocess.get_text_from_pdf">[docs]</a><span class="k">def</span> <span class="nf">get_text_from_pdf</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">pages</span> <span class="o">=</span> <span class="n">convert_from_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;jpeg&#39;</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pytesseract</span>
+                       <span class="o">.</span><span class="n">image_to_string</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">pages</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">text</span></div>
+
+
+<div class="viewcode-block" id="return_flagged"><a class="viewcode-back" href="../../code_preprocess.html#app.preprocess.return_flagged">[docs]</a><span class="k">def</span> <span class="nf">return_flagged</span><span class="p">(</span><span class="n">pdf_path</span><span class="p">,</span> <span class="n">df_cal</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">return_text</span><span class="p">(</span><span class="n">pdf_path</span><span class="p">)</span>
+    <span class="n">word_list</span> <span class="o">=</span> <span class="n">text_process</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">df_cal</span> <span class="o">=</span> <span class="n">renamed_qcols</span><span class="p">(</span><span class="n">df_cal</span><span class="p">)</span>
+
+    <span class="c1"># Create keyword lists</span>
+    <span class="n">q3_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;falling&quot;</span><span class="p">,</span> <span class="s2">&quot;fall&quot;</span><span class="p">,</span> <span class="s2">&quot;fell&quot;</span><span class="p">,</span> <span class="s2">&quot;tripped&quot;</span><span class="p">,</span> <span class="s2">&quot;trip&quot;</span><span class="p">,</span> <span class="s2">&quot;tumble&quot;</span><span class="p">]</span>
+    <span class="n">q4_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;depression&quot;</span><span class="p">,</span> <span class="s2">&quot;mental&quot;</span><span class="p">,</span> <span class="s2">&quot;bipolar&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;sad&quot;</span><span class="p">,</span> <span class="s2">&quot;upset&quot;</span><span class="p">,</span> <span class="s2">&quot;trauma&quot;</span><span class="p">,</span> <span class="s2">&quot;traumatic&quot;</span><span class="p">]</span>
+    <span class="n">q5_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;flu&quot;</span><span class="p">]</span>
+    <span class="n">q6_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;pneumonia&quot;</span><span class="p">,</span> <span class="s2">&quot;pneumococcal&quot;</span><span class="p">]</span>
+    <span class="n">q7_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;diabetes&quot;</span><span class="p">,</span> <span class="s2">&quot;foot&quot;</span><span class="p">]</span>
+    <span class="n">q8_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;walk&quot;</span><span class="p">,</span> <span class="s2">&quot;walking&quot;</span><span class="p">,</span> <span class="s2">&quot;moving&quot;</span><span class="p">]</span>
+    <span class="n">q9_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;bed&quot;</span><span class="p">]</span>
+    <span class="n">q10_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;bathing&quot;</span><span class="p">,</span> <span class="s2">&quot;bathe&quot;</span><span class="p">,</span> <span class="s2">&quot;bath&quot;</span><span class="p">]</span>
+    <span class="n">q11_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;breath&quot;</span><span class="p">,</span> <span class="s2">&quot;shortness of breath&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;shortness&quot;</span><span class="p">,</span> <span class="s2">&quot;breathing&quot;</span><span class="p">,</span> <span class="s2">&quot;breathe&quot;</span><span class="p">,</span> <span class="s2">&quot;oxygen&quot;</span><span class="p">]</span>
+    <span class="n">q12_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;wound&quot;</span><span class="p">,</span> <span class="s2">&quot;wounds&quot;</span><span class="p">,</span> <span class="s2">&quot;cut&quot;</span><span class="p">,</span> <span class="s2">&quot;slice&quot;</span><span class="p">,</span> <span class="s2">&quot;lesion&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;gash&quot;</span><span class="p">,</span> <span class="s2">&quot;puncture&quot;</span><span class="p">,</span> <span class="s2">&quot;slash&quot;</span><span class="p">,</span> <span class="s2">&quot;laceration&quot;</span><span class="p">,</span> <span class="s2">&quot;tear&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;rent&quot;</span><span class="p">,</span> <span class="s2">&quot;puncture&quot;</span><span class="p">,</span> <span class="s2">&quot;slash&quot;</span><span class="p">,</span> <span class="s2">&quot;sore&quot;</span><span class="p">,</span> <span class="s2">&quot;graze&quot;</span><span class="p">,</span> <span class="s2">&quot;scratch&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;scrape&quot;</span><span class="p">,</span> <span class="s2">&quot;abrasion&quot;</span><span class="p">,</span> <span class="s2">&quot;bruise&quot;</span><span class="p">,</span> <span class="s2">&quot;contusion&quot;</span><span class="p">,</span> <span class="s2">&quot;trauma&quot;</span><span class="p">]</span>
+    <span class="n">q16_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ulcer&quot;</span><span class="p">,</span> <span class="s2">&quot;pressure&quot;</span><span class="p">,</span> <span class="s2">&quot;skin&quot;</span><span class="p">,</span> <span class="s2">&quot;swelling&quot;</span><span class="p">,</span> <span class="s2">&quot;post-acute&quot;</span><span class="p">]</span>
+
+    <span class="n">q_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">q3_keys</span><span class="p">,</span> <span class="n">q4_keys</span><span class="p">,</span> <span class="n">q5_keys</span><span class="p">,</span> <span class="n">q6_keys</span><span class="p">,</span> <span class="n">q7_keys</span><span class="p">,</span> <span class="n">q8_keys</span><span class="p">,</span>
+              <span class="n">q9_keys</span><span class="p">,</span> <span class="n">q10_keys</span><span class="p">,</span> <span class="n">q11_keys</span><span class="p">,</span> <span class="n">q12_keys</span><span class="p">,</span> <span class="n">q16_keys</span><span class="p">]</span>
+
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;Q</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">16</span><span class="p">]]</span>
+    <span class="n">flags</span> <span class="o">=</span> <span class="p">[</span><span class="nb">any</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">word_list</span><span class="p">)))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">q_keys</span><span class="p">]</span>
+    <span class="n">flagged_qtopic</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">flags</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">flagged_qtopic</span></div>
+
+
+<div class="viewcode-block" id="return_text"><a class="viewcode-back" href="../../code_preprocess.html#app.preprocess.return_text">[docs]</a><span class="k">def</span> <span class="nf">return_text</span><span class="p">(</span><span class="n">pdf_path</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">get_text_from_pdf</span><span class="p">(</span><span class="n">pdf_path</span><span class="p">)</span>
+
+    <span class="c1"># Initalize ordinal translations</span>
+    <span class="n">translation_ws</span> <span class="o">=</span> <span class="p">{</span><span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">):</span> <span class="s1">&#39; &#39;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">whitespace</span><span class="p">}</span>
+    <span class="n">translation_punc</span> <span class="o">=</span> <span class="p">{</span><span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">):</span> <span class="s1">&#39;&#39;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">}</span>
+
+    <span class="c1"># Translate/ clean text</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">translation_ws</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">translation_punc</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
+    <span class="c1"># Remove other Digits</span>
+    <span class="n">translation_dig</span> <span class="o">=</span> <span class="p">{</span><span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">):</span> <span class="s1">&#39;&#39;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">}</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">translation_dig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span></div>
+
+
+<div class="viewcode-block" id="text_process"><a class="viewcode-back" href="../../code_preprocess.html#app.preprocess.text_process">[docs]</a><span class="k">def</span> <span class="nf">text_process</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Text-Preprocessing&quot;&quot;&quot;</span>
+    <span class="n">nlp</span> <span class="o">=</span> <span class="n">en_core_web_sm</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">filtered_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">string</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">is_stop</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">token</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">filtered_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">filtered_list</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Haoma Developers.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
