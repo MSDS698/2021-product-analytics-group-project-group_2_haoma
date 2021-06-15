@@ -73,17 +73,10 @@ def discharge():
     if patient_upload_form.validate_on_submit():
         file = patient_upload_form.file.data
         filename = secure_filename(file.filename)
-<<<<<<< HEAD
         
-        file.save(os.path.join('app/upload_temp', filename))
-        path = f'app/upload_temp/{filename}'
-    
-=======
-
         file.save(os.path.join('code/app/upload_temp', filename))
-        pdf_path = f'code/app/upload_temp/{filename}'
-
->>>>>>> 9c69a220060fa7c3da524ddbb55921007d3bf500
+        path = f'code/app/upload_temp/{filename}'
+    
         patient_info = funcs.extract_patient_info(app.instance_path,
                                                   filename, file)
 
@@ -92,34 +85,21 @@ def discharge():
         last = patient_upload_form.last.data
         zipcode = patient_upload_form.zipcode.data
         services = patient_upload_form.service.data
-<<<<<<< HEAD
-        # Change e.g. ['1', '3', '4'] to [True, False, True, True, False, False]
+
+        # Change e.g. ['1', '3', '4'] to
+        # [True, False, True, True, False, False]
         boolservices = [False]*6
         for i in services:
             boolservices[int(i)-1] = True
-        
-        insurance = patient_info['insurance']
-        summary = patient_info['summary']
-        
-        
-        df = recommender_instance.filter_zipcode(zipcode)
-        recommendations, df_rec = recommender_instance.recommend(df, boolservices, path)
-        
-=======
-        # Change e.g. ['1', '3', '4'] to
-        # [True, False, True, True, False, False]
-        bool_services = [False]*6
-        for i in services:
-            bool_services[int(i)-1] = True
 
         insurance = patient_info['insurance']
         summary = patient_info['summary']
 
         df = recommender_instance.filter_zipcode(zipcode)
-        recommendations = recommender_instance.recommend(df,
-                                                         bool_services,
-                                                         pdf_path)
->>>>>>> 9c69a220060fa7c3da524ddbb55921007d3bf500
+        recommendations, df_rec = recommender_instance.recommend(df,
+                                                         boolservices,
+                                                         path)
+        
         patient = classes.Patient(planner_username=planner_username,
                                   first=first,
                                   last=last,

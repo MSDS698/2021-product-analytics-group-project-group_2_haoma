@@ -124,6 +124,8 @@ class Recommend():
         df_rec[renamed_cols] = round(df_rec[renamed_cols]/denominator,2)
         df_rec['score'] = round((df_rec.score/df_rec.score.max())*100, 2)
         df_rec['ppr'] = round(df_rec.ppr/2,2)
+        df_rec.reset_index(drop=True, inplace=True)
+        df_rec.index += 1
 
         return X, df_rec
 

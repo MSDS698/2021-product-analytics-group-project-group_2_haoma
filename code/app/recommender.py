@@ -20,7 +20,7 @@ class Recommender():
         # Hyperparameters
         self.tier_weights = {'star': 0, 'flagged': 2,
                              'ppr': 2, 'dtc': 1}
-        self.num_agencies = 10
+        self.num_agencies = 50
 
     def filter_zipcode(self, zipcode):
         cms_nums = self.df_zip[self.df_zip[' ZIP Code']
@@ -44,7 +44,7 @@ class Recommender():
                                                       flagged_qtopic,
                                                       self.num_agencies))])
         df, df_rec = pipe_prep.fit_transform(df_filter.copy())
-        return df['name'].tolist()
+        return df['name'].tolist(), df_rec
 
     def get_metrics(self, recommendations, summary):
         ...
