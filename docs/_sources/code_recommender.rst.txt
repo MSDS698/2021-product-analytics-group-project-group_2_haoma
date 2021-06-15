@@ -1,4 +1,4 @@
-API Reference: Routes 
+API Reference: Recommender 
 =================================
 .. automodule:: app.recommender
 	:members:

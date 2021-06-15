@@ -1,4 +1,4 @@
-API Reference: Routes 
+API Reference: Pipeline 
 =================================
 .. automodule:: app.pipeline
 	:members:
