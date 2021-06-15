@@ -5,7 +5,7 @@ from app import app, funcs, classes, db, recommender_instance
 from flask import render_template, url_for, jsonify, request, redirect, abort
 import os
 import json
-
+import pandas as pd
 
 @app.route('/')
 @app.route('/index')
@@ -112,6 +112,7 @@ def discharge():
 
         db.session.add(patient)
         db.session.commit()
+        df_rec.to_pickle(f'code/app/upload_temp/recs/{patient.id}')
         return redirect(url_for('discharge'))
 
     patients = classes.Patient.query. \
@@ -135,9 +136,12 @@ def patient():
         abort(401)
 
     df = recommender_instance.filter_zipcode(patient.zipcode)
-    _, df_rec = recommender_instance.recommend(df,
-                                               patient.boolservices,
-                                               patient.path)
+    if(os.path.exists(f'code/app/upload_temp/recs/{patient.id}')):
+        df_rec = pd.read_pickle(f'code/app/upload_temp/recs/{patient.id}')
+    else:
+        _, df_rec = recommender_instance.recommend(df,
+                                                patient.boolservices,
+                                                patient.path)
 
     scores = recommender_instance.get_metrics(patient.recommendations,
                                               patient.summary)
