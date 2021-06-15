@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from pdf2image import convert_from_path
 import pytesseract
-import spacy
 import re
 import en_core_web_sm
 from app.pipeline import *
