@@ -73,10 +73,10 @@ def discharge():
     if patient_upload_form.validate_on_submit():
         file = patient_upload_form.file.data
         filename = secure_filename(file.filename)
-        
+
         file.save(os.path.join('code/app/upload_temp', filename))
         path = f'code/app/upload_temp/{filename}'
-    
+
         patient_info = funcs.extract_patient_info(app.instance_path,
                                                   filename, file)
 
@@ -97,19 +97,19 @@ def discharge():
 
         df = recommender_instance.filter_zipcode(zipcode)
         recommendations, df_rec = recommender_instance.recommend(df,
-                                                         boolservices,
-                                                         path)
-        
+                                                                 boolservices,
+                                                                 path)
+
         patient = classes.Patient(planner_username=planner_username,
                                   first=first,
                                   last=last,
                                   insurance=insurance,
                                   summary=summary,
                                   recommendations=recommendations,
-                                  boolservices = boolservices,
-                                  zipcode = zipcode,
-                                  path = path)
-        
+                                  boolservices=boolservices,
+                                  zipcode=zipcode,
+                                  path=path)
+
         db.session.add(patient)
         db.session.commit()
         return redirect(url_for('discharge'))
@@ -133,12 +133,12 @@ def patient():
     patient = classes.Patient.query.filter_by(id=id).first()
     if(patient.planner_username != current_user.username):
         abort(401)
-        
+
     df = recommender_instance.filter_zipcode(patient.zipcode)
-    recommendations, df_rec = recommender_instance.recommend(df, 
-                                                     patient.boolservices, 
-                                                     patient.path)
-    
+    _, df_rec = recommender_instance.recommend(df,
+                                               patient.boolservices,
+                                               patient.path)
+
     scores = recommender_instance.get_metrics(patient.recommendations,
                                               patient.summary)
     score_keys = recommender_instance.score_keys
@@ -149,7 +149,7 @@ def patient():
                            scores=scores,
                            score_keys=score_keys,
                            score_names=score_names,
-                           data = df_rec.to_html(table_id="example"))
+                           data=df_rec.to_html(table_id="example"))
 
 
 @app.route('/logout', methods=['GET', 'POST'])
