@@ -8,3 +8,7 @@ make html
 cd build
 cp -r html docs
 mv docs ../../
+cd ../../docs
+touch .nojekyll
+cd ../
+git add docs
