@@ -1,4 +1,3 @@
-anaconda-client==1.7.2
 awsebcli==3.20.0
 boto3==1.17.86
 brotlipy==0.7.0
