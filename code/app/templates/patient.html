@@ -15,9 +15,26 @@
          <div class="container">
           <div class="header">
           </div>
-          <div>
-            {{data | safe}}
-          </div>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                {% for col_name in columns %}
+                    <th scope="col">{{col_name}}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in data %}
+                {% if row[-1] == 'A' %}
+                <tr>
+                    {% for cell in row[:-1] %}
+                        <td>{{cell}}</td>
+                    {% endfor %}
+                </tr>
+                {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
 
         </div>
         <script src="https://code.jquery.com/jquery-1.12.4.js" type="text/javascript"></script>

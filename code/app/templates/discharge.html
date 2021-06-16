@@ -7,7 +7,7 @@
             <div class="header">
                 <h3 class="text-muted">Patients for {{username}}</h3>
             </div>
-            <table class="table">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         {% for col_name in table_names %}
@@ -17,7 +17,7 @@
                 </thead>
                 <tbody>
                     {% for patient in patients %}
-                        <tr data-bs-target="#patientViewModal" data-bs-toggle="modal" onclick='(function(){
+                        <tr onclick='(function(){
                             window.location.href = "/patient?id={{patient.id}}";
                             return false;
                         })();return false;'>

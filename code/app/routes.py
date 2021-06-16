@@ -108,7 +108,8 @@ def discharge():
                                   recommendations=recommendations,
                                   boolservices=boolservices,
                                   zipcode=zipcode,
-                                  path=path)
+                                  path=path,    
+                                  rec_status=["A"]*len(recommendations))
 
         db.session.add(patient)
         db.session.commit()
@@ -117,13 +118,13 @@ def discharge():
 
     patients = classes.Patient.query. \
         filter_by(planner_username=current_user.username).all()
+    table_keys, table_names = classes.Patient.get_display_columns()
     return render_template('discharge.html',
                            loggedin=current_user.is_authenticated,
                            username=current_user.username,
                            patients=patients,
-                           table_keys=[c.name for c in
-                                       classes.Patient.__table__.columns],
-                           table_names=classes.Patient.get_column_names(),
+                           table_keys=table_keys,
+                           table_names=table_names,
                            patient_upload_form=patient_upload_form)
 
 
@@ -147,13 +148,15 @@ def patient():
                                               patient.summary)
     score_keys = recommender_instance.score_keys
     score_names = recommender_instance.get_column_names()
+    df_rec['rec_status'] = patient.rec_status
     return render_template('patient.html',
                            loggedin=current_user.is_authenticated,
                            patient=patient,
                            scores=scores,
                            score_keys=score_keys,
                            score_names=score_names,
-                           data=df_rec.to_html(table_id="example"))
+                           data=df_rec.values,
+                           columns=df_rec.columns[:-1])
 
 
 @app.route('/logout', methods=['GET', 'POST'])
