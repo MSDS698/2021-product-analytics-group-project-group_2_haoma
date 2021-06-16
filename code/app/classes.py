@@ -44,6 +44,7 @@ class Patient(db.Model):
     "Class for the patients table"
     __tablename__ = "patient"
     __table_args__ = {"schema": "public"}
+    display_columns = ["id", "first", "last", "referral_date", "insurance"]
     id = db.Column(db.Integer, primary_key=True)
     planner_username = db.Column(db.String(100), nullable=False)
     first = db.Column(db.String(100), nullable=False)
@@ -52,9 +53,10 @@ class Patient(db.Model):
     insurance = db.Column(db.String(100), nullable=False)
     summary = db.Column(db.Text(), nullable=False)
     recommendations = db.Column(db.ARRAY(db.String(100)))
+    rec_status = db.Column(db.ARRAY(db.String(1))) # "A" = available, "R" = removed, "C" = HHA confirmed, "W" = waiting for HHA confirmd
     
     boolservices = db.Column(db.ARRAY(db.Boolean),nullable = False)
-    zipcode =db.Column(db.Integer, nullable=False)
+    zipcode = db.Column(db.Integer, nullable=False)
     path = db.Column(db.String(100), nullable=False)
                           
         
@@ -63,6 +65,19 @@ class Patient(db.Model):
         for k in Patient.__table__.columns:
             names += [" ".join(k.name.split("_")).title()]
         return names
+
+    def get_display_columns():
+        names = []
+        for k in Patient.display_columns:
+            names += [" ".join(k.split("_")).title()]
+        return Patient.display_columns, names
+
+    def update_rec_status(self, idx, status):
+        rec_status = self.rec_status.copy()
+        rec_status[idx] = status
+        self.rec_status = rec_status
+        db.session.commit()
+
 
 
 class StringForm(FlaskForm):
@@ -110,7 +125,7 @@ class PatientUploadForm(FlaskForm):
                                           ('6', 'CHHA')])
     file = FileField(label='Referral Form PDF', validators=[FileRequired()])
     submit = SubmitField(label='Submit')
-
+    
 
 @login_manager.user_loader
 def load_user(id):

@@ -1,38 +1,193 @@
 {% extends "headerbase.html" %}
 {% block content %}
 <html>
-      <head>
-    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
-  </head>
-    
-    <body><center>
-        <div class="container">
-            <div class="header">
-                <h3 class="text-muted">{{patient.first}}'s recommendations</h3>
-            </div>
 
-         <div class="container">
-          <div class="header">
+<head>
+  <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
+  <script type="text/javascript">
+    let patient_id = {{ patient.id }};
+    function removeRec(idx) {
+      $.post("{{url_for('change_rec_status')}}", { idx: idx, status: "R", patient_id: patient_id }, function (response) {
+        location.reload();
+      })
+    }
+    function requestRec(idx) {
+      $.post("{{url_for('request_rec')}}", { idx: idx, patient_id: patient_id }, function (response) {
+        location.reload();
+      })
+    }
+  </script>
+</head>
+
+<body>
+  <center>
+    <div class="container">
+      <div class="header"><br>
+        <h3 class="text-muted">{{patient.first}}'s recommendations</h3>
+      </div>
+      <ul class="nav nav-tabs" id="status" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="available-tab" data-bs-toggle="tab" data-bs-target="#available"
+            type="button" role="tab" aria-controls="available" aria-selected="true">Available</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="requested-tab" data-bs-toggle="tab" data-bs-target="#requested" type="button"
+            role="tab" aria-controls="requested" aria-selected="false">Requested</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="confirmed-tab" data-bs-toggle="tab" data-bs-target="#confirmed" type="button"
+            role="tab" aria-controls="confirmed" aria-selected="false">Confirmed</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="denied-tab" data-bs-toggle="tab" data-bs-target="#denied" type="button"
+            role="tab" aria-controls="denied" aria-selected="false">Denied</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="removed-tab" data-bs-toggle="tab" data-bs-target="#removed" type="button"
+            role="tab" aria-controls="removed" aria-selected="false">Removed</button>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="tabContent">
+        <!-- Available Pane -->
+        <div class="tab-pane active" id="available" role="tabpanel" aria-labelledby="available-tab">
+          <div class="container">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  {% for col_name in columns %}
+                  <th scope="col">{{col_name}}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in data_available %}
+                <tr>
+                  {% for cell in row %}
+                  <td>{{cell}}</td>
+                  {% endfor %}
+                  <td><button type="button" class="btn btn-warning" onclick="removeRec('{{row[0]-1}}');">
+                    <i class="bi bi-trash"></i>
+                  </button></td>
+                  <td><button type="button" class="btn btn-success" onclick="requestRec('{{row[0]-1}}');">
+                    Request
+                  </button></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
-          <div>
-            {{data | safe}}
+        </div>
+        <!-- Requested Pane -->
+        <div class="tab-pane" id="requested" role="tabpanel" aria-labelledby="requested-tab">
+          <div class="container">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  {% for col_name in columns %}
+                  <th scope="col">{{col_name}}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in data_requested %}
+                <tr>
+                  {% for cell in row %}
+                  <td>{{cell}}</td>
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
-
         </div>
-        <script src="https://code.jquery.com/jquery-1.12.4.js" type="text/javascript"></script>
-        <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js" type="text/javascript"></script>
-            
-
-         <script type="text/javascript">
-              $(document).ready(function() {
-                  $('#example').DataTable();
-                });
-    
-            </script>
-
+        <!-- Confirmed Pane -->
+        <div class="tab-pane" id="confirmed" role="tabpanel" aria-labelledby="confirmed-tab">
+          <div class="container">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  {% for col_name in columns %}
+                  <th scope="col">{{col_name}}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in data_confirmed %}
+                <tr>
+                  {% for cell in row %}
+                  <td>{{cell}}</td>
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
-        </center>
-    </body>
+        <!-- Denied Pane -->
+        <div class="tab-pane" id="denied" role="tabpanel" aria-labelledby="denied-tab">
+          <div class="container">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  {% for col_name in columns %}
+                  <th scope="col">{{col_name}}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in data_denied %}
+                <tr>
+                  {% for cell in row %}
+                  <td>{{cell}}</td>
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Removed Pane -->
+        <div class="tab-pane" id="removed" role="tabpanel" aria-labelledby="removed-tab">
+          <div class="container">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  {% for col_name in columns %}
+                  <th scope="col">{{col_name}}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in data_removed %}
+                <tr>
+                  {% for cell in row %}
+                  <td>{{cell}}</td>
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <script src="https://code.jquery.com/jquery-1.12.4.js" type="text/javascript"></script>
+      <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js" type="text/javascript"></script>
+
+
+      <script type="text/javascript">
+        $(document).ready(function () {
+          $('#example').DataTable();
+        });
+
+      </script>
+
+    </div>
+  </center>
+</body>
+
 </html>
 {%endblock%}
