@@ -143,20 +143,49 @@ def patient():
         _, df_rec = recommender_instance.recommend(df,
                                                 patient.boolservices,
                                                 patient.path)
-
-    scores = recommender_instance.get_metrics(patient.recommendations,
-                                              patient.summary)
-    score_keys = recommender_instance.score_keys
-    score_names = recommender_instance.get_column_names()
-    df_rec['rec_status'] = patient.rec_status
+    
+    rec_status = patient.rec_status
+    df_available, df_requested, df_confirmed, df_denied, df_removed = df_rec.loc[[e == "A" for e in rec_status]],\
+                                                                      df_rec.loc[[e == "W" for e in rec_status]],\
+                                                                      df_rec.loc[[e == "C" for e in rec_status]],\
+                                                                      df_rec.loc[[e == "D" for e in rec_status]],\
+                                                                      df_rec.loc[[e == "R" for e in rec_status]]
     return render_template('patient.html',
                            loggedin=current_user.is_authenticated,
                            patient=patient,
-                           scores=scores,
-                           score_keys=score_keys,
-                           score_names=score_names,
-                           data=df_rec.values,
-                           columns=df_rec.columns[:-1])
+                           columns=df_rec.columns,
+                           data_available=df_available.values,
+                           data_requested=df_requested.values,
+                           data_confirmed=df_confirmed.values,
+                           data_denied=df_denied.values,
+                           data_removed=df_removed.values)
+
+
+@app.route('/_change_rec_status', methods=['POST'])
+@login_required
+def change_rec_status():
+    if request.method == "POST":
+        patient_id = request.form['patient_id']
+        patient = classes.Patient.query.filter_by(id=patient_id).first()
+        if(patient.planner_username != current_user.username):
+            abort(401)
+        idx = int(request.form['idx'])
+        status = request.form['status']
+        patient.update_rec_status(idx, status)
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+
+
+@app.route('/_request_rec', methods=['POST'])
+@login_required
+def request_rec():
+    if request.method == "POST":
+        patient_id = request.form['patient_id']
+        patient = classes.Patient.query.filter_by(id=patient_id).first()
+        if(patient.planner_username != current_user.username):
+            abort(401)
+        idx = int(request.form['idx'])
+        patient.update_rec_status(idx, "W")
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
 
 @app.route('/logout', methods=['GET', 'POST'])

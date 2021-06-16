@@ -56,7 +56,7 @@ class Patient(db.Model):
     rec_status = db.Column(db.ARRAY(db.String(1))) # "A" = available, "R" = removed, "C" = HHA confirmed, "W" = waiting for HHA confirmd
     
     boolservices = db.Column(db.ARRAY(db.Boolean),nullable = False)
-    zipcode =db.Column(db.Integer, nullable=False)
+    zipcode = db.Column(db.Integer, nullable=False)
     path = db.Column(db.String(100), nullable=False)
                           
         
@@ -71,6 +71,13 @@ class Patient(db.Model):
         for k in Patient.display_columns:
             names += [" ".join(k.split("_")).title()]
         return Patient.display_columns, names
+
+    def update_rec_status(self, idx, status):
+        rec_status = self.rec_status.copy()
+        rec_status[idx] = status
+        self.rec_status = rec_status
+        db.session.commit()
+
 
 
 class StringForm(FlaskForm):
@@ -118,7 +125,7 @@ class PatientUploadForm(FlaskForm):
                                           ('6', 'CHHA')])
     file = FileField(label='Referral Form PDF', validators=[FileRequired()])
     submit = SubmitField(label='Submit')
-
+    
 
 @login_manager.user_loader
 def load_user(id):
