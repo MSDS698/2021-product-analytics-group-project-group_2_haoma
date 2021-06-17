@@ -129,7 +129,7 @@ class Recommend():
         X = X.rename(columns=rename_dict)
         return_cols = ['name', 'ppr', 'dtc'] + renamed_cols + ['score']
 
-        df_rec = X[return_cols]
+        df_rec = X[return_cols].copy()
 
         denominator = 3
         df_rec[renamed_cols] = round(df_rec[renamed_cols]/denominator, 2)
