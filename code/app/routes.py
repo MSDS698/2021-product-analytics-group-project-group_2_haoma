@@ -23,8 +23,9 @@ def zipcode_search():
 
 @app.route('/_get_table', methods=['GET', 'POST'])
 def get_table():
-    df_rec = request.args.get('df_rec')
-    json_df = json.loads(df_rec.to_json(orient="split"))
+    zipcode = request.args.get('a', type=int)
+    df = funcs.get_hh_agencies(zipcode)
+    json_df = json.loads(df.to_json(orient="split"))
     return jsonify(my_table=json_df["data"],
                    columns=[{"title": str(col)} for col in json_df["columns"]])
 
