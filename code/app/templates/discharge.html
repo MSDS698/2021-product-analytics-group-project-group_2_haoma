@@ -1,6 +1,17 @@
 {% extends "headerbase.html" %}
 {% block content %}
 <html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
+        <script type="text/javascript">
+            let patientId = null;
+            function removePatient() {
+              $.post("{{url_for('remove_patient')}}", { id: patientId }, function (response) {
+                location.reload();
+              })
+            }
+        </script>
+    </head>
     <body>
         <center>
         <div class="container">
@@ -17,13 +28,17 @@
                 </thead>
                 <tbody>
                     {% for patient in patients %}
-                        <tr onclick='(function(){
-                            window.location.href = "/patient?id={{patient.id}}";
-                            return false;
-                        })();return false;'>
+                        <tr>
                             {% for k in table_keys %}
                                 <td>{{patient[k]}}</td>
                             {% endfor %}
+                            <td width="5%"><button type="button" class="btn btn-success" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
+                                View
+                            </button></td>
+                            <td width="5%"><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#deletePatientModal" 
+                                onclick="patientId={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patientId;return false;">
+                                <i class="bi bi-trash"></i>
+                            </button></td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -33,6 +48,20 @@
             Add Patient
         </button>
 
+        <!-- Delete patient modal -->
+        <div class="modal fade" id="deletePatientModal" tabindex="-1" aria-labelledby="deletePatientModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deletePatientModalLabel"></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <button class="btn btn-danger" onclick="removePatient();return false;">Delete</button>
+              </div>
+            </div>
+        </div>
+
+        <!-- Upload patient modal -->
         <div class="modal fade" id="patientUploadModal" tabindex="-1" aria-labelledby="patientUploadModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">

@@ -15,11 +15,13 @@
 
       <div>
         <form method="POST">
-            {{form.csrf_token}}
+            {{form.csrf_token}}<br>
+            {{form.account_type.label}}
+            {{form.account_type()}}<br><br>
             {{form.username.label}}
-            {{form.username()}}
+            {{form.username()}}<br><br>
             {{form.password.label}}
-            {{form.password()}}
+            {{form.password()}}<br><br>
             {{form.submit()}}
         </form>
         <div>

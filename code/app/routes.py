@@ -34,12 +34,13 @@ def register():
     form = classes.RegisterForm()
     user_exists = False
     if form.validate_on_submit():
+        account_type = form.account_type.data
         username = form.username.data
         password = form.password.data
         matching_user_count = classes.User.query.filter_by(username=username) \
                                                 .count()
         if(matching_user_count == 0):
-            user = classes.User(username, password)
+            user = classes.User(username, password, account_type)
             db.session.add(user)
             db.session.commit()
             login_user(user)
@@ -185,6 +186,18 @@ def request_rec():
             abort(401)
         idx = int(request.form['idx'])
         patient.update_rec_status(idx, "W")
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+
+@app.route('/_remove_patient', methods=['POST'])
+@login_required
+def remove_patient():
+    if request.method == "POST":
+        id = request.form['id']
+        patient = classes.Patient.query.filter_by(id=id).first()
+        if(patient.planner_username != current_user.username):
+            abort(401)
+        db.session.delete(patient)
+        db.session.commit()
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
 
 

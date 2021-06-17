@@ -7,7 +7,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 from wtforms import StringField, IntegerField, SubmitField, \
-                    PasswordField, SelectMultipleField, widgets
+                    PasswordField, SelectMultipleField, \
+                    SelectField, widgets
 from wtforms.validators import DataRequired, NumberRange, Length
 
 
@@ -26,12 +27,14 @@ class User(db.Model, UserMixin):
     __tablename__ = "user"
     __table_args__ = {"schema": "public"}
     id = db.Column(db.Integer, primary_key=True)
+    account_type = db.Column(db.String(100), nullable=False)
     username = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(100), nullable=False)
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, account_type):
         self.username = username
         self.set_password(password)
+        self.account_type = account_type
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -96,6 +99,7 @@ class RegisterForm(FlaskForm):
                            validators=[DataRequired(), Length(min=4)])
     password = PasswordField(label='Password',
                              validators=[DataRequired(), Length(min=8)])
+    account_type = SelectField(label="Register as a ", choices=["discharge planner", "agency"], validators=[DataRequired()])
     submit = SubmitField(label='Register')
 
 

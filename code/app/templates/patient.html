@@ -68,11 +68,11 @@
                   {% for cell in row %}
                   <td>{{cell}}</td>
                   {% endfor %}
-                  <td><button type="button" class="btn btn-warning" onclick="removeRec('{{row[0]-1}}');">
-                    <i class="bi bi-trash"></i>
-                  </button></td>
                   <td><button type="button" class="btn btn-success" onclick="requestRec('{{row[0]-1}}');">
                     Request
+                  </button></td>
+                  <td><button type="button" class="btn btn-warning" onclick="removeRec('{{row[0]-1}}');">
+                    <i class="bi bi-trash"></i>
                   </button></td>
                 </tr>
                 {% endfor %}
