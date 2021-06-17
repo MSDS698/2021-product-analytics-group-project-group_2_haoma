@@ -31,6 +31,7 @@ def get_table():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    "User registration page"
     form = classes.RegisterForm()
     user_exists = False
     agency_invalid = False
@@ -61,6 +62,7 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    "User login page"
     form = classes.LoginForm()
     if form.validate_on_submit():
         username = form.username.data
@@ -80,6 +82,7 @@ def login():
 @app.route('/discharge', methods=['GET', 'POST'])
 @login_required
 def discharge():
+    "Discharge planner dashboard page"
     if(current_user.account_type != "discharge planner"): abort(401)
     patient_upload_form = classes.PatientUploadForm()
     if patient_upload_form.validate_on_submit():
@@ -143,6 +146,7 @@ def discharge():
 @app.route('/agency', methods=['GET', 'POST'])
 @login_required
 def agency():
+    "Agency user's request dashboard"
     if(current_user.account_type != "agency"): abort(401)
     agency_requests = classes.AgencyRequest.query. \
         filter_by(agency_name=current_user.username, acknowledged=False).all()
@@ -164,6 +168,7 @@ def agency():
 @app.route('/patient', methods=['GET', 'POST'])
 @login_required
 def patient():
+    "Discharge planner's patient-recommendations dashboard"
     if(current_user.account_type != "discharge planner"): abort(401)
     id = request.args.get('id', type=int)
     patient = classes.Patient.query.filter_by(id=id).first()
@@ -198,6 +203,7 @@ def patient():
 @app.route('/_change_rec_status', methods=['POST'])
 @login_required
 def change_rec_status():
+    "Endpoint for changing the status of a recommendation"
     if request.method == "POST":
         patient_id = request.form['patient_id']
         patient = classes.Patient.query.filter_by(id=patient_id).first()
@@ -212,6 +218,7 @@ def change_rec_status():
 @app.route('/_request_rec', methods=['POST'])
 @login_required
 def request_rec():
+    "Endpoint for adding a new agency request"
     if request.method == "POST":
         patient_id = request.form['patient_id']
         patient = classes.Patient.query.filter_by(id=patient_id).first()
@@ -228,6 +235,7 @@ def request_rec():
 @app.route('/_remove_patient', methods=['POST'])
 @login_required
 def remove_patient():
+    "Endpoint for deleting a patient, performed by discharge planner"
     if request.method == "POST":
         id = request.form['id']
         patient = classes.Patient.query.filter_by(id=id).first()
@@ -241,6 +249,7 @@ def remove_patient():
 @app.route('/_respond_request', methods=['POST'])
 @login_required
 def respond_request():
+    "Endpoint for responding to recommendation, performed by agency"
     if request.method == "POST":
         request_id = request.form['request_id']
         status = request.form['status']

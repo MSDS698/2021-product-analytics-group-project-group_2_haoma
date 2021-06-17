@@ -23,6 +23,7 @@ class Recommender():
         self.num_agencies = 50
 
     def check_provider_name(self, name):
+        "This is used to check that the agency username being registered is a real agency name"
         return name.upper() in self.df_cal['Provider Name'].values
 
     def filter_zipcode(self, zipcode):
