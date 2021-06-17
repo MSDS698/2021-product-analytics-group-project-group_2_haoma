@@ -22,6 +22,9 @@ class Recommender():
                              'ppr': 2, 'dtc': 1}
         self.num_agencies = 50
 
+    def check_provider_name(self, name):
+        return name.upper() in self.df_cal['Provider Name'].values
+
     def filter_zipcode(self, zipcode):
         cms_nums = self.df_zip[self.df_zip[' ZIP Code']
                                == zipcode]['CMS Certification Number (CCN)']

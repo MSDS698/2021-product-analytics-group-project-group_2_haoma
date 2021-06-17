@@ -26,6 +26,7 @@
         </form>
         <div>
             {{"This username already exists" if user_exists else ""}}
+            {{"There are no agencies with that name" if agency_invalid else ""}}
         </div>
       </div>
     </div>

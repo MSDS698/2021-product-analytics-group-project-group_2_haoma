@@ -56,7 +56,7 @@ class Patient(db.Model):
     insurance = db.Column(db.String(100), nullable=False)
     summary = db.Column(db.Text(), nullable=False)
     recommendations = db.Column(db.ARRAY(db.String(100)))
-    rec_status = db.Column(db.ARRAY(db.String(1))) # "A" = available, "R" = removed, "C" = HHA confirmed, "W" = waiting for HHA confirmd
+    rec_status = db.Column(db.ARRAY(db.String(1))) # "A" = available, "R" = removed, "C" = HHA confirmed, "D" = HHA denied, "W" = waiting for HHA confirmd
     
     boolservices = db.Column(db.ARRAY(db.Boolean),nullable = False)
     zipcode = db.Column(db.Integer, nullable=False)
@@ -81,6 +81,33 @@ class Patient(db.Model):
         self.rec_status = rec_status
         db.session.commit()
 
+
+class AgencyRequest(db.Model):
+    "Class for the agency_request table"
+    __tablename__ = "agency_request"
+    __table_args__ = {"schema": "public"}
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.Integer, nullable=False)
+    planner_username = db.Column(db.String(100), nullable=False)
+    acknowledged = db.Column(db.Boolean(), default=False)
+    agency_name = db.Column(db.String(100), nullable=False)
+                          
+        
+    def get_column_names():
+        names = []
+        for k in AgencyRequest.__table__.columns:
+            names += [" ".join(k.name.split("_")).title()]
+        return names
+
+    def get_display_columns():
+        names = []
+        for k in AgencyRequest.display_columns:
+            names += [" ".join(k.split("_")).title()]
+        return AgencyRequest.display_columns, names
+
+    def acknowledge(self):
+        self.acknowledged = True
+        db.session.commit()
 
 
 class StringForm(FlaskForm):
