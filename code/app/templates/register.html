@@ -1,6 +1,6 @@
 {% extends "headerbase.html" %}
 {% block content %}
-<html> 
+<html>
   <body>
     <center><br><br><br>
     {% if loggedin %}
@@ -25,8 +25,11 @@
             {{form.submit()}}
         </form>
         <div>
-            {{"This username already exists" if user_exists else ""}}
-            {{"There are no agencies with that name" if agency_invalid else ""}}
+            {{"This username already exists" if user_exists else ""}}<br>
+            {{"There are no agencies with that name" if agency_invalid else ""}}<br>
+            {{"Please make sure your username is at least 4 characters long" if username_too_short else ""}}<br>
+            {{"Please make sure your password is at least 8 characters long" if password_too_short else ""}}<br>
+
         </div>
       </div>
     </div>
