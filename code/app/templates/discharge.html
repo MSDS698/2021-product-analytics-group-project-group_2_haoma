@@ -13,7 +13,6 @@
         </script>
     </head>
     <body>
-        <center>
         <div class="container">
             <div class="header">
                 <h3 class="text-muted">Patients for {{username}}</h3>
@@ -44,9 +43,12 @@
                 </tbody>
             </table>
         </div>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#patientUploadModal">
-            Add Patient
-        </button>
+        <center>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#patientUploadModal">
+                Add Patient
+            </button>
+
+        </center>
 
         <!-- Delete patient modal -->
         <div class="modal fade" id="deletePatientModal" tabindex="-1" aria-labelledby="deletePatientModalLabel" aria-hidden="true">
@@ -86,12 +88,12 @@
                                 {{patient_upload_form.zipcode.label}}
                                 {{patient_upload_form.zipcode()}}
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3 no-bullets">
                                 {{patient_upload_form.service.label}}
-                                {{patient_upload_form.service()}}
+                                {{patient_upload_form.service(style="list-style:none")}}
                             </div>
                             <div class="mb-3">
-                                {{patient_upload_form.file.label}}
+                                {{patient_upload_form.file.label}}<br>
                                 {{patient_upload_form.file()}}
                             </div>
 

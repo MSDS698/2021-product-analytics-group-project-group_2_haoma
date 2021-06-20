@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+
+<html>
+  <body>
+    <center>
+    {% if loggedin %}
+      <div class="container">
+        Already logged in
+      </div>
+    {% else %}
+
+
+    <div class="container-fluid">
+        <div class="registration-form">
+
+          <form method="POST">
+              <div class="form-group">
+                  <img src="{{ url_for('static', filename='haoma_logo_only.png') }}" height='250rem'>
+                  <br>
+                  <br>
+                  {% block content %}
+                  {{form.csrf_token}}
+                  <h2>Login</h2>
+                  <br>
+                  {{form.username(class="form-control item", placeholder='Username')}}
+                  {{form.password(class="form-control item", placeholder='Password')}}
+                  {{form.submit(class="btn btn-block create-account")}}
+                  <br>
+                  <br>
+                  Don't have an account? <a href="/register">Register</a>
+                  {%endblock%}
+              </div>
+
+              </div>
+          </form>
+        </div>
+      </div>
+    {% endif %}
+  </body>
+</html>

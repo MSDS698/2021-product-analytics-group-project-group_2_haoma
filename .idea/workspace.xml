@@ -21,11 +21,8 @@
   <component name="ChangeListManager">
     <list default="true" id="05b5c410-5bdc-438a-8d20-6307c467c2d2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/templates/headerbase.html" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/templates/headerbase.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/templates/zipcode.html" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/templates/zipcode.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/static/css/custom.css" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/static/css/custom.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/templates/login.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,6 +119,10 @@
     </state>
     <state x="405" y="196" key="SettingsEditor/0.0.1792.1120@0.0.1792.1120" timestamp="1622867451871" />
     <state x="2371" y="75" key="SettingsEditor/0.25.1792.1037/1792.-173.2560.1415@1792.-173.2560.1415" timestamp="1623030599205" />
+    <state x="697" y="461" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1623914885159">
+      <screen x="0" y="25" width="1792" height="1037" />
+    </state>
+    <state x="697" y="461" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.25.1792.1037@0.25.1792.1037" timestamp="1623914885159" />
     <state x="2737" y="133" width="670" height="676" key="search.everywhere.popup" timestamp="1622920720708">
       <screen x="1792" y="-198" width="2560" height="1440" />
     </state>
