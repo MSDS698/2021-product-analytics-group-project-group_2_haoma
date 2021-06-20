@@ -23,11 +23,11 @@ def zipcode_search():
 
 @app.route('/_get_table', methods=['GET', 'POST'])
 def get_table():
-    df_rec = request.args.get('df_rec')
-    json_df = json.loads(df_rec.to_json(orient="split"))
+    zipcode = request.args.get('a', type=int)
+    df = funcs.get_hh_agencies(zipcode)
+    json_df = json.loads(df.to_json(orient="split"))
     return jsonify(my_table=json_df["data"],
                    columns=[{"title": str(col)} for col in json_df["columns"]])
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -35,6 +35,8 @@ def register():
     form = classes.RegisterForm()
     user_exists = False
     agency_invalid = False
+    password_invalid = False
+    username_invalid = False
     if form.validate_on_submit():
         account_type = form.account_type.data
         username = form.username.data
@@ -54,10 +56,21 @@ def register():
                 return redirect(url_for('discharge'))
             else:
                 return redirect(url_for('agency'))
+    elif request.method == 'POST' and not form.validate():
+        account_type = form.account_type.data
+        username = form.username.data
+        password = form.password.data
+        if len(password) < 8:
+            password_invalid = True
+        if len(username) < 4:
+            username_invalid = True
+
     return render_template('register.html', form=form,
                            loggedin=current_user.is_authenticated,
                            user_exists=user_exists,
-                           agency_invalid=agency_invalid)
+                           agency_invalid=agency_invalid,
+                           username_too_short=username_invalid,
+                           password_too_short=password_invalid)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -123,7 +136,7 @@ def discharge():
                                   recommendations=recommendations,
                                   boolservices=boolservices,
                                   zipcode=zipcode,
-                                  path=path,    
+                                  path=path,
                                   rec_status=["A"]*len(recommendations))
 
         db.session.add(patient)
@@ -182,7 +195,7 @@ def patient():
         _, df_rec = recommender_instance.recommend(df,
                                                 patient.boolservices,
                                                 patient.path)
-    
+
     rec_status = patient.rec_status
     df_available, df_requested, df_confirmed, df_denied, df_removed = df_rec.loc[[e == "A" for e in rec_status]],\
                                                                       df_rec.loc[[e == "W" for e in rec_status]],\
@@ -212,7 +225,7 @@ def change_rec_status():
         idx = int(request.form['idx'])
         status = request.form['status']
         patient.update_rec_status(idx, status)
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
 
 @app.route('/_request_rec', methods=['POST'])
@@ -229,7 +242,7 @@ def request_rec():
         agency_request = classes.AgencyRequest(patient_id=patient_id, planner_username=patient.planner_username, agency_name=patient.recommendations[idx])
         db.session.add(agency_request)
         db.session.commit()
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
 
 @app.route('/_remove_patient', methods=['POST'])
@@ -243,7 +256,7 @@ def remove_patient():
             abort(401)
         db.session.delete(patient)
         db.session.commit()
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
 
 @app.route('/_respond_request', methods=['POST'])
@@ -264,7 +277,7 @@ def respond_request():
                 rec_idx = i
                 break
         patient.update_rec_status(rec_idx, status)
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
 
 @app.route('/logout', methods=['GET', 'POST'])

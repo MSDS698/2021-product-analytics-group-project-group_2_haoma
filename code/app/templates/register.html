@@ -1,0 +1,40 @@
+{% extends "headerbase.html" %}
+{% block content %}
+<html>
+  <body>
+    <center><br><br><br>
+    {% if loggedin %}
+      <div class="container">
+        Already logged in
+      </div>
+    {% else %}
+    <div class="container">
+      <div class="header">
+        <h3 class="text-muted">Registration</h3>
+      </div>
+
+      <div>
+        <form method="POST">
+            {{form.csrf_token}}<br>
+            {{form.account_type.label}}
+            {{form.account_type()}}<br><br>
+            {{form.username.label}}
+            {{form.username()}}<br><br>
+            {{form.password.label}}
+            {{form.password()}}<br><br>
+            {{form.submit()}}
+        </form>
+        <div>
+            {{"This username already exists" if user_exists else ""}}<br>
+            {{"There are no agencies with that name" if agency_invalid else ""}}<br>
+            {{"Please make sure your username is at least 4 characters long" if username_too_short else ""}}<br>
+            {{"Please make sure your password is at least 8 characters long" if password_too_short else ""}}<br>
+
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </body>
+</html>
+
+{%endblock%}
