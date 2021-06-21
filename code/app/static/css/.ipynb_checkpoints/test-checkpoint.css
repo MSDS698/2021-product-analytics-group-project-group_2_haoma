@@ -12,9 +12,12 @@ ul{
 
 
 .card-text{
-    text-align:left;    
+    text-align:left;
+    line-height:3;
 }    
 
 .card-title{
-    text-align:left;    
+    text-align:left; 
+    padding-top: 7px;
+    color: #376b69;
 }    
