@@ -1,0 +1,20 @@
+body {
+  font-family: "Lato";
+  color: #444444;
+}
+
+
+ul{
+    display: inline-block;
+    text-align:left;
+    
+}        
+
+
+.card-text{
+    text-align:left;    
+}    
+
+.card-title{
+    text-align:left;    
+}    

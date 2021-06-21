@@ -97,7 +97,7 @@ class Recommend():
                        'Q12': 'wounds',
                        'Q16': 'skin_integrity'}
 
-    def transform(self, X, **transform_params):
+    def transform(self, X, **transform_params):        
         q_columns = X.columns[7:]
 
         # initialize weights
@@ -120,8 +120,10 @@ class Recommend():
                 X[col] = X[col] * weight[col]
 
         # sort recommendations
-        X['score'] = X[q_columns].sum(axis=1)
-        X = X.sort_values('score', ascending=False).iloc[:self.num_agencies]
+        X['score'] = X[q_columns].sum(axis=1, skipna=True)
+        X = X.sort_values('score', ascending=False)
+        X_copy = X.copy()
+        X = X.iloc[:self.num_agencies]
 
         renamed_cols = [self.Q_dict[col] for col in filtered_qs]
         rename_dict = dict(zip(filtered_qs, renamed_cols))
@@ -137,8 +139,17 @@ class Recommend():
         df_rec['ppr'] = round(df_rec.ppr/2, 2)
         df_rec.reset_index(drop=True, inplace=True)
         df_rec.index += 1
+        X_copy['score'] = round((X_copy.score/X_copy.score.max())*100, 2)
+        
+        X_copy.columns = ['ccn', 'name', 'address', 'city', ' zip', 'phone',
+              'date', 'timely_manner', 'taught_meds', 'checked_falling',
+              'checked_depression', 'checked_flu', 'checked_pneumonia',
+              'diabetes_foot', 'better_moving', 'better_getting_in_bed',
+              'better_bathing','improve_breathing', 'improve_wounds', 
+              'better_taking_meds', 'readmitted', 'ER', 'changed_skin',
+              'timely_address_meds', 'discharge_community', 'preventable_readmission', 'score']
 
-        return X, df_rec
+        return X_copy, df_rec
 
     def fit(self, X, y=None, **fit_params):
         return self

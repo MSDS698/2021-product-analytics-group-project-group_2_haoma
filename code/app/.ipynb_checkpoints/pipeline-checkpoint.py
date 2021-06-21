@@ -12,19 +12,25 @@ class Drop():
 
     def transform(self, X):
         drop_cols = ['State', 'DTC Numerator', 'Type of Ownership',
+                     'Quality of patient care star rating',
                      'DTC Denominator', 'DTC Risk-Standardized Rate',
+                     'DTC Performance Categorization',
                      'DTC Risk-Standardized Rate (Lower Limit)',
                      'DTC Risk-Standardized Rate (Upper Limit)',
+                     'PPR Performance Categorization',
                      'PPR Numerator', 'PPR Denominator',
                      'PPR Risk-Standardized Rate',
                      'PPR Risk-Standardized Rate (Lower Limit)',
                      'PPR Risk-Standardized Rate (Upper Limit)',
-                     'How much Medicare spends on an episode of care at ' +
-                     'this agency, compared to Medicare spending across ' +
-                     'all agencies nationally',
-                     'No. of episodes to calc how much Medicare spends ' +
-                     'per episode of care at agency, compared to spending ' +
-                     'at all agencies (national)']
+                     'How much Medicare spends on an episode ' +
+                     'of care at this agency, ' +
+                     'compared to Medicare spending across all ' +
+                     'agencies nationally',
+                     'No. of episodes to calc how much Medicare ' +
+                     'spends per episode of ' +
+                     'care at agency, compared to spending at all ' +
+                     'agencies (national)']
+
         X = X.drop(columns=drop_cols)
         return X
 
@@ -38,13 +44,11 @@ class Rename():
         ...
 
     def transform(self, X):
-        X.columns = ['ccn', 'name', 'address', 'city', ' zip',
-                     'phone', 'nursing', 'pt', 'ot', 'speech',
-                     'social', 'aide', 'date', 'star', 'Q1',
-                     'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8',
-                     'Q9', 'Q10', 'Q11', 'Q12', 'Q13', 'Q14',
-                     'Q15', 'Q16', 'Q17', 'dtc', 'dtc_cat', 'ppr',
-                     'ppr_cat']
+        X.columns = ['ccn', 'name', 'address', 'city', ' zip', 'phone',
+                     'nursing', 'pt', 'ot', 'speech', 'social', 'aide',
+                     'date', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7',
+                     'Q8', 'Q9', 'Q10', 'Q11', 'Q12', 'Q13', 'Q14', 'Q15',
+                     'Q16', 'Q17', 'dtc', 'ppr']
         return X
 
     def fit(self, X, y=None, **fit_params):
@@ -73,29 +77,126 @@ class FilterByService():
 class Recommend():
     """Input: list of boolean values pertaining to offered services
        Output: filtered df of agencies based on offered services"""
-    def __init__(self, Q_flagged, num_agencies):
-        self.Q_flagged = Q_flagged
+    def __init__(self,
+                 tier_weights,
+                 flagged_qtopic,
+                 num_agencies):
+        self.tier_weights = tier_weights
+        self.flagged_qtopic = flagged_qtopic
         self.num_agencies = num_agencies
+        self.star_cols = ['Q1', 'Q13', 'Q8', 'Q9', 'Q10', 'Q11', 'Q15']
+        self.Q_dict = {'Q3': 'falling',
+                       'Q4': 'depression',
+                       'Q5': 'flu',
+                       'Q6': 'pneumonia',
+                       'Q7': 'diabetes',
+                       'Q8': 'moving',
+                       'Q9': 'getting_in_bed',
+                       'Q10': 'bathing',
+                       'Q11': 'breathing',
+                       'Q12': 'wounds',
+                       'Q16': 'skin_integrity'}
 
-    def transform(self, X, **transform_params):
-        sort_cols = self.Q_flagged + ['star']
-        X = X.sort_values(by=sort_cols, ascending=False)
-        return X.iloc[:self.num_agencies]
+    def transform(self, X, **transform_params):        
+        q_columns = X.columns[7:]
+
+        # initialize weights
+        weight = {key: 1 for key in q_columns}
+        filtered_qs = [key for key,
+                       value in self.flagged_qtopic.items() if value]
+
+        for col in self.star_cols:
+            weight[col] += self.tier_weights['star']
+
+        for col in filtered_qs:
+            weight[col] += self.tier_weights['flagged']
+
+        weight['ppr'] = self.tier_weights['ppr']
+        weight['dtc'] = self.tier_weights['dtc']
+
+        # apply weights
+        for col in X:
+            if col in weight.keys():
+                X[col] = X[col] * weight[col]
+
+        # sort recommendations
+        X['score'] = X[q_columns].sum(axis=1, skipna=True)
+        X = X.sort_values('score', ascending=False)
+        X_copy = X.copy()
+        X = X.iloc[:self.num_agencies]
+
+        renamed_cols = [self.Q_dict[col] for col in filtered_qs]
+        rename_dict = dict(zip(filtered_qs, renamed_cols))
+
+        X = X.rename(columns=rename_dict)
+        return_cols = ['name', 'ppr', 'dtc'] + renamed_cols + ['score']
+
+        df_rec = X[return_cols].copy()
+
+        denominator = 3
+        df_rec[renamed_cols] = round(df_rec[renamed_cols]/denominator, 2)
+        df_rec['score'] = round((df_rec.score/df_rec.score.max())*100, 2)
+        df_rec['ppr'] = round(df_rec.ppr/2, 2)
+        df_rec.reset_index(drop=True, inplace=True)
+        df_rec.index += 1
+        X_copy['score'] = round((X_copy.score/X_copy.score.max())*100, 2)
+        
+        X_copy.columns = ['ccn', 'name', 'address', 'city', ' zip', 'phone',
+              'date', 'timely_manner', 'taught_meds', 'checked_falling',
+              'checked_depression', 'checked_flu', 'checked_pneumonia',
+              'diabetes_foot', 'better_moving', 'better_getting_in_bed',
+              'better_bathing','improve_breathing', 'improve_wounds', 
+              'better_taking_meds', 'readmitted', 'ER', 'changed_skin',
+              'timely_address_meds', 'discharge_community', 'preventable_readmission', 'score']
+
+        return X_copy, df_rec
 
     def fit(self, X, y=None, **fit_params):
         return self
 
 
-def text_process(s):
-    """Text-Preprocessing"""
-    nlp = spacy.load('en_core_web_sm')
-    string = nlp(s)
-    filtered_list = []
-    for token in string:
-        if token.is_stop or len(token) < 3:
-            continue
-        filtered_list.append(token.text.lower())
-    return filtered_list
+class custom_imputer():
+    """
+    Imputs Q columns with worst value
+    Assumes that questions with good answers being a higher value will be,
+    on average, higher than 50% (0.5)
+    """
+    def __init__(self):
+        ...
+
+    def transform(self, X):
+        q_columns = X.columns[8:]
+        col_values = X[q_columns]
+        high_is_better = False
+
+        if np.nanmean(col_values) > 50:
+            high_is_better = True
+
+        if not high_is_better:
+            col_values = np.ones_like(col_values)*100 - col_values
+
+        df_impute = col_values.fillna(np.nanmin(col_values))
+        return X.iloc[:, :8].join(df_impute)
+
+    def fit(self, X, y=None, **fit_params):
+        return self
+
+
+class change_ascending_cols():
+    """
+    Transforms the ascending columns to
+    descending to prepare for the recommendation sum
+    """
+    def __init__(self):
+        self.max_cols = ['ppr', 'Q14', 'Q15', 'Q16']
+
+    def transform(self, X):
+        for col in self.max_cols:
+            X[col] = round((100-X[col]), 2)
+        return X
+
+    def fit(self, X, y=None, **fit_params):
+        return self
 
 
 def renamed_qcols(df):
@@ -113,14 +214,13 @@ def renamed_qcols(df):
     return df
 
 
-def load_df(zipcode):
+def load_df(z):
     df = pd.read_csv('data/HH_Provider_Oct2020.csv')
     df_cal = df[df['State'] == 'CA']
     df_cal.reset_index(drop=True, inplace=True)
     df_cal = df_cal.loc[:, ~df_cal.columns.str.startswith('Footnote')]
     df_zip = pd.read_csv('data/HH_Zip_Oct2020.csv')
-    cms_nums = df_zip[df_zip[' ZIP Code']
-                      == zipcode]['CMS Certification Number (CCN)']
-    df_cal = df_cal[df_cal['CMS Certification Number (CCN)']
-                    .isin(list(cms_nums))]
+    cms = 'CMS Certification Number (CCN)'
+    cms_nums = df_zip[df_zip[' ZIP Code'] == z][cms]
+    df_cal = df_cal[df_cal[cms].isin(list(cms_nums))]
     return df_cal
