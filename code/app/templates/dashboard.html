@@ -491,7 +491,7 @@
           options: {
             responsive: true,
             animation: {
-            onComplete : function() {
+            onProgress : function() {
                 var first_ppr_cx = first_ppr_canvas.width / 4;
                 var first_ppr_cy = first_ppr_canvas.height / 4;
                 first_ppr_ctx.textAlign = 'center';
@@ -541,7 +541,7 @@
           options: {
             responsive: true,
             animation: {
-            onComplete : function() {
+            onProgress : function() {
                 var second_ppr_cx = second_ppr_canvas.width / 4;
                 var second_ppr_cy = second_ppr_canvas.height / 4;
                 second_ppr_ctx.textAlign = 'center';
@@ -591,19 +591,20 @@
           options: {
             responsive: true,
             animation: {
-            onComplete : function() {
-                var third_ppr_cx = third_ppr_canvas.width / 4;
-                var third_ppr_cy = third_ppr_canvas.height / 4;
-                third_ppr_ctx.textAlign = 'center';
-                third_ppr_ctx.textBaseline = 'middle';
-                third_ppr_ctx.font = '35px arial';
-                third_ppr_ctx.fillStyle = 'black';
-                third_ppr_ctx.fillText(third_ppr[0].toFixed()+"%", third_ppr_cx,
-                                           third_ppr_cy);
+                onProgress : function() {
+                    var third_ppr_cx = third_ppr_canvas.width / 4;
+                    var third_ppr_cy = third_ppr_canvas.height / 4;
+                    third_ppr_ctx.textAlign = 'center';
+                    third_ppr_ctx.textBaseline = 'middle';
+                    third_ppr_ctx.font = '35px arial';
+                    third_ppr_ctx.fillStyle = 'black';
+                    third_ppr_ctx.fillText(third_ppr[0].toFixed()+"%", third_ppr_cx,
+                                            third_ppr_cy);
+                    },
                 },
-            },            legend: {
+            legend: {
                 display: false
-              },
+            },
             title: {
                 display: false,
                 text: 'Timely Manner'
@@ -612,8 +613,8 @@
                 padding: {
                     left: 50,
                     right: 50
-                  },
-               },
+                },
+            },
             cutoutPercentage: 60,
             },
         });
@@ -1253,7 +1254,7 @@
           options: {
             responsive: true,
             animation: {
-            onComplete : function() {
+            onProgress : function() {
                 var cx = first_score_canvas.width / 4;
                 var cy = first_score_canvas.height / 3.25;
                 first_score_ctx.textAlign = 'center';
@@ -1289,7 +1290,7 @@
           options: {
             responsive: true,
             animation: {
-            onComplete : function() {
+            onProgress : function() {
                 var second_cx = second_score_canvas.width / 4;
                 var second_cy = second_score_canvas.height / 3.25;
                 second_score_ctx.textAlign = 'center';
@@ -1322,7 +1323,7 @@
           options: {
             responsive: true,
             animation: {
-            onComplete : function() {
+            onProgress : function() {
                 var third_cx = third_score_canvas.width / 4;
                 var third_cy = third_score_canvas.height / 3.25;
                 third_score_ctx.textAlign = 'center';
@@ -1355,7 +1356,7 @@
           options: {
             responsive: true,
             animation: {
-            onComplete : function() {
+            onProgress : function() {
                 var first_timely_cx = first_timely_canvas.width / 4;
                 var first_timely_cy = first_timely_canvas.height / 4;
                 first_timely_ctx.textAlign = 'center';
@@ -1389,7 +1390,7 @@
       options: {
             responsive: true,
             animation: {
-            onComplete : function() {
+            onProgress : function() {
                 var second_timely_cx = second_timely_canvas.width / 4;
                 var second_timely_cy = second_timely_canvas.height / 4;
                 second_timely_ctx.textAlign = 'center';
@@ -1425,7 +1426,7 @@
           options: {
             responsive: true,
             animation: {
-            onComplete : function() {
+            onProgress : function() {
                 var third_timely_cx = third_timely_canvas.width / 4;
                 var third_timely_cy = third_timely_canvas.height / 4;
                 third_timely_ctx.textAlign = 'center';
