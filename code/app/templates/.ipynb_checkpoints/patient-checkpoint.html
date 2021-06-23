@@ -31,10 +31,14 @@
             </div>
             <div align="left" style="color:#211F1F;font-size:22px">
             <br>We filtered out all agencies that don't serve <p style="display:inline;color:#376b69"><strong>{{patient.zipcode}}</strong></p> and don't offer
-            {% for service in specific_services[:-1] %}
-                <p style="display:inline;color:#376b69"><strong>{{service}}</strong></p>,
-            {% endfor %}
-                and <p style="display:inline;color:#376b69"><strong>{{specific_services[-1]}}</strong></p>.
+            {% if specific_services|length == 1 %}
+                <p style="display:inline;color:#376b69"><strong>{{specific_services[0]}}</strong></p>.
+            {% else %}
+                {% for service in specific_services[:-1] %}
+                    <p style="display:inline;color:#376b69"><strong>{{service}}</strong></p>,
+                {% endfor %}
+                    and <p style="display:inline;color:#376b69"><strong>{{specific_services[-1]}}</strong></p>.
+            {% endif %}
             </div>
             <br>
           </h3>
