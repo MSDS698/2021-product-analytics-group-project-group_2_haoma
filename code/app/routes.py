@@ -2,7 +2,7 @@ from flask_login.utils import login_user, logout_user, \
                               current_user, login_required
 from werkzeug.utils import secure_filename
 from app import app, funcs, classes, db, recommender_instance
-from flask import render_template, url_for, jsonify, request, redirect, abort
+from flask import render_template, url_for, jsonify, request, redirect, abort, flash
 import os
 import json
 import pandas as pd
@@ -182,6 +182,25 @@ def agency():
 @login_required
 def patient():
     "Discharge planner's patient-recommendations dashboard"
+    if request.method == "POST":
+        if len(list(request.form.keys())) != 4:
+            print('Error with number of agencies selected')
+            # flash('Please Select 3 Agencies', "error")
+            # render_template('patient.html',
+            #                loggedin=current_user.is_authenticated,
+            #                patient=patient,
+            #                columns=df_rec.columns,
+            #                data_available=df_available.values,
+            #                data_requested=df_requested.values,
+            #                data_confirmed=df_confirmed.values,
+            #                data_denied=df_denied.values,
+            #                data_removed=df_removed.values,
+            #                specific_services=specific_services)
+        else:
+            resulting_agencies = list(request.form.keys())[:-1]
+            print(resulting_agencies)
+            ### CHRISTABELLE
+
     if(current_user.account_type != "discharge planner"): abort(401)
     id = request.args.get('id', type=int)
     patient = classes.Patient.query.filter_by(id=id).first()
@@ -205,7 +224,7 @@ def patient():
     # Manipulating boolean services
     services = ['nursing care', 'physical therapy', 'occupational therapy', 'speech therapy', 'medical social services', 'home health aide']
     specific_services = [services[i] for i,b in enumerate(patient.boolservices) if b]
-    
+
     # Cleaner columns
     clean_dict =  {'rank' : 'Rank',
                    'name' : 'Name',
@@ -222,9 +241,9 @@ def patient():
                    'breathing' : '',
                    'wounds' : '',
                    'skin_integrity' : ''}
-    
+
 #     df_rec.columns
-    
+
     return render_template('patient.html',
                            loggedin=current_user.is_authenticated,
                            patient=patient,

@@ -70,6 +70,7 @@
 
       <div class="tab-content" id="tabContent">
         <!-- Available Pane -->
+        <form method="POST">
         <div class="tab-pane active" id="available" role="tabpanel" aria-labelledby="available-tab">
           <div class="container">
             <table class="table table-hover">
@@ -89,6 +90,8 @@
                   <td><button type="button" class="btn btn-success" onclick="requestRec('{{row[0]-1}}');">
                     Request
                   </button></td>
+                  <td><input type="checkbox" name="{{row[1]}}"></td>
+
                   <td><button type="button" class="btn btn-warning" onclick="removeRec('{{row[0]-1}}');">
                     <i class="bi bi-trash"></i>
                   </button></td>
@@ -98,6 +101,8 @@
             </table>
           </div>
         </div>
+        <button type="submit" name="compare" value="company.index" style="margin-left:45%">Compare</button>
+      </form>
         <!-- Requested Pane -->
         <div class="tab-pane" id="requested" role="tabpanel" aria-labelledby="requested-tab">
           <div class="container">
