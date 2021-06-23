@@ -2,6 +2,7 @@ from flask_login.utils import login_user, logout_user, \
                               current_user, login_required
 from werkzeug.utils import secure_filename
 from app import app, funcs, classes, db, recommender_instance
+from app.constants import *
 from flask import render_template, url_for, jsonify, request, redirect, abort
 import os
 import json
@@ -10,94 +11,36 @@ import pandas as pd
 
 @app.route("/dashboard")
 def dashboard():
-    agency_df = funcs.get_top_agencies()
+    num_agencies = 3
+    agency_df = funcs.get_top_agencies().fillna(0)
     agency_df['preventable_readmission'] = round(agency_df['preventable_readmission']/2,2)
-    df3 = agency_df.sample(3)
-    patient_name = 'Jenny'
-    
-    daily_activities = ['name', 
-                        'better_bathing',
-                        'better_getting_in_bed', 
-                        'better_moving']
-    
-    treating_symptoms = ['name',
-                         'improve_breathing',
-                         'improve_wounds',
-                         'changed_skin']
-    
-    preventing_harm = ['checked_falling',
-                       'checked_depression',
-                       'checked_flu',
-                       'checked_pneumonia']
-    
-    # daily activities
-    good = df3[daily_activities].iloc[2].values[1:].tolist()
-    better = df3[daily_activities].iloc[1].values[1:].tolist()
-    best = df3[:3][daily_activities].iloc[0].values[1:].tolist()
-    
-    # daily activities
-    symp_good = df3[treating_symptoms].iloc[2].values[1:].tolist()
-    symp_better = df3[treating_symptoms].iloc[1].values[1:].tolist()
-    symp_best = df3[treating_symptoms].iloc[0].values[1:].tolist()
-    
-    # preventing harm 
-    falling = df3['checked_falling'].tolist() 
-    depress = df3['checked_depression'].tolist() 
-    flu = df3['checked_flu'].tolist() 
-    pneumonia = df3['checked_pneumonia'].tolist() 
-
+    df3 = agency_df.sample(num_agencies)
     names = df3.name.tolist()
-    good_name = names[2]
-    better_name = names[1]
-    best_name = names[0]
+    all_scores = list(map(lambda x: [x, round(100-x,2)], df3.score.tolist()))
+    all_timely = list(map(lambda x: [x, round(100-x,2)], df3.timely_manner.tolist()))
+    all_ppr = list(map(lambda x: [x, round(100-x,2)], df3.preventable_readmission.tolist()))
+
+    data = {
+        'num_agencies': num_agencies,
+        'patient_name': 'Jenny',
+        'name': json.dumps(names),
+        'da': json.dumps([df3[agency_df_keys['daily_activities']].iloc[i].values[1:].tolist() for i in range(num_agencies)]),
+        'ts': json.dumps([df3[agency_df_keys['treating_symptoms']].iloc[i].values[1:].tolist() for i in range(num_agencies)]),
+        'falling': json.dumps(df3[agency_df_keys['falling']].tolist()),
+        'depression': json.dumps(df3[agency_df_keys['depression']].tolist()),
+        'flu': json.dumps(df3[agency_df_keys['flu']].tolist()),
+        'pneumonia': json.dumps(df3[agency_df_keys['pneumonia']].tolist()),
+        'score': json.dumps(all_scores),
+        'timely': json.dumps(all_timely),
+        'ppr': json.dumps(all_ppr),
+    }
+
+    colors = {
+        'colors': json.dumps(dashboard_colors),
+        'bg_colors': json.dumps(background_colors)
+    }
     
-    all_scores = list(map(lambda x: [x, round(100-x,2)],
-                          df3.score.tolist()))
-    
-    first_score = all_scores[0]
-    second_score = all_scores[1]
-    third_score = all_scores[2]
-    
-    all_timely = list(map(lambda x: [x, round(100-x,2)],
-                          df3.timely_manner.tolist()))
-    
-    first_timely = all_timely[0]
-    second_timely = all_timely[1]
-    third_timely = all_timely[2]
-    
-    all_ppr = list(map(lambda x: [x, round(100-x,2)],
-                          df3.preventable_readmission.tolist()))
-    
-    first_ppr = all_ppr[0]
-    second_ppr = all_ppr[1]
-    third_ppr = all_ppr[2]
-    
-    return render_template("dashboard.html", 
-                           patient_name = patient_name,
-                           good_scores = json.dumps(good),
-                           better_scores = json.dumps(better),
-                           best_scores = json.dumps(best),
-                           agency_names = json.dumps(names),
-                           good_name = json.dumps(good_name),
-                           better_name = json.dumps(better_name),
-                           best_name = json.dumps(best_name),
-                           good_symp = json.dumps(symp_good),
-                           better_symp = json.dumps(symp_better),
-                           best_symp = json.dumps(symp_best),
-                           falling = json.dumps(falling),
-                           depress = json.dumps(depress),
-                           flu = json.dumps(flu),
-                           pneumonia = json.dumps(pneumonia),
-                           all_scores = json.dumps(df3.score.tolist()),
-                           first_score = json.dumps(first_score),
-                           second_score = json.dumps(second_score),
-                           third_score = json.dumps(third_timely),
-                           first_timely = json.dumps(first_timely),
-                           second_timely = json.dumps(second_timely),
-                           third_timely = json.dumps(third_score),
-                           first_ppr = json.dumps(first_ppr),
-                           second_ppr = json.dumps(second_ppr),
-                           third_ppr = json.dumps(third_ppr))
+    return render_template("dashboard.html", name_arr=names, colors_arr=dashboard_colors, **colors, **data)
 
 
 @app.route('/')
