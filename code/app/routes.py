@@ -101,9 +101,9 @@ def discharge():
     if patient_upload_form.validate_on_submit():
         file = patient_upload_form.file.data
         filename = secure_filename(file.filename)
-
-        file.save(os.path.join('code/app/upload_temp', filename))
-        path = f'code/app/upload_temp/{filename}'
+        path = os.path.join(os.getcwd(), 'app/upload_temp', filename)
+        file.save(path)
+        # path = f'code/app/upload_temp/{filename}'
 
         patient_info = funcs.extract_patient_info(app.instance_path,
                                                   filename, file)
@@ -141,7 +141,8 @@ def discharge():
 
         db.session.add(patient)
         db.session.commit()
-        df_rec.to_pickle(f'code/app/upload_temp/recs/{patient.id}')
+        patient_path = os.path.join(os.getcwd(), 'app/upload_temp', str(patient.id))
+        df_rec.to_pickle(patient_path)#f'code/app/upload_temp/recs/{patient.id}')
         return redirect(url_for('discharge'))
 
     patients = classes.Patient.query. \
@@ -189,8 +190,10 @@ def patient():
         abort(401)
 
     df = recommender_instance.filter_zipcode(patient.zipcode)
-    if(os.path.exists(f'code/app/upload_temp/recs/{patient.id}')):
-        df_rec = pd.read_pickle(f'code/app/upload_temp/recs/{patient.id}')
+    patient_path = os.path.join(os.getcwd(), 'app/upload_temp', str(patient.id))
+
+    if(os.path.exists(patient_path)):#f'code/app/upload_temp/recs/{patient.id}')):
+        df_rec = pd.read_pickle(patient_path)#f'code/app/upload_temp/recs/{patient.id}')
     else:
         _, df_rec = recommender_instance.recommend(df,
                                                 patient.boolservices,
@@ -205,8 +208,8 @@ def patient():
     # Manipulating boolean services
     services = ['nursing care', 'physical therapy', 'occupational therapy', 'speech therapy', 'medical social services', 'home health aide']
     specific_services = [services[i] for i,b in enumerate(patient.boolservices) if b]
-    
-    
+
+
     return render_template('patient.html',
                            loggedin=current_user.is_authenticated,
                            patient=patient,
