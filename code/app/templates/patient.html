@@ -25,12 +25,12 @@
     <div class="container">
       <div class="header"><br>
         <h3 class="text-muted">
-            
+
             <div align="center" style="color:#211F1F;font-size:35px">
                 <strong>{{patient.first}}'s recommendations:</strong>
             </div>
             <div align="left" style="color:#211F1F;font-size:22px">
-            <br>We filtered out all agencies that don't serve <p style="display:inline;color:#376b69"><strong>{{patient.zipcode}}</strong></p> and don't offer
+            <br>Below are agencies that serve <p style="display:inline;color:#376b69"><strong>{{patient.zipcode}}</strong></p> and offer
             {% if specific_services|length == 1 %}
                 <p style="display:inline;color:#376b69"><strong>{{specific_services[0]}}</strong></p>.
             {% elif specific_services|length == 2 %}
