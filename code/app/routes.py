@@ -202,6 +202,11 @@ def patient():
                                                                       df_rec.loc[[e == "C" for e in rec_status]],\
                                                                       df_rec.loc[[e == "D" for e in rec_status]],\
                                                                       df_rec.loc[[e == "R" for e in rec_status]]
+    # Manipulating boolean services
+    services = ['nursing care', 'physical therapy', 'occupational therapy', 'speech therapy', 'medical social services', 'home health aide']
+    specific_services = [services[i] for i,b in enumerate(patient.boolservices) if b]
+    
+    
     return render_template('patient.html',
                            loggedin=current_user.is_authenticated,
                            patient=patient,
@@ -210,7 +215,8 @@ def patient():
                            data_requested=df_requested.values,
                            data_confirmed=df_confirmed.values,
                            data_denied=df_denied.values,
-                           data_removed=df_removed.values)
+                           data_removed=df_removed.values,
+                           specific_services=specific_services)
 
 
 @app.route('/_change_rec_status', methods=['POST'])
