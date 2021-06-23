@@ -5,134 +5,99 @@
 
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/test.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/test.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 
 
-<body>
-<center>
 
-    
-<div class="container">
-    <div class="row">    
-        <div class="col-xl-6">
-            <div class="card-body">
-                <h3 class="align-middle"></h3>
-                <p class="card-text"></p>
-            </div>
-        </div>
-        <div class="col-xl-6">
-            <div class="card bg-light mb-3">
-              <h5 class="card-header"><b>Personalized Haoma Score for {{patient_name}}</b></h5>
-<!--               <h5 class="card-header" style="color:black;background-color:#529c89;opacity: 0.9;
-                                             "><b>Haoma Score Personalized for {{patient_name}}</b></h5> -->
-            </div>
-        </div>
-    </div>
-</div>
-    
+<!-- <center> -->
 
-<div class="container">
-    <div class="row">    
-        <div class="col-xl-6">
-                <div class="card-body">
-                    <h1 class="align-middle" style="font-family:tahoma;color:#376b69"><b>Haoma Compare</b></h1>
-                    <h3 class="align-middle">Based on Official Medicare Surveys</h3>
-                    <p class="card-text">
-                    </p>
+<body>  
+    <div class="agency-header">   
+        <div class="container">
+            <div class="row">    
+                <div class="col-xl-6">
+                    <div class="card-body">
+                        <h3 class="align-middle"></h3>
+                        <p class="card-text"></p>
+                    </div>
                 </div>
-        </div>
-        <div class="col-md-2">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="first_score"></canvas>
+                <div class="col-xl-6">
+                    <div class="card bg-light mb-3">
+                    <h5 class="card-header"><b>Personalized Haoma Score for {{patient_name}}</b></h5>
+        <!--               <h5 class="card-header" style="color:black;background-color:#529c89;opacity: 0.9;
+                                                    "><b>Haoma Score Personalized for {{patient_name}}</b></h5> -->
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-2">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="second_score"></canvas>
+            
+    
+        <div class="container">
+            <div class="row">    
+                <div class="col-xl-6">
+                        <div class="card-body">
+                            <h1 class="align-middle" style="font-family:tahoma;color:#376b69"><b>Haoma Compare</b></h1>
+                            <h3 class="align-middle">Based on Official Medicare Surveys</h3>
+                            <p class="card-text">
+                            </p>
+                        </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card card-style mb-2">
+                        <div class="card-body">
+                            <div class="chart-container" style="position: relative;">
+                                <canvas id="first_score"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card card-style mb-2">
+                        <div class="card-body">
+                            <div class="chart-container" style="position: relative;">
+                                <canvas id="second_score"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="card card-style mb-2">
+                        <div class="card-body">
+                            <div class="chart-container" style="position: relative;">
+                                <canvas id="third_score"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-2">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="third_score"></canvas>
+
+        <div class="container">
+            <div class="row">    
+                <div class="col-xl">
+                    <div class="card bg-white mb-3">
+                    <h5 class="card-header">&nbsp;</h5>
+                    </div>
+                </div>
+                <div class="col-xl">
+                    <div class="card bg-light mb-3">
+                    <h5 class="card-header" style="color: #cc3d33;">{{good_name[1:-1][0:25].title()}}</h5>
+                    </div>
+                </div>
+                <div class="col-xl">
+                    <div class="card bg-light mb-3">
+                    <h5 class="card-header" style="color: #dea004;">{{better_name[1:-1][0:25].title()}}</h5>
+                    </div>
+                </div>
+                <div class="col-xl">
+                    <div class="card bg-light mb-3">
+                    <h5 class="card-header" style="color: #3378cc;"> {{best_name[1:-1][0:25].title()}}</h5>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> 
     </div>
-</div>
-
-    
-<!-- <div class="container">
-    <div class="row">    
-        <div class="col-xl-12">
-            <div class="card bg-white mb-3">
-              <h3 class="card-header" style="color:black;background-color:#529c89;opacity: 0.9;
-"><b>Quality Scores<b/></h3>
-            </div>
-        </div>
-    </div>
-</div> -->
-
-
-<!-- <div class="container">
-    <div class="row">    
-        <div class="col-xl">
-            <div class="card bg-white mb-3">
-              <h5 class="card-header"> . </h5>
-            </div>
-        </div>
-        <div class="col-xl">
-            <div class="card bg-light mb-3">
-              <h5 class="card-header" style="color: #cc3d33;">{{good_name[1:-1][0:25].title()}}</h5>
-            </div>
-        </div>
-        <div class="col-xl">
-            <div class="card bg-light mb-3">
-              <h5 class="card-header" style="color: #dea004;">{{better_name[1:-1][0:25].title()}}</h5>
-            </div>
-        </div>
-        <div class="col-xl">
-            <div class="card bg-light mb-3">
-              <h5 class="card-header" style="color: #3378cc;"> {{best_name[1:-1][0:25].title()}}</h5>
-            </div>
-        </div>
-    </div>
-</div> -->
-    
-<div class="container">
-    <div class="row">    
-        <div class="col-xl">
-            <div class="card bg-white mb-3">
-              <h5 class="card-header"> . </h5>
-            </div>
-        </div>
-        <div class="col-xl">
-            <div class="card bg-light mb-3">
-              <h5 class="card-header" style="color: #cc3d33;">{{good_name[1:-1][0:25].title()}}</h5>
-            </div>
-        </div>
-        <div class="col-xl">
-            <div class="card bg-light mb-3">
-              <h5 class="card-header" style="color: #dea004;">{{better_name[1:-1][0:25].title()}}</h5>
-            </div>
-        </div>
-        <div class="col-xl">
-            <div class="card bg-light mb-3">
-              <h5 class="card-header" style="color: #3378cc;"> {{best_name[1:-1][0:25].title()}}</h5>
-            </div>
-        </div>
-    </div>
-</div> 
 <!--     
 <div class="container">
   <div class="row">    
@@ -177,228 +142,228 @@
     
 
     
-    
-<div class="container">
-    <div class="row">   
-        <div class="col-md-3 d-flex align-items-stretch ">
-            <div class="card text-left">
-                <div class="card-body">
-                    <h5 class="card-title "><b>Managing Daily Activities</b></h5>
-                    <h8 class="card-text" style="line-height:2">How often the patient got better at :</h8>
-                    <ul>
-                        <li>Bathing</li>
-                        <li>Getting In and Out of the Bed</li>
-                        <li>Walking or Moving Around</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="manage1"></canvas>
+<body> 
+<div class="agency-body">
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card card-body" style="position: relative; height:12rem">
+                    <div class="chart-container">
+                        <h5 class="card-title"><b>Managing Daily Activities</b></h5>
+                        <h8 class="card-text">How often the patient got better at:</h8>
+                        <ul>
+                            <li>Bathing</li>
+                            <li>Getting In and Out of the Bed</li>
+                            <li>Walking or Moving Around</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="manage2"></canvas>
+            <div class="col-md-3  align-items-stretch">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height: 10rem">
+                            <canvas id="manage1"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="manage3"></canvas>
+            <div class="col-md-3  align-items-stretch">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height:10rem">
+                            <canvas id="manage2"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-    
-<div class="container">
-    <div class="row">   
-        <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card align-items-left">
-                <div class="card-body">
-                    <h5 class="card-title align-items-left"><b>Treating Symptoms</b></h5>
-                    <ul>
-                        <li>How often breathing improved</li>
-                        <li>How often wounds improved</li>
-                        <li>How often pressure ulcers didn't worsen</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="symptom1"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="symptom2"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="symptom3"></canvas>
+            <div class="col-md-3  align-items-stretch">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height:10rem">
+                            <canvas id="manage3"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-    
-    
-    
-    
-<!-- <div class="container d-flex align-items-center justify-content-between">
-    <div class="row">   
-        <div class="col-md-3 vertical-align='center'">
-            <div class="card text-left">
-                <div class="card-body">
-                    <h5 class="card-title">Our score</h5>
-                    <p class="card-text">
-                     Our standardized rating based on potential preventable readmission, 
-                     discharge to community, and personalized features to the patient.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="first_score"></canvas>
+        
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card card-body" style="position: relative; height:12rem">
+                    <div class="card-style mb-2">
+                        <h5 class="card-title"><b>Treating Symptoms</b></h5>
+                        <ul>
+                            <li>How often breathing improved</li>
+                            <li>How often wounds improved</li>
+                            <li>How often pressure ulcers didn't worsen</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="second_score"></canvas>
+            <div class="col-md-3  align-items-stretch">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height:10rem">
+                            <canvas id="symptom1"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="third_score"></canvas>
+            <div class="col-md-3  align-items-stretch">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height:10rem">
+                            <canvas id="symptom2"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div> -->
-    
-<div class="container">
-    <div class="row">  
-        <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card card-style mb-3">
-                <div class="card-body">
-                    <h5 class="card-title"><b></b></h5>
-                    <h5 class="card-title"><b>Timely Manner</b></h5>
-                    <p class="card-text">
-                      How often did the agency begin their patients' care in a timely manner?
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="first_timely"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="second_timely"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="third_timely"></canvas>
+            <div class="col-md-3  align-items-stretch">
+                <div class="card card-style mb-2">
+                    <div class="card-body" style="position: relative;">
+                        <div class="chart-container" style="position: relative; height:10rem">
+                            <canvas id="symptom3"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-    
-    
-<div class="container">
-    <div class="row">   
-        <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card card-style mb-3 ">
-                <div class="card-body">
-                    <h5 class="card-title"><b>Preventable Readmission</b></h5>
-                    <p class="card-text">
-                     The risk-standardized rate of unplanned, potentially preventable readmissions for
-                     patients within 30 days of discharge.
-                    </p>
+        
+        
+        
+        
+    <!-- <div class="container  align-items-center justify-content-between">
+        <div class="row">   
+            <div class="col-md-3 vertical-align='center'">
+                <div class="card text-left">
+                    <div class="card-body">
+                        <h5 class="card-title">Our score</h5>
+                        <p class="card-text">
+                        Our standardized rating based on potential preventable readmission, 
+                        discharge to community, and personalized features to the patient.
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="first_ppr"></canvas>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="first_score"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="second_score"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="third_score"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="second_ppr"></canvas>
+    </div> -->
+        
+    <div class="container">
+        <div class="row">  
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body" style="position: relative; height: 19rem;">
+                        <h5 class="card-title"><b>Timely Manner</b></h5>
+                        <p>
+                        How often did the agency begin their patients' care in a timely manner?
+                        </p>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3 d-flex align-items-stretch">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="third_ppr"></canvas>
-                        
+            <div class="col-md-3  align-items-stretch">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height: 17rem;">
+                            <canvas id="first_timely"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3  align-items-stretch">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height: 17rem;">
+                            <canvas id="second_timely"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3  align-items-stretch">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height: 17rem;">
+                            <canvas id="third_timely"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+        
+        
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body" style="position: relative; height: 19rem;">
+                        <h5 class="card-title"><b>Preventable Readmission</b></h5>
+                        <p>
+                            The risk-standardized rate of unplanned, potentially preventable readmissions for
+                            patients within 30 days of discharge.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3  align-items-stretch">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height: 17rem;">
+                            <canvas id="first_ppr" class="align-middle"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3  align-items-stretch">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height: 17rem;">
+                            <canvas id="second_ppr" class="align-middle"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3  align-items-stretch">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height: 17rem;">
+                            <canvas id="third_ppr"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>   
 </div>
     
 

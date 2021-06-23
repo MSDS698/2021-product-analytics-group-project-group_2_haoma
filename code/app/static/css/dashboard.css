@@ -1,0 +1,12 @@
+.agency-header{
+    position: fixed;
+    width: 100%;
+    background-color: white;
+    padding-top: 2rem;
+    z-index: 100;
+}
+
+.agency-body{
+    padding-top: 23rem;
+    z-index: 1;
+}
