@@ -3,13 +3,10 @@ import pandas as pd
 from sklearn.pipeline import *
 from sklearn.preprocessing import *
 import spacy
-
-
 class Drop():
     """Drop Unnecessary Columns"""
     def __init__(self):
         ...
-
     def transform(self, X):
         drop_cols = ['State', 'DTC Numerator', 'Type of Ownership',
                      'Quality of patient care star rating',
@@ -30,19 +27,16 @@ class Drop():
                      'spends per episode of ' +
                      'care at agency, compared to spending at all ' +
                      'agencies (national)']
-
         X = X.drop(columns=drop_cols)
         return X
-
     def fit(self, X, y=None):
         return self
-
-
+    
+    
 class Rename():
     """Rename Columns"""
     def __init__(self):
         ...
-
     def transform(self, X):
         X.columns = ['ccn', 'name', 'address', 'city', ' zip', 'phone',
                      'nursing', 'pt', 'ot', 'speech', 'social', 'aide',
@@ -50,17 +44,15 @@ class Rename():
                      'Q8', 'Q9', 'Q10', 'Q11', 'Q12', 'Q13', 'Q14', 'Q15',
                      'Q16', 'Q17', 'dtc', 'ppr']
         return X
-
     def fit(self, X, y=None, **fit_params):
         return self
-
-
+    
+    
 class FilterByService():
     """Input: list of boolean values pertaining to offered services
        Output: filtered df of agencies based on offered services"""
     def __init__(self, bool_services):
         self.bool_services = bool_services
-
     def transform(self, X, **transform_params):
         services = ['nursing', 'pt', 'ot', 'speech', 'social', 'aide']
         services_dict = dict(zip(services, self.bool_services))
@@ -69,11 +61,10 @@ class FilterByService():
                 X = X[X[service] == 'Yes']
         X = X.drop(columns=services)
         return X
-
     def fit(self, X, y=None, **fit_params):
         return self
-
-
+    
+    
 class Recommend():
     """Input: list of boolean values pertaining to offered services
        Output: filtered df of agencies based on offered services"""
@@ -96,54 +87,55 @@ class Recommend():
                        'Q11': 'breathing',
                        'Q12': 'wounds',
                        'Q16': 'skin_integrity'}
-
-    def transform(self, X, **transform_params):
+        
+        
+    def transform(self, X, **transform_params):        
         q_columns = X.columns[7:]
-
         # initialize weights
         weight = {key: 1 for key in q_columns}
         filtered_qs = [key for key,
                        value in self.flagged_qtopic.items() if value]
-
         for col in self.star_cols:
             weight[col] += self.tier_weights['star']
-
         for col in filtered_qs:
             weight[col] += self.tier_weights['flagged']
-
         weight['ppr'] = self.tier_weights['ppr']
         weight['dtc'] = self.tier_weights['dtc']
-
         # apply weights
         for col in X:
             if col in weight.keys():
                 X[col] = X[col] * weight[col]
-
         # sort recommendations
-        X['score'] = X[q_columns].sum(axis=1)
-        X = X.sort_values('score', ascending=False).iloc[:self.num_agencies]
-
+        X['score'] = X[q_columns].sum(axis=1, skipna=True)
+        X = X.sort_values('score', ascending=False)
+        X_copy = X.copy()
+        X = X.iloc[:self.num_agencies]
         renamed_cols = [self.Q_dict[col] for col in filtered_qs]
         rename_dict = dict(zip(filtered_qs, renamed_cols))
-
         X = X.rename(columns=rename_dict)
         return_cols = ['name', 'ppr', 'dtc'] + renamed_cols + ['score']
-
         df_rec = X[return_cols].copy()
-
         denominator = 3
         df_rec[renamed_cols] = round(df_rec[renamed_cols]/denominator, 2)
         df_rec['score'] = round((df_rec.score/df_rec.score.max())*100, 2)
         df_rec['ppr'] = round(df_rec.ppr/2, 2)
         df_rec.reset_index(drop=True, inplace=True)
         df_rec.index += 1
-
-        return X, df_rec
-
+        X_copy['score'] = round((X_copy.score/X_copy.score.max())*100, 2)
+        X_copy.columns = ['ccn', 'name', 'address', 'city', ' zip', 'phone',
+              'date', 'timely_manner', 'taught_meds', 'checked_falling',
+              'checked_depression', 'checked_flu', 'checked_pneumonia',
+              'diabetes_foot', 'better_moving', 'better_getting_in_bed',
+              'better_bathing','improve_breathing', 'improve_wounds', 
+              'better_taking_meds', 'readmitted', 'ER', 'changed_skin',
+              'timely_address_meds', 'discharge_community', 'preventable_readmission', 'score']
+        return X_copy, df_rec
+    
+    
     def fit(self, X, y=None, **fit_params):
         return self
-
-
+    
+    
 class custom_imputer():
     """
     Imputs Q columns with worst value
@@ -152,25 +144,20 @@ class custom_imputer():
     """
     def __init__(self):
         ...
-
     def transform(self, X):
         q_columns = X.columns[8:]
         col_values = X[q_columns]
         high_is_better = False
-
         if np.nanmean(col_values) > 50:
             high_is_better = True
-
         if not high_is_better:
             col_values = np.ones_like(col_values)*100 - col_values
-
         df_impute = col_values.fillna(np.nanmin(col_values))
         return X.iloc[:, :8].join(df_impute)
-
     def fit(self, X, y=None, **fit_params):
         return self
-
-
+    
+    
 class change_ascending_cols():
     """
     Transforms the ascending columns to
@@ -178,21 +165,18 @@ class change_ascending_cols():
     """
     def __init__(self):
         self.max_cols = ['ppr', 'Q14', 'Q15', 'Q16']
-
     def transform(self, X):
         for col in self.max_cols:
             X[col] = round((100-X[col]), 2)
         return X
-
     def fit(self, X, y=None, **fit_params):
         return self
-
-
+    
+    
 def renamed_qcols(df):
     """Renamed Qualitative Columns"""
     long_questions = df.columns[16:33]
     short_questions = [f'Q{i+1}' for i in range(17)]
-
     new_columns = []
     for i, col in enumerate(df.columns):
         if col not in long_questions:

@@ -206,6 +206,24 @@ def patient():
     services = ['nursing care', 'physical therapy', 'occupational therapy', 'speech therapy', 'medical social services', 'home health aide']
     specific_services = [services[i] for i,b in enumerate(patient.boolservices) if b]
     
+    # Cleaner columns
+    clean_dict =  {'rank' : 'Rank',
+                   'name' : 'Name',
+                   'ppr' : '',
+                   'dtc' : '',
+                   'falling' : '',
+                   'depression' : '',
+                   'flu' : '',
+                   'pneumonia' : '',
+                   'diabetes' : '',
+                   'moving' : '',
+                   'getting_in_bed' : '',
+                   'bathing' : '',
+                   'breathing' : '',
+                   'wounds' : '',
+                   'skin_integrity' : ''}
+    
+#     df_rec.columns
     
     return render_template('patient.html',
                            loggedin=current_user.is_authenticated,
