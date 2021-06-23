@@ -6,10 +6,12 @@ body {
 
 ul{
     display: inline-block;
-    text-align:left;
-    
+    text-align:left;    
 }        
 
+ul li{
+    margin-bottom:1em;
+}    
 
 .card-text{
     text-align:left;
@@ -18,7 +20,7 @@ ul{
 
 .card-title{
     text-align:left; 
-    padding-top: 7px;
+    padding-top: 20px;
     color: #376b69;
 }    
 
