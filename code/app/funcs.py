@@ -74,4 +74,8 @@ def extract_patient_info(instance_path, filename, file) -> dict:
     extracted_info['summary'] = "summary example"
     return extracted_info
 
+def return_agency_data(df3, column):
+    all_data = list(map(lambda x: [x, round(100-x,2)],
+                        df3[column].tolist()))
+    return all_data[0], all_data[1], all_data[2]
 # get_hh_agencies()
