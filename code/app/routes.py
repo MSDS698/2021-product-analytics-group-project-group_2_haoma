@@ -213,33 +213,33 @@ def patient():
         else:
             resulting_agencies = list(request.form.keys())[:-1]
             df_agency['preventable_readmission'] = round(df_agency['preventable_readmission']/2,2)
-            df3 = df_agency[df_agency.name.isin(resulting_agencies)]
+            df = df_agency[df_agency.name.isin(resulting_agencies)]
             patient_name = patient.first
-            num_agencies = 3
-            names = df3.name.tolist()
-            all_scores = list(map(lambda x: [x, round(100-x,2)], df3.score.tolist()))
-            all_timely = list(map(lambda x: [x, round(100-x,2)], df3.timely_manner.tolist()))
-            all_ppr = list(map(lambda x: [x, round(100-x,2)], df3.preventable_readmission.tolist()))
+            num_agencies = len(resulting_agencies)
+            names = df.name.tolist()
+            all_scores = list(map(lambda x: [x, round(100-x,2)], df.score.tolist()))
+            all_timely = list(map(lambda x: [x, round(100-x,2)], df.timely_manner.tolist()))
+            all_ppr = list(map(lambda x: [x, round(100-x,2)], df.preventable_readmission.tolist()))
 
             data = {
                 'num_agencies': num_agencies,
                 'patient_name': patient_name,
                 'name': json.dumps(names),
                 'score': json.dumps(all_scores),
-                'daily': json.dumps([df3[agency_df_keys['daily_activities']].iloc[i].values[1:].tolist() for i in range(num_agencies)]),
-                'symptom': json.dumps([df3[agency_df_keys['daily_activities']].iloc[i].values[1:].tolist() for i in range(num_agencies)]),
+                'daily': json.dumps([df[agency_df_keys['daily_activities']].iloc[i].values[1:].tolist() for i in range(num_agencies)]),
+                'symptom': json.dumps([df[agency_df_keys['daily_activities']].iloc[i].values[1:].tolist() for i in range(num_agencies)]),
                 'timely': json.dumps(all_timely),
                 'ppr': json.dumps(all_ppr),
-                'dtc': json.dumps(return_agency_data(df3, agency_df_keys['dtc'])),
-                'er': json.dumps(return_agency_data(df3, agency_df_keys['er'])),
-                'readmitted': json.dumps(return_agency_data(df3, agency_df_keys['readmitted'])),
-                'falling': json.dumps(return_agency_data(df3, agency_df_keys['falling'])),
-                'depression': json.dumps(return_agency_data(df3, agency_df_keys['depression'])),
-                'pneumonia': json.dumps(return_agency_data(df3, agency_df_keys['pneumonia'])),
-                'flu': json.dumps(return_agency_data(df3, agency_df_keys['flu'])),
-                'timely_med': json.dumps(return_agency_data(df3, agency_df_keys['timely_med'])),
-                'taught_med': json.dumps(return_agency_data(df3, agency_df_keys['taught_med'])),
-                'diabetes': json.dumps(return_agency_data(df3, agency_df_keys['diabetes'])),
+                'dtc': json.dumps(return_agency_data(df, agency_df_keys['dtc'])),
+                'er': json.dumps(return_agency_data(df, agency_df_keys['er'])),
+                'readmitted': json.dumps(return_agency_data(df, agency_df_keys['readmitted'])),
+                'falling': json.dumps(return_agency_data(df, agency_df_keys['falling'])),
+                'depression': json.dumps(return_agency_data(df, agency_df_keys['depression'])),
+                'pneumonia': json.dumps(return_agency_data(df, agency_df_keys['pneumonia'])),
+                'flu': json.dumps(return_agency_data(df, agency_df_keys['flu'])),
+                'timely_med': json.dumps(return_agency_data(df, agency_df_keys['timely_med'])),
+                'taught_med': json.dumps(return_agency_data(df, agency_df_keys['taught_med'])),
+                'diabetes': json.dumps(return_agency_data(df, agency_df_keys['diabetes'])),
             }
 
             colors = {
