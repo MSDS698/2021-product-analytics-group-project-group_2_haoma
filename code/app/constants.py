@@ -36,8 +36,8 @@ dashboard_info = {
                 <li>Getting In and Out of the Bed</li>
                 <li>Walking or Moving Around</li>
             </ul>""",
-        'height_desc': '12rem',
-        'height_data': '10rem',
+        'height_desc': '15rem',
+        'height_data': '13rem',
     },
     'symptom': {
         'title': 'Treating Symptoms',
@@ -47,8 +47,8 @@ dashboard_info = {
                 <li>How often wounds improved</li>
                 <li>How often pressure ulcers didn't worsen</li>
             </ul>""",
-        'height_desc': '12rem',
-        'height_data': '10rem',
+        'height_desc': '15rem',
+        'height_data': '13rem',
     },
     'timely': {
         'title': 'Timely Manner',
