@@ -12,9 +12,9 @@
     <div class="agency-header">   
         <div class="container">
             <div class="row">
-                <div class="col-xl-6">
+                <div class="col-6">
                 </div>
-                <div class="col-xl-6">
+                <div class="col-6">
                     <div class="card bg-light mb-3">
                         <h5 class="card-header" style="text-align:center"><b>Personalized Haoma Score for {{patient_name}}</b></h5>
                     </div>
@@ -25,7 +25,7 @@
     
         <div class="container">
             <div class="row">    
-                <div class="col-xl-6">
+                <div class="col-6">
                     <div class="card-body">
                         <h1 class="align-middle" style="font-family:tahoma;color:#376b69;text-align:center"><br><b>Haoma Compare</b></h1>
                         <h3 class="align-middle" style="text-align:center">Based on Official Medicare Surveys</h3>
@@ -49,13 +49,13 @@
     
         <div class="container">
             <div class="row">    
-                <div class="col-xl">
+                <div class="col">
                     <div class="card bg-white mb-3">
                     <h5 class="card-header">&nbsp;</h5>
                     </div>
                 </div>
                 {% for i in range(num_agencies) %}
-                <div class="col-xl">
+                <div class="col">
                     <div class="card bg-light mb-3">
                     <h5 class="card-header" style="color: {{colors_arr[i]}};">{{name_arr[i].title()}}</h5>
                     </div>
@@ -69,7 +69,7 @@
         {% for k in dashboard_key_order %}
         <div class="container">
             <div class="row">   
-                <div class="col-md-3">
+                <div class="col-3">
                     <div class="card card-body" style="position: relative; height: {{dashboard_info[k]['height_desc']}};">
                         <div class="chart-container">
                             <h5 class="card-title"><b>{{dashboard_info[k]['title']}}</b></h5>
@@ -78,7 +78,7 @@
                     </div>
                 </div>
                 {% for i in range(num_agencies) %}
-                <div class="col-md-3">
+                <div class="col-3">
                     <div class="card card-style mb-2">
                         <div class="card-body">
                             <div class="chart-container" style="position: relative; height: {{dashboard_info[k]['height_data']}};">
