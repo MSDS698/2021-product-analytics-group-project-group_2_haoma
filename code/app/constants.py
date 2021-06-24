@@ -57,7 +57,7 @@ dashboard_info = {
                 How often did the agency begin their patients' care in a timely manner?
             </p>""",
         'height_desc': '19rem',
-        'height_data': '17rem',
+        'height_data': '100%',
     },
     'ppr': {
         'title': 'Preventable Readmission',
