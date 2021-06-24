@@ -1,3 +1,9 @@
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    </head>
+</html>
+
 <!-- Favicon -->
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
@@ -24,6 +30,7 @@
 * Author: BootstrapMade.com
 * License: https://bootstrapmade.com/license/
 ======================================================== -->
+
 </head>
 
 <body>
@@ -36,7 +43,7 @@
       <nav id="navbar" class="navbar">
           <ul>
             {% if loggedin %}
-            <li><a class="getstarted scrollto" href="/logout">Logout</a></li>
+            <li><a class="scrollto" href="/logout">Logout</a></li>
             {% else %}
             <li><a class="getstarted scrollto" href="/login">Sign in</a></li>
             {% endif %}
@@ -45,7 +52,7 @@
         </nav><!-- .navbar -->
     </div>
   </header><!-- End Header -->
-  <br><br><br><br>
+  <br><br>
 
   {% block content %}{%endblock%}
 
