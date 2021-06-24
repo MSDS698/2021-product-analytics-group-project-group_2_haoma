@@ -142,6 +142,7 @@ def discharge():
         db.session.add(patient)
         db.session.commit()
         df_rec.to_pickle(f'code/app/upload_temp/recs/{patient.id}')
+        recommendations.to_pickle(f'code/app/upload_temp/dfs/{patient.id}')
         return redirect(url_for('discharge'))
 
     patients = classes.Patient.query. \
@@ -195,7 +196,7 @@ def patient():
     if(os.path.exists(f'code/app/upload_temp/recs/{patient.id}')):
         df_rec = pd.read_pickle(f'code/app/upload_temp/recs/{patient.id}')
     else:
-        df, df_rec = recommender_instance.recommend(df,
+        _, df_rec = recommender_instance.recommend(df,
                                                 patient.boolservices,
                                                 patient.path)
         
@@ -204,7 +205,7 @@ def patient():
             print('Error with number of agencies selected')
         else:
             resulting_agencies = list(request.form.keys())[:-1]
-            agency_df = df
+            agency_df = pd.read_pickle(f'code/app/upload_temp/dfs/{patient.id}')
             agency_df['preventable_readmission'] = round(agency_df['preventable_readmission']/2,2)
             df3 = agency_df[agency_df.name.isin(resulting_agencies)]
             patient_name = 'ENTER NAME'
