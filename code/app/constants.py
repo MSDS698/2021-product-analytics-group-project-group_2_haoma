@@ -30,12 +30,14 @@ dashboard_info = {
     'daily': {
         'title': 'Managing Daily Activities',
         'body': """
-            <h8 class="card-text">How often the patient got better at :</h8>
-            <ul>
-                <li>Bathing</li>
-                <li>Getting In and Out of the Bed</li>
-                <li>Walking or Moving Around</li>
-            </ul>""",
+            How often the patient got better at :
+            <div>
+                <ul>
+                    <li>Bathing</li>
+                    <li>Getting In and Out of the Bed</li>
+                    <li>Walking or Moving Around</li>
+                </ul>
+            </div>""",
         'height_desc': '15rem',
         'height_data': '13rem',
     },
@@ -52,114 +54,78 @@ dashboard_info = {
     },
     'timely': {
         'title': 'Timely Manner',
-        'body': """
-            <p class="card-text">
-                How often did the agency begin their patients' care in a timely manner?
-            </p>""",
+        'body': """How often did the agency begin their patients' care in a timely manner?""",
         'height_desc': '19rem',
         'height_data': '100%',
     },
     'ppr': {
         'title': 'Preventable Readmission',
-        'body': """
-            <p class="card-text">
-                The risk-standardized rate of unplanned, potentially preventable readmissions for
-                patients within 30 days of discharge.
-            </p>""",
+        'body': """The risk-standardized rate of unplanned, potentially preventable readmissions for
+                patients within 30 days of discharge.""",
         'height_desc': '19rem',
         'height_data': '17rem',
     },
     'dtc': {
         'title': 'Discharge to Community',
-        'body': """
-            <p class="card-text">
-                Percent of patients who were discharged to the community within 100 
+        'body': """Percent of patients who were discharged to the community within 100 
                 days of the start of the episode, and remained in the community for 30 
-                consecutive days 
-            </p>""",
+                consecutive days""",
         'height_desc': '19rem',
         'height_data': '17rem',
     },
     'er': {
         'title': 'ER Visits',
-        'body': """
-            <p class="card-text">
-                How often patients receiving home health care needed any urgent, 
+        'body': """How often patients receiving home health care needed any urgent, 
                 unplanned care in the hospital emergency room – without being 
-                admitted to the hospital
-            </p>""",
+                admitted to the hospital""",
         'height_desc': '19rem',
         'height_data': '17rem',
     },
     'readmitted': {
         'title': 'Readmitted',
-        'body': """
-            <p class="card-text">
-                How often home health patients did not have to be admitted to the hospital
-            </p>""",
+        'body': """How often home health patients did not have to be admitted to the hospital""",
         'height_desc': '19rem',
         'height_data': '17rem',
     },
     'falling': {
         'title': 'Risk of Falling',
-        'body': """
-            <p class="card-text">
-                How often the home health team checked patients' risk of falling?
-            </p>""",
+        'body': """How often the home health team checked patients' risk of falling?""",
         'height_desc': '19rem',
         'height_data': '17rem',
     },
     'depression': {
         'title': 'Depression',
-        'body': """
-            <p class="card-text">
-                How often the home health team checked patients for depression?
-            </p>""",
+        'body': """How often the home health team checked patients for depression?""",
         'height_desc': '19rem',
         'height_data': '17rem',
     },
     'pneumonia': {
         'title': 'Pneumococcal Vaccine',
-        'body': """
-            <p class="card-text">
-                How often the home health team made sure that their patients have received a pneumococcal vaccine (pneumonia shot)
-            </p>""",
+        'body': """How often the home health team made sure that their patients have received a pneumococcal vaccine (pneumonia shot)""",
         'height_desc': '19rem',
         'height_data': '17rem',
     },
     'flu': {
         'title': 'Flu Shot',
-        'body': """
-            <p class="card-text">
-                How often the home health team determined whether patients received a flu shot for the current flu season
-            </p>""",
+        'body': """How often the home health team determined whether patients received a flu shot for the current flu season""",
         'height_desc': '19rem',
         'height_data': '17rem',
     },
     'timely_med': {
         'title': 'Medication',
-        'body': """
-            <p class="card-text">
-                How often patients got better at taking their drugs correctly by mouth
-            </p>""",
+        'body': """How often patients got better at taking their drugs correctly by mouth""",
         'height_desc': '19rem',
         'height_data': '17rem',
     },
     'taught_med': {
         'title': 'Taught Meds',
-        'body': """
-            <p class="card-text">
-                How often the home health team taught patients (or their family caregivers) about their drugs
-            </p>""",
+        'body': """How often the home health team taught patients (or their family caregivers) about their drugs""",
         'height_desc': '19rem',
         'height_data': '17rem',
     },
     'diabetes': {
         'title': 'Diabetes and Foot Care',
-        'body': """
-            <p class="card-text">
-                For patients with diabetes, how often the home health team got doctor's orders, gave foot care, and taught patients about foot care
-            </p>""",
+        'body': """For patients with diabetes, how often the home health team got doctor's orders, gave foot care, and taught patients about foot care""",
         'height_desc': '19rem',
         'height_data': '17rem',
     },
@@ -206,5 +172,5 @@ dashboard_barchart_labels = {
     'symptom': ['Breathing', 'Wounds', 'Skin'],
 }
 
-dashboard_colors = ['#cc3d33', '#dea004', '#3378cc']
-background_colors = ['rgba(204, 61, 51, 0.8)', 'rgba(222, 160, 4, 0.8)', 'rgba(51, 120, 204, 0.8)']
+dashboard_colors = ['#cc3d33', '#dea004', '#3378cc', '#b30098', '#7d4700']
+background_colors = ['rgba(204, 61, 51, 0.8)', 'rgba(222, 160, 4, 0.8)', 'rgba(51, 120, 204, 0.8)', '#b30098', '#7d4700']

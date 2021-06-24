@@ -251,10 +251,10 @@ def patient():
             col_first_size = 5
             col_size = 2
             if(num_agencies == 3):
-                col_first_size = 3
+                col_first_size = 4
                 col_size = 2
             elif(num_agencies == 4):
-                col_first_size = 3
+                col_first_size = 4
                 col_size = 2
             elif(num_agencies == 5):
                 col_first_size = col_size = 2

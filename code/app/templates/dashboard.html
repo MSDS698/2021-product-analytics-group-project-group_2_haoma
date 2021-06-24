@@ -63,7 +63,10 @@
                     <div class="card card-body" style="position: relative; height: {{dashboard_info[k]['height_desc']}};">
                         <div class="chart-container">
                             <h5 class="card-title"><b>{{dashboard_info[k]['title']}}</b></h5>
-                            {{dashboard_info[k]['body']|safe}}
+                            <div class="card-text-test">
+                                {{dashboard_info[k]['body']|safe}}
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -136,7 +139,7 @@
                 plugin_denominator:  130,
                 plugin_height: 1.7,
                 responsive: true,
-                plugin_text: Math.round(score[i][0]),
+                plugin_text: Math.round(score[i][0]) + '%',
                 legend: {
                     display: false
                 },
@@ -149,9 +152,9 @@
                 },
                 layout: {
                     padding: {
-                        left: 10,
-                        right: 10,
-                        bottom: 10
+                        left: 0,
+                        right: 0,
+                        bottom: 0
                     },
                 },
                 cutoutPercentage: 60,
@@ -217,7 +220,7 @@
                         plugin_denominator: 120,
                         plugin_height: 2,
                         responsive: true,
-                        plugin_text: Math.round(data[j][i][0]),
+                        plugin_text: Math.round(data[j][i][0]) + '%',
                         legend: {
                             display: false
                         },
@@ -225,14 +228,14 @@
                             display: false
                         },
                         title: {
-                            display: true,
+                            display: false,
                             text: name[i].substring(0, 20)
                         },
                         layout: {
                             padding: {
-                                left: 10,
-                                right: 10,
-                                bottom: 30
+                                left: 0,
+                                right: 0,
+                                bottom: 0
                             },
                         },
                         cutoutPercentage: 60,

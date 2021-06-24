@@ -1,4 +1,4 @@
-.agency-header{
+.agency-header {
     position: fixed;
     width: 100%;
     background-color: white;
@@ -6,7 +6,7 @@
     z-index: 100;
 }
 
-.agency-body{
+.agency-body {
     padding-top: 23rem;
     z-index: 1;
 } 
@@ -18,21 +18,23 @@ body {
 }
 
 
-ul{
+ul {
     display: inline-block;
     text-align:left;    
 }        
 
-ul li{
+ul li {
     margin-bottom:1em;
 }    
 
-.card-text{
+.card-text-test {
     text-align:left;
-    line-height:3;
+    line-height: 12px;
+    margin: 0 0;
+    padding: 0 0 0 0;
 }    
 
-.card-title{
+.card-title {
     text-align:left; 
     padding-top: 20px;
     color: #376b69;
