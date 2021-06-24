@@ -58,9 +58,11 @@ class Patient(db.Model):
     recommendations = db.Column(db.ARRAY(db.String(100)))
     rec_status = db.Column(db.ARRAY(db.String(1))) # "A" = available, "R" = removed, "C" = HHA confirmed, "D" = HHA denied, "W" = waiting for HHA confirmd
     
-    boolservices = db.Column(db.ARRAY(db.Boolean),nullable = False)
+    boolservices = db.Column(db.ARRAY(db.Boolean), nullable = False)
     zipcode = db.Column(db.Integer, nullable=False)
     path = db.Column(db.String(100), nullable=False)
+    match = db.Column(db.String(100))
+    agency_requests = db.relationship('AgencyRequest', backref='patient', lazy=True)
                           
         
     def get_column_names():
@@ -87,10 +89,11 @@ class AgencyRequest(db.Model):
     __tablename__ = "agency_request"
     __table_args__ = {"schema": "public"}
     id = db.Column(db.Integer, primary_key=True)
-    patient_id = db.Column(db.Integer, nullable=False)
+    patient_id = db.Column(db.Integer, db.ForeignKey('public.patient.id'), nullable=False)
     planner_username = db.Column(db.String(100), nullable=False)
     acknowledged = db.Column(db.Boolean(), default=False)
     agency_name = db.Column(db.String(100), nullable=False)
+    completed = db.Column(db.Boolean(), default=False, nullable=False)
                           
         
     def get_column_names():
