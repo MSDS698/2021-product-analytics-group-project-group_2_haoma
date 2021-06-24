@@ -22,6 +22,7 @@
 <!-- Template Main CSS File -->
 <!--  <link href="assets/css/style.css" rel="stylesheet">-->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/headerbase.css') }}">
 
 <head>
 <!-- =======================================================
@@ -37,7 +38,7 @@
 
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top">
-    <div class="container d-flex align-items-center justify-content-between">
+    <div class="container d-flex align-items-center align-content-center justify-content-between headerbase">
       <h1 class="logo"><a href="/">Haoma</a></h1>
 
       <nav id="navbar" class="navbar">
@@ -52,7 +53,7 @@
         </nav><!-- .navbar -->
     </div>
   </header><!-- End Header -->
-  <br><br>
+  <br>
 
   {% block content %}{%endblock%}
 

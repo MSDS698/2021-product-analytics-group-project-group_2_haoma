@@ -17,7 +17,7 @@
                     <div class="card-body">
                         <h1 class="align-middle" style="font-family:tahoma;color:#376b69;text-align:center"><br><b>Haoma Compare</b></h1>
                         {% if show_haoma_desc %}  
-                        <h3 class="align-middle" style="text-align:center">Based on Official Medicare Surveys</h3>
+                        <!-- <h3 class="align-middle" style="text-align:center">Based on Official Medicare Surveys</h3> -->
                         {% endif %}
                         <p class="card-text">
                         </p>
@@ -71,8 +71,8 @@
                 <div class="col-{{col_size}}">
                     <div class="card card-style mb-2">
                         <div class="card-body">
-                            <div class="chart-container" style="position: relative; height: {{dashboard_info[k]['height_data']}};">
-                                <canvas id="{{k}}{{i}}" style="height: 100%"></canvas>
+                            <div class="chart-container" style="position: relative;">
+                                <canvas id="{{k}}{{i}}" style="height: 100%; width: 100%;"></canvas>
                             </div>
                         </div>
                     </div>
@@ -136,7 +136,7 @@
                 plugin_denominator:  130,
                 plugin_height: 1.7,
                 responsive: true,
-                plugin_text: Math.round(score[i][0]) + '%',
+                plugin_text: Math.round(score[i][0]),
                 legend: {
                     display: false
                 },
@@ -172,7 +172,7 @@
                 };
                 new Chart(ctx, {
                     type: 'bar',
-                    data: card_data, 
+                    data: card_data,
                     options: {
                         scales: {
                             xAxes: [{
@@ -217,7 +217,7 @@
                         plugin_denominator: 120,
                         plugin_height: 2,
                         responsive: true,
-                        plugin_text: Math.round(data[j][i][0]) + '%',
+                        plugin_text: Math.round(data[j][i][0]),
                         legend: {
                             display: false
                         },
@@ -230,8 +230,8 @@
                         },
                         layout: {
                             padding: {
-                                left: 50,
-                                right: 50,
+                                left: 10,
+                                right: 10,
                                 bottom: 30
                             },
                         },

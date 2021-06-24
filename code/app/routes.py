@@ -248,13 +248,15 @@ def patient():
                 'bg_colors': json.dumps(background_colors)
             }
 
-            col_first_size = col_size = 4
+            col_first_size = 5
+            col_size = 2
             if(num_agencies == 3):
-                col_first_size = col_size = 3
+                col_first_size = 3
+                col_size = 2
             elif(num_agencies == 4):
                 col_first_size = 3
                 col_size = 2
-            else:
+            elif(num_agencies == 5):
                 col_first_size = col_size = 2
             
             return render_template("dashboard.html",
