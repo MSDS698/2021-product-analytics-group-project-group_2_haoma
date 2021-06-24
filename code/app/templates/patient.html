@@ -5,6 +5,7 @@
 
 <head>
   <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/patient.css') }}">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
   <script type="text/javascript">
     let patient_id = {{ patient.id }};
@@ -22,7 +23,6 @@
 </head>
 
 <body>
-  <center>
     <div class="container">
       <div class="header"><br>
         <h3 class="text-muted">
@@ -75,6 +75,48 @@
         <!-- Available Pane -->
         <div class="tab-pane active" id="available" role="tabpanel" aria-labelledby="available-tab">
           <form method="POST">
+            <div class="row">
+              <div class="container col-md-12 compare-table">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      {% for col_name in columns %}
+                      <th scope="col">{{col_name}}</th>
+                      {% endfor %}
+                      <th></th>
+                      <th></th>
+                      <th class="compare-button"><button type="submit" name="compare" id ="compare-btn" class="btn btn-primary">Compare</button></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for row in data_available %}
+                    <tr>
+                      
+                      {% for cell in row %}
+                      <td style="vertical-align: middle;">{{cell}}</td>
+                      {% endfor %}
+                      <td><button type="button" class="btn btn-success" style="vertical-align: middle;" onclick="requestRec('{{row[0]-1}}');">
+                        Request
+                      </button></td>
+                      <td><button type="button" class="btn btn-warning" style="vertical-align: middle;" onclick="removeRec('{{row[0]-1}}');">
+                        <i class="bi bi-trash"></i>
+                      </button></td>
+                      <td class="compare-checkbox"><input type="checkbox" name="{{row[1]}}"></td>
+
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <!-- <div class="container col-md-2 compare-button text-center">
+                <button type="submit" name="compare" class="btn btn-primary">Compare</button>
+              </div> -->
+            </div>
+          </form>
+        </div>
+        <!-- Requested Pane -->
+        <div class="tab-pane" id="requested" role="tabpanel" aria-labelledby="requested-tab">
+          <form method="POST">
             <div class="container">
               <table class="table table-hover">
                 <thead>
@@ -82,51 +124,24 @@
                     {% for col_name in columns %}
                     <th scope="col">{{col_name}}</th>
                     {% endfor %}
+                    <th></th>
+                    <th class="compare-button"><button type="submit" name="compare" class="btn btn-primary">Compare</button></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {% for row in data_available %}
+                  {% for row in data_requested %}
                   <tr>
                     {% for cell in row %}
                     <td>{{cell}}</td>
                     {% endfor %}
-                    <td><button type="button" class="btn btn-success" onclick="requestRec('{{row[0]-1}}');">
-                      Request
-                    </button></td>
-                    <td><input type="checkbox" name="{{row[1]}}"></td>
-                    <td><button type="button" class="btn btn-warning" onclick="removeRec('{{row[0]-1}}');">
-                      <i class="bi bi-trash"></i>
-                    </button></td>
+                    <td></td>
+                    <td class="compare-checkbox"><input type="checkbox" name="{{row[1]}}"></td>
                   </tr>
                   {% endfor %}
                 </tbody>
               </table>
             </div>
-            <button type="submit" name="compare" value="company.index" style="margin-left:45%">Compare</button>
           </form>
-        </div>
-        <!-- Requested Pane -->
-        <div class="tab-pane" id="requested" role="tabpanel" aria-labelledby="requested-tab">
-          <div class="container">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  {% for col_name in columns %}
-                  <th scope="col">{{col_name}}</th>
-                  {% endfor %}
-                </tr>
-              </thead>
-              <tbody>
-                {% for row in data_requested %}
-                <tr>
-                  {% for cell in row %}
-                  <td>{{cell}}</td>
-                  {% endfor %}
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
         </div>
         <!-- Confirmed Pane -->
         <div class="tab-pane" id="confirmed" role="tabpanel" aria-labelledby="confirmed-tab">
@@ -200,7 +215,6 @@
       </div>
 
     </div>
-  </center>
 </body>
 
 </html>
