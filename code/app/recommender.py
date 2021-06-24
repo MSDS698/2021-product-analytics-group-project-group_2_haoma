@@ -50,7 +50,7 @@ class Recommender():
         df, df_rec = pipe_prep.fit_transform(df_filter.copy())
         df_rec['rank'] = range(1, len(df_rec)+1)
         df_rec = df_rec[['rank'] + list(df_rec.columns[:-1])]
-        return df['name'].tolist(), df_rec
+        return df, df_rec
 
     def get_metrics(self, recommendations, summary):
         ...
