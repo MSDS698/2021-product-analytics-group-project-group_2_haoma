@@ -10,55 +10,6 @@ import json
 import pandas as pd
 
 
-@app.route("/dashboard")
-def dashboard():
-    num_agencies = 3
-    agency_df = funcs.get_top_agencies().fillna(0)
-    agency_df['preventable_readmission'] = round(agency_df['preventable_readmission']/2,2)
-    df3 = agency_df.sample(num_agencies)
-    names = df3.name.tolist()
-    all_scores = list(map(lambda x: [x, round(100-x,2)], df3.score.tolist()))
-    all_timely = list(map(lambda x: [x, round(100-x,2)], df3.timely_manner.tolist()))
-    all_ppr = list(map(lambda x: [x, round(100-x,2)], df3.preventable_readmission.tolist()))
-
-    data = {
-        'num_agencies': num_agencies,
-        'patient_name': 'Jenny',
-        'name': json.dumps(names),
-        'score': json.dumps(all_scores),
-        'daily': json.dumps([df3[agency_df_keys['daily_activities']].iloc[i].values[1:].tolist() for i in range(num_agencies)]),
-        'symptom': json.dumps([df3[agency_df_keys['daily_activities']].iloc[i].values[1:].tolist() for i in range(num_agencies)]),
-        'timely': json.dumps(all_timely),
-        'ppr': json.dumps(all_ppr),
-        'dtc': json.dumps(return_agency_data(df3, agency_df_keys['dtc'])),
-        'er': json.dumps(return_agency_data(df3, agency_df_keys['er'])),
-        'readmitted': json.dumps(return_agency_data(df3, agency_df_keys['readmitted'])),
-        'falling': json.dumps(return_agency_data(df3, agency_df_keys['falling'])),
-        'depression': json.dumps(return_agency_data(df3, agency_df_keys['depression'])),
-        'pneumonia': json.dumps(return_agency_data(df3, agency_df_keys['pneumonia'])),
-        'flu': json.dumps(return_agency_data(df3, agency_df_keys['flu'])),
-        'timely_med': json.dumps(return_agency_data(df3, agency_df_keys['timely_med'])),
-        'taught_med': json.dumps(return_agency_data(df3, agency_df_keys['taught_med'])),
-        'diabetes': json.dumps(return_agency_data(df3, agency_df_keys['diabetes'])),
-    }
-
-    colors = {
-        'colors': json.dumps(dashboard_colors),
-        'bg_colors': json.dumps(background_colors)
-    }
-    
-    return render_template("dashboard.html", 
-                           dashboard_key_order=dashboard_key_order,
-                           dashboard_key_order_json=json.dumps(dashboard_key_order),
-                           dashboard_chart_types=json.dumps(dashboard_chart_types),
-                           dashboard_barchart_labels=json.dumps(dashboard_barchart_labels),
-                           dashboard_chart_titles=json.dumps(dashboard_chart_titles),
-                           dashboard_info=dashboard_info,
-                           name_arr=names, 
-                           colors_arr=dashboard_colors, 
-                           **colors, **data)
-
-
 @app.route('/')
 @app.route('/index')
 def index():
@@ -264,75 +215,50 @@ def patient():
             df_agency['preventable_readmission'] = round(df_agency['preventable_readmission']/2,2)
             df3 = df_agency[df_agency.name.isin(resulting_agencies)]
             patient_name = patient.first
-
+            num_agencies = 3
             names = df3.name.tolist()
-            name1 = names[0]
-            name2 = names[1]
-            name3 = names[2]
+            all_scores = list(map(lambda x: [x, round(100-x,2)], df3.score.tolist()))
+            all_timely = list(map(lambda x: [x, round(100-x,2)], df3.timely_manner.tolist()))
+            all_ppr = list(map(lambda x: [x, round(100-x,2)], df3.preventable_readmission.tolist()))
 
-            daily_activities = ['name', 'better_bathing', 
-                                'better_getting_in_bed', 'better_moving']
+            data = {
+                'num_agencies': num_agencies,
+                'patient_name': patient_name,
+                'name': json.dumps(names),
+                'score': json.dumps(all_scores),
+                'daily': json.dumps([df3[agency_df_keys['daily_activities']].iloc[i].values[1:].tolist() for i in range(num_agencies)]),
+                'symptom': json.dumps([df3[agency_df_keys['daily_activities']].iloc[i].values[1:].tolist() for i in range(num_agencies)]),
+                'timely': json.dumps(all_timely),
+                'ppr': json.dumps(all_ppr),
+                'dtc': json.dumps(return_agency_data(df3, agency_df_keys['dtc'])),
+                'er': json.dumps(return_agency_data(df3, agency_df_keys['er'])),
+                'readmitted': json.dumps(return_agency_data(df3, agency_df_keys['readmitted'])),
+                'falling': json.dumps(return_agency_data(df3, agency_df_keys['falling'])),
+                'depression': json.dumps(return_agency_data(df3, agency_df_keys['depression'])),
+                'pneumonia': json.dumps(return_agency_data(df3, agency_df_keys['pneumonia'])),
+                'flu': json.dumps(return_agency_data(df3, agency_df_keys['flu'])),
+                'timely_med': json.dumps(return_agency_data(df3, agency_df_keys['timely_med'])),
+                'taught_med': json.dumps(return_agency_data(df3, agency_df_keys['taught_med'])),
+                'diabetes': json.dumps(return_agency_data(df3, agency_df_keys['diabetes'])),
+            }
 
-            treating_symptoms = ['name', 'improve_breathing',
-                                 'improve_wounds', 'changed_skin']
+            colors = {
+                'colors': json.dumps(dashboard_colors),
+                'bg_colors': json.dumps(background_colors)
+            }
+            
+            return render_template("dashboard.html",
+                                loggedin=current_user.is_authenticated,
+                                dashboard_key_order=dashboard_key_order,
+                                dashboard_key_order_json=json.dumps(dashboard_key_order),
+                                dashboard_chart_types=json.dumps(dashboard_chart_types),
+                                dashboard_barchart_labels=json.dumps(dashboard_barchart_labels),
+                                dashboard_chart_titles=json.dumps(dashboard_chart_titles),
+                                dashboard_info=dashboard_info,
+                                name_arr=names, 
+                                colors_arr=dashboard_colors, 
+                                **colors, **data)
 
-            # daily activities
-            daily1 = df3[daily_activities].iloc[2].values[1:].tolist()
-            daily2 = df3[daily_activities].iloc[1].values[1:].tolist()
-            daily3 = df3[:3][daily_activities].iloc[0].values[1:].tolist()
-
-            # daily activities
-            symp1 = df3[treating_symptoms].iloc[2].values[1:].tolist()
-            symp2 = df3[treating_symptoms].iloc[1].values[1:].tolist()
-            symp3 = df3[treating_symptoms].iloc[0].values[1:].tolist()
-
-            # preventing harm
-            fall1, fall2, fall3 = funcs.return_agency_data(df3, 'checked_falling')
-            depr1, depr2, depr3 = funcs.return_agency_data(df3, 'checked_depression')
-            pneu1, pneu2, pneu3 = funcs.return_agency_data(df3, 'checked_pneumonia')
-            flu1, flu2, flu3 = funcs.return_agency_data(df3, 'checked_flu')
-
-            # teaching patients
-            med1, med2, med3 = funcs.return_agency_data(df3, 'taught_meds')
-            tmed1, tmed2, tmed3 = funcs.return_agency_data(df3, 'timely_address_meds')
-            diab1, diab2, diab3 = funcs.return_agency_data(df3, 'diabetes_foot')
-
-            # general
-            score1, score2, score3 = funcs.return_agency_data(df3, 'score')
-            time1, time2, time3 = funcs.return_agency_data(df3, 'timely_manner')
-            ppr1, ppr2, ppr3 = funcs.return_agency_data(df3, 'preventable_readmission')
-            dtc1, dtc2, dtc3 = funcs.return_agency_data(df3, 'discharge_community')
-            er1, er2, er3 = funcs.return_agency_data(df3, 'ER')
-            adm1, adm2, adm3 = funcs.return_agency_data(df3, 'readmitted')
-
-            return render_template("dashboard.html", 
-                                   patient_name = patient_name,
-                                   agency_names = json.dumps(names),
-                                   all_scores = json.dumps(df3.score.tolist()),
-                                   daily1 = json.dumps(daily1), daily2 = json.dumps(daily2),
-                                   daily3 = json.dumps(daily3), name1 = json.dumps(name1),
-                                   name2 = json.dumps(name2), name3 = json.dumps(name3),
-                                   symp1 = json.dumps(symp1), symp2 = json.dumps(symp2),
-                                   symp3 = json.dumps(symp3), score1 = json.dumps(score1),
-                                   score2 = json.dumps(score2), score3 = json.dumps(score3),
-                                   time1 = json.dumps(time1), time2 = json.dumps(time2),
-                                   time3 = json.dumps(time3), fall1 = json.dumps(fall1),
-                                   fall2 = json.dumps(fall2), fall3 = json.dumps(fall3),
-                                   depr1 = json.dumps(depr1), depr2 = json.dumps(depr2),
-                                   depr3 = json.dumps(depr3), pneu1 = json.dumps(pneu1),
-                                   pneu2 = json.dumps(pneu2), pneu3 = json.dumps(pneu3),
-                                   flu1 = json.dumps(flu1), flu2 = json.dumps(flu2),
-                                   flu3 = json.dumps(flu3), med1 = json.dumps(med1),
-                                   med2 = json.dumps(med2), med3 = json.dumps(med3),
-                                   tmed1 = json.dumps(tmed1), tmed2 = json.dumps(tmed2),
-                                   tmed3 = json.dumps(tmed3), diab1 = json.dumps(diab1),
-                                   diab2 = json.dumps(diab2), diab3 = json.dumps(diab3),
-                                   dtc1 = json.dumps(dtc1), dtc2 = json.dumps(dtc2),
-                                   dtc3 = json.dumps(dtc3), er1 = json.dumps(er1),
-                                   er2 = json.dumps(er2), er3 = json.dumps(er3),
-                                   adm1 = json.dumps(adm1), adm2 = json.dumps(adm2),
-                                   adm3 = json.dumps(adm3), ppr1 = json.dumps(ppr1),
-                                   ppr2 = json.dumps(ppr2), ppr3 = json.dumps(ppr3))
 
     rec_status = patient.rec_status[:20]
     df_available, df_requested, df_confirmed, df_denied, df_removed = df_rec.loc[[e == "A" for e in rec_status]],\
