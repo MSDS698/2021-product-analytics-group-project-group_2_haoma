@@ -11,3 +11,5 @@ code/app/config.py
 code/app/db/credentials.csv
 *.DS_Store
 code/app/upload_temp/*
+.flaskenv
+.vscode

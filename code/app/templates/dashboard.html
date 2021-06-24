@@ -7,12 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/test.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
-
-
-
-<!-- <center> -->
-
-<body>  
+    
+<div>
     <div class="agency-header">   
         <div class="container">
             <div class="row">    
@@ -24,55 +20,40 @@
                 </div>
                 <div class="col-xl-6">
                     <div class="card bg-light mb-3">
-                    <h5 class="card-header"><b>Personalized Haoma Score for {{patient_name}}</b></h5>
-        <!--               <h5 class="card-header" style="color:black;background-color:#529c89;opacity: 0.9;
-                                                    "><b>Haoma Score Personalized for {{patient_name}}</b></h5> -->
+                        <h5 class="card-header"><b>Personalized Haoma Score for {{patient_name}}</b></h5>
                     </div>
                 </div>
             </div>
         </div>
-            
+    </div>
+</div>
     
+<body>
+    <div class="agency-header">   
         <div class="container">
             <div class="row">    
                 <div class="col-xl-6">
-                        <div class="card-body">
-                            <h1 class="align-middle" style="font-family:tahoma;color:#376b69"><b>Haoma Compare</b></h1>
-                            <h3 class="align-middle">Based on Official Medicare Surveys</h3>
-                            <p class="card-text">
-                            </p>
-                        </div>
+                    <div class="card-body">
+                        <h1 class="align-middle" style="font-family:tahoma;color:#376b69"><b>Haoma Compare</b></h1>
+                        <h3 class="align-middle">Based on Official Medicare Surveys</h3>
+                        <p class="card-text">
+                        </p>
+                    </div>
                 </div>
+                {% for i in range(num_agencies) %}
                 <div class="col-md-2">
-                    <div class="card card-style mb-2">
+                    <div class="card card-style mb-3">
                         <div class="card-body">
                             <div class="chart-container" style="position: relative;">
-                                <canvas id="first_score"></canvas>
+                                <canvas id="score{{i}}"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <div class="card card-style mb-2">
-                        <div class="card-body">
-                            <div class="chart-container" style="position: relative;">
-                                <canvas id="second_score"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="card card-style mb-2">
-                        <div class="card-body">
-                            <div class="chart-container" style="position: relative;">
-                                <canvas id="third_score"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
-
+    
         <div class="container">
             <div class="row">    
                 <div class="col-xl">
@@ -80,1347 +61,226 @@
                     <h5 class="card-header">&nbsp;</h5>
                     </div>
                 </div>
+                {% for i in range(num_agencies) %}
                 <div class="col-xl">
                     <div class="card bg-light mb-3">
-                    <h5 class="card-header" style="color: #cc3d33;">{{good_name[1:-1][0:25].title()}}</h5>
+                    <h5 class="card-header" style="color: {{colors_arr[i]}};">{{name_arr[i][1:-1][0:25].title()}}</h5>
                     </div>
                 </div>
-                <div class="col-xl">
-                    <div class="card bg-light mb-3">
-                    <h5 class="card-header" style="color: #dea004;">{{better_name[1:-1][0:25].title()}}</h5>
-                    </div>
-                </div>
-                <div class="col-xl">
-                    <div class="card bg-light mb-3">
-                    <h5 class="card-header" style="color: #3378cc;"> {{best_name[1:-1][0:25].title()}}</h5>
-                    </div>
-                </div>
-            </div>
-        </div> 
-    </div>
-<!--     
-<div class="container">
-  <div class="row">    
-        <div class="col-xl-3">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="falling"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="depress"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="flu"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3">
-            <div class="card card-style mb-2">
-                <div class="card-body">
-                    <div class="chart-container" style="position: relative;">
-                        <canvas id="pneumonia"></canvas>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
-</div> -->
-    
 
-    
-<body> 
-<div class="agency-body">
-    <div class="container">
-        <div class="row">   
-            <div class="col-md-3">
-                <div class="card card-body" style="position: relative; height:12rem">
-                    <div class="chart-container">
-                        <h5 class="card-title"><b>Managing Daily Activities</b></h5>
-                        <h8 class="card-text">How often the patient got better at:</h8>
-                        <ul>
-                            <li>Bathing</li>
-                            <li>Getting In and Out of the Bed</li>
-                            <li>Walking or Moving Around</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3  align-items-stretch">
-                <div class="card card-style mb-2">
-                    <div class="card-body">
-                        <div class="chart-container" style="position: relative; height: 10rem">
-                            <canvas id="manage1"></canvas>
+    <div class="agency-body">
+        {% for k in dashboard_key_order %}
+        <div class="container">
+            <div class="row">   
+                <div class="col-md-3">
+                    <div class="card card-body" style="position: relative; height: {{dashboard_info[k]['height_desc']}};">
+                        <div class="chart-container">
+                            <h5 class="card-title"><b>{{dashboard_info[k]['title']}}</b></h5>
+                            {{dashboard_info[k]['body']|safe}}
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3  align-items-stretch">
-                <div class="card card-style mb-2">
-                    <div class="card-body">
-                        <div class="chart-container" style="position: relative; height:10rem">
-                            <canvas id="manage2"></canvas>
+                {% for i in range(num_agencies) %}
+                <div class="col-md-3">
+                    <div class="card card-style mb-2">
+                        <div class="card-body">
+                            <div class="chart-container" style="position: relative; height: {{dashboard_info[k]['height_data']}};">
+                                <canvas id="{{k}}{{i}}"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3  align-items-stretch">
-                <div class="card card-style mb-2">
-                    <div class="card-body">
-                        <div class="chart-container" style="position: relative; height:10rem">
-                            <canvas id="manage3"></canvas>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
+        {% endfor %}
     </div>
-        
-    <div class="container">
-        <div class="row">   
-            <div class="col-md-3">
-                <div class="card card-body" style="position: relative; height:12rem">
-                    <div class="card-style mb-2">
-                        <h5 class="card-title"><b>Treating Symptoms</b></h5>
-                        <ul>
-                            <li>How often breathing improved</li>
-                            <li>How often wounds improved</li>
-                            <li>How often pressure ulcers didn't worsen</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3  align-items-stretch">
-                <div class="card card-style mb-2">
-                    <div class="card-body">
-                        <div class="chart-container" style="position: relative; height:10rem">
-                            <canvas id="symptom1"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3  align-items-stretch">
-                <div class="card card-style mb-2">
-                    <div class="card-body">
-                        <div class="chart-container" style="position: relative; height:10rem">
-                            <canvas id="symptom2"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3  align-items-stretch">
-                <div class="card card-style mb-2">
-                    <div class="card-body" style="position: relative;">
-                        <div class="chart-container" style="position: relative; height:10rem">
-                            <canvas id="symptom3"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-        
-        
-        
-        
-    <!-- <div class="container  align-items-center justify-content-between">
-        <div class="row">   
-            <div class="col-md-3 vertical-align='center'">
-                <div class="card text-left">
-                    <div class="card-body">
-                        <h5 class="card-title">Our score</h5>
-                        <p class="card-text">
-                        Our standardized rating based on potential preventable readmission, 
-                        discharge to community, and personalized features to the patient.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card card-style mb-2">
-                    <div class="card-body">
-                        <div class="chart-container" style="position: relative;">
-                            <canvas id="first_score"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card card-style mb-2">
-                    <div class="card-body">
-                        <div class="chart-container" style="position: relative;">
-                            <canvas id="second_score"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card card-style mb-2">
-                    <div class="card-body">
-                        <div class="chart-container" style="position: relative;">
-                            <canvas id="third_score"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-        
-    <div class="container">
-        <div class="row">  
-            <div class="col-md-3">
-                <div class="card card-style mb-2">
-                    <div class="card-body" style="position: relative; height: 19rem;">
-                        <h5 class="card-title"><b>Timely Manner</b></h5>
-                        <p>
-                        How often did the agency begin their patients' care in a timely manner?
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3  align-items-stretch">
-                <div class="card card-style mb-2">
-                    <div class="card-body">
-                        <div class="chart-container" style="position: relative; height: 17rem;">
-                            <canvas id="first_timely"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3  align-items-stretch">
-                <div class="card card-style mb-2">
-                    <div class="card-body">
-                        <div class="chart-container" style="position: relative; height: 17rem;">
-                            <canvas id="second_timely"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3  align-items-stretch">
-                <div class="card card-style mb-2">
-                    <div class="card-body">
-                        <div class="chart-container" style="position: relative; height: 17rem;">
-                            <canvas id="third_timely"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-        
-        
-    <div class="container">
-        <div class="row">   
-            <div class="col-md-3">
-                <div class="card card-style mb-2">
-                    <div class="card-body" style="position: relative; height: 19rem;">
-                        <h5 class="card-title"><b>Preventable Readmission</b></h5>
-                        <p>
-                            The risk-standardized rate of unplanned, potentially preventable readmissions for
-                            patients within 30 days of discharge.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3  align-items-stretch">
-                <div class="card card-style mb-2">
-                    <div class="card-body">
-                        <div class="chart-container" style="position: relative; height: 17rem;">
-                            <canvas id="first_ppr" class="align-middle"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3  align-items-stretch">
-                <div class="card card-style mb-2">
-                    <div class="card-body">
-                        <div class="chart-container" style="position: relative; height: 17rem;">
-                            <canvas id="second_ppr" class="align-middle"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3  align-items-stretch">
-                <div class="card card-style mb-2">
-                    <div class="card-body">
-                        <div class="chart-container" style="position: relative; height: 17rem;">
-                            <canvas id="third_ppr"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>   
-</div>
-    
-
+</body>
     
 </center>
 {% block javascript %}
 <script>
-    
-    let good_data = JSON.parse({{good_scores | tojson }});
-    let better_data = JSON.parse({{better_scores | tojson }});
-    let best_data = JSON.parse({{best_scores | tojson }});
-    
-    let good_symp = JSON.parse({{good_symp | tojson }});
-    let better_symp = JSON.parse({{better_symp | tojson }});
-    let best_symp = JSON.parse({{best_symp | tojson }});
-    
-    let good_name = JSON.parse({{good_name | tojson }});
-    let better_name = JSON.parse({{better_name | tojson }});
-    let best_name = JSON.parse({{best_name | tojson }});
-    
-    
-//     let falling = JSON.parse({{falling | tojson }});
-//     let depress = JSON.parse({{depress | tojson }});
-//     let flu = JSON.parse({{flu | tojson }});
-//     let pneumonia = JSON.parse({{pneumonia | tojson }});
-    
-    let first_score = JSON.parse({{first_score | tojson }});
-    let second_score = JSON.parse({{second_score | tojson }});
-    let third_score = JSON.parse({{third_score | tojson }});
-    
-    let first_timely = JSON.parse({{first_timely | tojson }});
-    let second_timely = JSON.parse({{second_timely | tojson }});
-    let third_timely = JSON.parse({{third_timely | tojson }});
+    const colors = JSON.parse({{colors | tojson }});
+    const bg_colors = JSON.parse({{bg_colors | tojson }});
 
+    const name = JSON.parse({{name | tojson}});
+    const num_agencies = JSON.parse({{num_agencies | tojson}});
 
-    
-//     var ctx = document.getElementById('daily_activities').getContext('2d');
-//     var symp_ctx = document.getElementById('symptoms').getContext('2d');
+    const score = JSON.parse({{score | tojson }});
+    const dashboard_key_order = JSON.parse({{dashboard_key_order_json | tojson}});
+    const dashboard_chart_types = JSON.parse({{dashboard_chart_types | tojson}});
+    const dashboard_barchart_labels = JSON.parse({{dashboard_barchart_labels | tojson}});
+    const dashboard_chart_titles = JSON.parse({{dashboard_chart_titles | tojson}});
+    const data = [
+        JSON.parse({{daily | tojson }}),
+        JSON.parse({{symptom | tojson }}),
+        JSON.parse({{timely | tojson }}),
+        JSON.parse({{ppr | tojson }}),
+        JSON.parse({{dtc | tojson }}),
+        JSON.parse({{er | tojson }}),
+        JSON.parse({{readmitted | tojson }}),
+        JSON.parse({{falling | tojson }}),
+        JSON.parse({{depression | tojson }}),
+        JSON.parse({{pneumonia | tojson }}),
+        JSON.parse({{flu | tojson }}),
+        JSON.parse({{timely_med | tojson }}),
+        JSON.parse({{taught_med | tojson }}),
+        JSON.parse({{diabetes | tojson }}),
+    ];
 
-    
-    var manage1_ctx = document.getElementById('manage1').getContext('2d');
-    var manage2_ctx = document.getElementById('manage2').getContext('2d');
-    var manage3_ctx = document.getElementById('manage3').getContext('2d');
-    
-    var symp1_ctx = document.getElementById('symptom1').getContext('2d');
-    var symp2_ctx = document.getElementById('symptom2').getContext('2d');
-    var symp3_ctx = document.getElementById('symptom3').getContext('2d');
-
-//     var fall_ctx = document.getElementById('falling').getContext('2d');
-//     var depress_ctx = document.getElementById('depress').getContext('2d');
-//     var flu_ctx = document.getElementById('flu').getContext('2d');
-//     var pneumonia_ctx = document.getElementById('pneumonia').getContext('2d');
-    
-
-    var first_score_canvas = document.getElementById('first_score');
-    var first_score_ctx = first_score_canvas.getContext('2d');
-    var second_score_canvas = document.getElementById('second_score');
-    var second_score_ctx = second_score_canvas.getContext('2d');
-    var third_score_canvas = document.getElementById('third_score');
-    var third_score_ctx = third_score_canvas.getContext('2d');
-    
-
-    var first_timely_canvas = document.getElementById('first_timely');
-    var first_timely_ctx = first_timely_canvas.getContext('2d');
-    var second_timely_canvas = document.getElementById('second_timely');
-    var second_timely_ctx = second_timely_canvas.getContext('2d');
-    var third_timely_canvas = document.getElementById('third_timely');
-    var third_timely_ctx = third_timely_canvas.getContext('2d');
-    
-
-
-    let first_ppr = JSON.parse({{first_ppr | tojson }});
-    var first_ppr_canvas = document.getElementById('first_ppr')
-    var first_ppr_ctx = first_ppr_canvas.getContext('2d');
-
-    var first_ppr_data = {
-          labels: [good_name, 'Orange'],
-          datasets: [
-            {
-              label: 'Dataset 1',
-              data: first_ppr,
-              backgroundColor: ['rgba(204, 61, 51, 0.8)',
-                'rgba(255, 255, 255, 0.8)'],
-            }
-          ]
+    for(let i=0; i<num_agencies; i++) {
+        const score_canvas = document.getElementById(`score${i}`);
+        const score_ctx = score_canvas.getContext('2d');
+        const score_data = {
+            labels: [name[i]],
+            datasets: [
+                {
+                label: `Dataset ${i+1}`,
+                data: score[i],
+                backgroundColor: [bg_colors[i],
+                    'rgba(255, 255, 255, 0.8)'],
+                }
+            ]
         };
-    var myChart = new Chart(first_ppr_ctx, {
-      type: 'doughnut',
-      data: first_ppr_data,
-          options: {
-            responsive: true,
-            animation: {
-            onProgress : function() {
-                var first_ppr_cx = first_ppr_canvas.width / 4;
-                var first_ppr_cy = first_ppr_canvas.height / 4;
-                first_ppr_ctx.textAlign = 'center';
-                first_ppr_ctx.textBaseline = 'middle';
-                first_ppr_ctx.font = '35px arial';
-                first_ppr_ctx.fillStyle = 'black';
-                first_ppr_ctx.fillText(first_ppr[0].toFixed()+"%", 
-                                        first_ppr_cx,
-                                        first_ppr_cy);
+        new Chart(score_ctx, {
+            type: 'doughnut',
+            data: score_data,
+            options: {
+                plugin_denominator:  70,
+                plugin_height: 1.7,
+                responsive: true,
+                plugin_text: Math.round(score[i][0]) + '%',
+                legend: {
+                    display: false
                 },
-            },            legend: {
-                display: false
-              },
-            title: {
-                display: false,
-                text: 'Timely Manner'
-            },
-            layout: {
-                padding: {
-                    left: 50,
-                    right: 50
-                  },
-               },
-            cutoutPercentage: 60,
-            },
-        });
-    
-    
-
-    let second_ppr = JSON.parse({{second_ppr | tojson }});
-    var second_ppr_canvas = document.getElementById('second_ppr')
-    var second_ppr_ctx = second_ppr_canvas.getContext('2d');    
-    var second_ppr_data = {
-          labels: [better_name, 'Orange'],
-          datasets: [
-            {
-              label: 'Dataset 1',
-              data: second_ppr,
-              backgroundColor: ['rgba(222, 160, 4, 0.8)',
-                'rgba(255, 255, 255, 0.8)'],
-            }
-          ]
-        };
-    var myChart = new Chart(second_ppr_ctx, {
-      type: 'doughnut',
-      data: second_ppr_data,
-          options: {
-            responsive: true,
-            animation: {
-            onProgress : function() {
-                var second_ppr_cx = second_ppr_canvas.width / 4;
-                var second_ppr_cy = second_ppr_canvas.height / 4;
-                second_ppr_ctx.textAlign = 'center';
-                second_ppr_ctx.textBaseline = 'middle';
-                second_ppr_ctx.font = '35px arial';
-                second_ppr_ctx.fillStyle = 'black';
-                second_ppr_ctx.fillText(second_ppr[0].toFixed()+"%", second_ppr_cx,
-                                           second_ppr_cy);
+                legend: {
+                    display: false
                 },
-            },            legend: {
-                display: false
-              },
-            title: {
-                display: false,
-                text: 'Timely Manner'
-            },
-            layout: {
-                padding: {
-                    left: 50,
-                    right: 50
-                  },
-               },
-            cutoutPercentage: 60,
-            },
-        });
-    
-    
-    
-    let third_ppr = JSON.parse({{third_ppr | tojson }});
-    var third_ppr_canvas = document.getElementById('third_ppr')
-    var third_ppr_ctx = third_ppr_canvas.getContext('2d');    
-    var third_ppr_data = {
-          labels: [best_name, 'Orange'],
-          datasets: [
-            {
-              label: 'Dataset 1',
-              data: third_ppr,
-              backgroundColor: ['rgba(51, 120, 204, 0.8)',
-                'rgba(255, 255, 255, 0.8)'],
-            }
-          ]
-        };  
-
-    var myChart = new Chart(third_ppr_ctx, {
-      type: 'doughnut',
-      data: third_ppr_data,
-          options: {
-            responsive: true,
-            animation: {
-                onProgress : function() {
-                    var third_ppr_cx = third_ppr_canvas.width / 4;
-                    var third_ppr_cy = third_ppr_canvas.height / 4;
-                    third_ppr_ctx.textAlign = 'center';
-                    third_ppr_ctx.textBaseline = 'middle';
-                    third_ppr_ctx.font = '35px arial';
-                    third_ppr_ctx.fillStyle = 'black';
-                    third_ppr_ctx.fillText(third_ppr[0].toFixed()+"%", third_ppr_cx,
-                                            third_ppr_cy);
+                title: {
+                    display: true,
+                    text: name[i].substring(0, 20)
+                },
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 10
                     },
                 },
-            legend: {
-                display: false
-            },
-            title: {
-                display: false,
-                text: 'Timely Manner'
-            },
-            layout: {
-                padding: {
-                    left: 50,
-                    right: 50
-                },
-            },
-            cutoutPercentage: 60,
+                cutoutPercentage: 60,
             },
         });
-    
-//     let all_scores = JSON.parse({{all_scores | tojson }});
-//     var all_scores_ctx = document.getElementById('our_score');
-//     var all_scores_data = {
-//         labels: [good_name, better_name, best_name],
-//         datasets:[{
-//                     label: 'dataset',
-//                     backgroundColor: [
-//                         "rgba(69, 82, 122, .8)",
-//                         "rgba(191, 183, 109, .8)",
-//                         "rgba(69, 122, 113, .8)" 
-//                     ],
-//                     data: all_scores
-//                 }]};  
-//     var myChart = new Chart(all_scores_ctx, {
-//         type: 'polarArea',
-//         data: all_scores_data, 
-//         options: {
-//             scales: {
-//                 yAxes: [{
-//                     display: false,
-//                     ticks: {
-//                         min: 0, // minimum value
-//                         max: 100, // maximum value
-//                     },
 
-//                 }],
-//                 xAxes: [{
-//                     display: false
-//                 }],
-//             },
-//             legend: {
-//                 display: true,
-//                 position: 'left',
-//                 align: 'stretch',
-//                 fullSize: false
-//             },
-//             title: {
-//                 display: true,
-//                 text: 'Our Score',
-//                 fontSize: 30,
-//                 position: 'top'
-//             },
-//             layout: {
-//                 padding: {
-//                     left: 15,
-//                     right: 15
-//                   },
-//                }
-//         }
-//     });
-    
-    
-    
-    var manage1 = {
-        labels: ['Bath', 'Bed', 'Move'],
-        datasets:[{
-                    backgroundColor: 'rgba(204, 61, 51, 0.8)',
-                    data: good_data
-                }]};  
-    
-    var manage2 = {
-        labels: ['Bath', 'Bed', 'Move'],
-        datasets:[{
-                    backgroundColor: 'rgba(222, 160, 4, 0.8)',
-                    data: better_data
-                }]};  
-    
-    var manage3 = {
-        labels: ['Bath', 'Bed', 'Move'],
-        datasets:[{
-                    backgroundColor: "rgba(51, 120, 204, 0.8)",
-                    data: best_data
-                }]};  
-       
-
-    var symptom1 = {
-        labels: ['Breathing', 'Wounds', 'Skin'],
-        datasets:[{
-                    backgroundColor: 'rgba(204, 61, 51, 0.8)',
-                    data: good_symp
-                }]};  
-    var symptom2 = {
-        labels: ['Breathing', 'Wounds', 'Skin'],
-        datasets:[{
-                    backgroundColor: 'rgba(222, 160, 4, 0.8)',
-                    data: better_data
-                }]};  
-    var symptom3 = {
-        labels: ['Breathing', 'Wounds', 'Skin'],
-        datasets:[{
-                    backgroundColor: "rgba(51, 120, 204, 0.8)",
-                    data: best_symp
-                }]}; 
-    
-    
-
-    
-//     var falling_data = {
-//         labels: [good_name,better_name,best_name],
-//         datasets: [{
-//             label: 'Percentage',
-//             data: falling,
-//             backgroundColor: [
-//                 'rgba(69, 82, 122, 0.8)',
-//                 'rgba(191, 183, 109, 0.8)',
-//                 'rgba(69, 122, 113, 0.8)',
-//                 'rgba(75, 192, 192, 0.2)',
-//                 'rgba(153, 102, 255, 0.2)',
-//                 'rgba(255, 159, 64, 0.2)'
-//             ],
-//         }]
-//     };
-    
-//     var depress_data = {
-//         labels: [good_name,better_name,best_name],
-//         datasets: [{
-//             label: 'Percentage',
-//             data: depress,
-//             backgroundColor: [
-//                 'rgba(69, 82, 122, 0.8)',
-//                 'rgba(191, 183, 109, 0.8)',
-//                 'rgba(69, 122, 113, 0.8)',
-//                 'rgba(75, 192, 192, 0.2)',
-//                 'rgba(153, 102, 255, 0.2)',
-//                 'rgba(255, 159, 64, 0.2)'
-//             ],
-//         }]
-//     };
-
-//     var flu_data = {
-//         labels: [good_name,better_name,best_name],
-//         datasets: [{
-//             label: 'Percentage',
-//             data: flu,
-//             backgroundColor: [
-//                 'rgba(69, 82, 122, 0.8)',
-//                 'rgba(191, 183, 109, 0.8)',
-//                 'rgba(69, 122, 113, 0.8)',
-//                 'rgba(75, 192, 192, 0.2)',
-//                 'rgba(153, 102, 255, 0.2)',
-//                 'rgba(255, 159, 64, 0.2)'
-//             ],
-//         }]
-//     };
-    
-//     var pneumonia_data = {
-//         labels: [good_name,better_name,best_name],
-//         datasets: [{
-//             label: 'Percentage',
-//             data: pneumonia,
-//             backgroundColor: [
-//                 'rgba(69, 82, 122, 0.8)',
-//                 'rgba(191, 183, 109, 0.8)',
-//                 'rgba(69, 122, 113, 0.8)',
-//                 'rgba(75, 192, 192, 0.2)',
-//                 'rgba(153, 102, 255, 0.2)',
-//                 'rgba(255, 159, 64, 0.2)'
-//             ],
-//         }]
-//     };
-    
-    
-    var first_score_data = {
-          labels: ['Red', 'Orange'],
-          datasets: [
-            {
-              label: 'Dataset 1',
-              data: first_score,
-              backgroundColor: ['rgba(204, 61, 51, 0.8)',
-                'rgba(255, 255, 255, 0.8)'],
-            }
-          ]
-        };
-
-    var second_score_data = {
-          labels: ['Red', 'Orange'],
-          datasets: [
-            {
-              label: 'Dataset 1',
-              data: second_score,
-              backgroundColor: ['rgba(222, 160, 4, 0.8)',
-                'rgba(255, 255, 255, 0.8)'],
-            }
-          ]
-        };
-    
-    var third_score_data = {
-          labels: ['Red', 'Orange'],
-          datasets: [
-            {
-              label: 'Dataset 1',
-              data: third_score,
-              backgroundColor: ['rgba(51, 120, 204, 0.8)',
-                'rgba(255, 255, 255, 0.8)'],
-            }
-          ]
-        };
-    
-    var first_timely_data = {
-          labels: ['Red', 'Orange'],
-          datasets: [
-            {
-              label: 'Dataset 1',
-              data: first_timely,
-              backgroundColor: ['rgba(204, 61, 51, 0.8)',
-                'rgba(255, 255, 255, 0.8)'],
-            }
-          ]
-        };
-
-    var second_timely_data = {
-          labels: ['Red', 'Orange'],
-          datasets: [
-            {
-              label: 'Dataset 1',
-              data: second_timely,
-              backgroundColor: ['rgba(222, 160, 4, 0.8)',
-                'rgba(255, 255, 255, 0.8)'],
-            }
-          ]
-        };
-    
-    var third_timely_data = {
-          labels: ['Red', 'Orange'],
-          datasets: [
-            {
-              label: 'Dataset 1',
-              data: third_timely,
-              backgroundColor: ['rgba(51, 120, 204, 0.8)',
-                'rgba(255, 255, 255, 0.8)'],
-            }
-          ]
-        };
-    
-
- 
-
-
-
-//     var myChart = new Chart(manage1_ctx, {
-//         type: 'horizontalBar',
-//         data: manage1, 
-//         options: {
-//             scales: {
-//                 yAxes: [{
-//                     display: true,
-//                     barThickness: 5,
-//                 }],
-//                 xAxes: [{
-//                     display: true,
-//                     barThickness: 5,
-//                     ticks: {
-//                         min: 0, // minimum value
-//                         max: 100 // maximum value
-//                     },
-//                 }],
-//             },
-//             legend: {
-//                 display: false
-//             },
-//             title: {
-//                 display: false,
-//                 text: 'Managing Daily Activities',
-//                 fontSize: 15,
-//                 position: 'top'
-//             }
-//         }
-//     });
-    
-//     var myChart = new Chart(manage2_ctx, {
-//         type: 'horizontalBar',
-//         data: manage2, 
-//         options: {
-//             scales: {
-//                 yAxes: [{
-//                     display: true,
-//                 }],
-//                 xAxes: [{
-//                     display: true,
-//                     barThickness: 5,
-//                     ticks: {
-//                         min: 0, // minimum value
-//                         max: 100 // maximum value
-//                     },
-//                 }],
-//             },
-//             legend: {
-//                 display: false
-//             },
-//             title: {
-//                 display: false,
-//                 text: 'Managing Daily Activities',
-//                 fontSize: 15,
-//                 position: 'top'
-//             }
-//         }
-//     });
-
-//     var myChart = new Chart(manage3_ctx, {
-//         type: 'horizontalBar',
-//         data: manage3, 
-//         options: {
-//             scales: {
-//                 yAxes: [{
-//                     display: true,
-//                 }],
-//                 xAxes: [{
-//                     display: true,
-//                     barThickness: 5,
-//                     ticks: {
-//                         min: 0, // minimum value
-//                         max: 100 // maximum value
-//                     },
-//                 }],
-//             },
-//             legend: {
-//                 display: false
-//             },
-//             title: {
-//                 display: false,
-//                 text: 'Managing Daily Activities',
-//                 fontSize: 15,
-//                 position: 'top'
-//             }
-//         }
-//     });
-    
-    var myChart = new Chart(manage1_ctx, {
-        type: 'bar',
-        data: manage1, 
-        options: {
-            scales: {
-                xAxes: [{
-                    display: true,
-                    barThickness: 30,
-                }],
-                yAxes: [{
-                    display: true,
-                    barThickness: 5,
-                    ticks: {
-                        min: 0, // minimum value
-                        max: 100 // maximum value
+        for(let j in dashboard_key_order) {
+            const k = dashboard_key_order[j];
+            const canvas = document.getElementById(`${k}${i}`);
+            const ctx = canvas.getContext('2d');
+            if(dashboard_chart_types[k] === 'bar') {
+                const card_data = {
+                    labels: dashboard_barchart_labels[k],
+                    datasets:[{
+                        backgroundColor: bg_colors[i],
+                        data: data[j][i]
+                    }]
+                };
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: card_data, 
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                display: true,
+                                barThickness: 30,
+                            }],
+                            yAxes: [{
+                                display: true,
+                                barThickness: 5,
+                                ticks: {
+                                    min: 0, // minimum value
+                                    max: 100 // maximum value
+                                },
+                            }],
+                        },
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: false,
+                            text: dashboard_chart_titles[k],
+                            fontSize: 15,
+                            position: 'top'
+                        }
+                    }
+                });
+            } else {
+                const card_data = {
+                    labels: [name[i]],
+                    datasets: [
+                        {
+                            label: `Dataset ${i+1}`,
+                            data: data[j][i],
+                            backgroundColor: [bg_colors[i], 'rgba(255, 255, 255, 0.8)'],
+                        }
+                    ]
+                };
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: card_data,
+                    options: {
+                        plugin_denominator:  120,
+                        plugin_height: 2,
+                        responsive: true,
+                        plugin_text: Math.round(data[j][i][0]) + '%',
+                        legend: {
+                            display: false
+                        },
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: name[i].substring(0, 20)
+                        },
+                        layout: {
+                            padding: {
+                                left: 50,
+                                right: 50
+                            },
+                        },
+                        cutoutPercentage: 60,
                     },
-                }],
-            },
-            legend: {
-                display: false
-            },
-            title: {
-                display: false,
-                text: 'Managing Daily Activities',
-                fontSize: 15,
-                position: 'top'
+                });
             }
         }
-    });
-    
-    var myChart = new Chart(manage2_ctx, {
-        type: 'bar',
-        data: manage2, 
-        options: {
-            scales: {
-                xAxes: [{
-                    display: true,
-                    barThickness: 30
-                }],
-                yAxes: [{
-                    display: true,
-                    ticks: {
-                        min: 0, // minimum value
-                        max: 100 // maximum value
-                    },
-                }],
-            },
-            legend: {
-                display: false
-            },
-            title: {
-                display: false,
-                text: 'Managing Daily Activities',
-                fontSize: 15,
-                position: 'top'
-            }
+    }
+
+Chart.pluginService.register({
+    beforeDraw: function(chart) {
+        if (chart.options.plugin_text && chart.options.plugin_denominator && chart.options.plugin_height) {
+            var width = chart.chart.width,
+            height = chart.chart.height,
+            ctx = chart.chart.ctx;
+
+            ctx.restore();
+
+            var denominator = chart.options.plugin_denominator;
+            var fontSize = (height / denominator).toFixed(2);
+            ctx.font = fontSize + "em sans-serif";
+            ctx.textBaseline = "middle";
+
+            var text = chart.options.plugin_text,
+                textX = Math.round((width - ctx.measureText(text).width) / 2),
+                textY = height / chart.options.plugin_height;
+
+            ctx.fillText(text, textX, textY);
+            ctx.save();   
         }
-    });
+    }
+}); 
 
-    var myChart = new Chart(manage3_ctx, {
-        type: 'bar',
-        data: manage3, 
-        options: {
-            scales: {
-                xAxes: [{
-                    display: true,
-                    barThickness: 30
-                }],
-                yAxes: [{
-                    display: true,
-                    ticks: {
-                        min: 0, // minimum value
-                        max: 100 // maximum value
-                    },
-                }],
-            },
-            legend: {
-                display: false
-            },
-            title: {
-                display: false,
-                text: 'Managing Daily Activities',
-                fontSize: 15,
-                position: 'top'
-            }
-        }
-    });
-
-   
-    var myChart = new Chart(symp1_ctx, {
-        type: 'bar',
-        data: symptom1, 
-        options: {
-            scales: {
-                yAxes: [{
-                    display: true,
-                    ticks: {
-                        min: 0, // minimum value
-                        max: 100, // maximum value
-                    },
-
-                }],
-                xAxes: [{
-                    display: true,
-                    barThickness: 30
-                }],
-            },
-            legend: {
-                display: false
-            },
-            title: {
-                display: false,
-                text: 'Managing Daily Activities',
-                fontSize: 30,
-                position: 'top'
-            }
-        }
-    });
-    
-    var myChart = new Chart(symp2_ctx, {
-        type: 'bar',
-        data: symptom2, 
-        options: {
-            scales: {
-                yAxes: [{
-                    display: true,
-                    ticks: {
-                        min: 0, // minimum value
-                        max: 100,
-                    },
-
-                }],
-                xAxes: [{
-                    display: true,
-                    barThickness: 30
-                }],
-            },
-            legend: {
-                display: false
-            },
-            title: {
-                display: false,
-                text: 'Managing Daily Activities',
-                fontSize: 30,
-                position: 'top'
-            }
-        }
-    });
-
-    var myChart = new Chart(symp3_ctx, {
-        type: 'bar',
-        data: symptom3, 
-        options: {
-            scales: {
-                yAxes: [{
-                    display: true,
-                    ticks: {
-                        min: 0, // minimum value
-                        max: 100
-                    },
-
-                }],
-              xAxes: [{
-                    display: true,
-                    barThickness: 30 // maximum value
-
-              }],
-            },
-            legend: {
-                display: false
-            },
-            title: {
-                display: false,
-                text: 'Managing Daily Activities',
-                fontSize: 30,
-                position: 'top'
-            }
-        }
-    });
-    
-    
-
-    
-
-//     var myChart = new Chart(fall_ctx, {
-//         type: 'horizontalBar',
-//         data: falling_data, 
-//         options: {
-//             scales: {
-//                 yAxes: [{
-//                     display: false,
-//                     barThickness: 2
-//                     }],
-//                 xAxes: [{
-//                     display: true,
-//                     ticks: {
-//                             min: 60, // minimum value
-//                             max: 100 // maximum value
-//                             }
-//                     }],
-//             },
-//             legend: {
-//                 display: false
-//             },
-//             title: {
-//                 display: true,
-//                 text: 'Checked the Risk of Falling:',
-//                 fontSize: 16,
-//                 position: 'top'
-//             }
-//         }
-//     });
-
-//     var myChart = new Chart(depress_ctx, {
-//         type: 'horizontalBar',
-//         data: depress_data, 
-//         options: {
-//             scales: {
-//                 yAxes: [{
-//                     display: false,
-//                     barThickness: 2
-//                     }],
-//                 xAxes: [{
-//                     display: true,
-//                     ticks: {
-//                             min: 60, // minimum value
-//                             max: 100 // maximum value
-//                             }
-//                     }],
-//             },
-//             legend: {
-//                 display: false
-//             },
-//             title: {
-//                 display: true,
-//                 text: 'Checked the Risk of Depression:',
-//                 fontSize: 16,
-//                 position: 'top'
-//             }
-//         }
-//     });
-
-//     var myChart = new Chart(flu_ctx, {
-//         type: 'horizontalBar',
-//         data: flu_data, 
-//         options: {
-//             scales: {
-//                 yAxes: [{
-//                     display: false,
-//                     barThickness: 2
-//                     }],
-//                 xAxes: [{
-//                     display: true,
-//                     ticks: {
-//                             min: 60, // minimum value
-//                             max: 100 // maximum value
-//                             }
-//                     }],
-//             },
-//             legend: {
-//                 display: false
-//             },
-//             title: {
-//                 display: true,
-//                 text: 'Agency Checked Flu Vaccine:',
-//                 fontSize: 16,
-//                 position: 'top'
-//             }
-//         }
-//     });
-    
-//     var myChart = new Chart(pneumonia_ctx, {
-//         type: 'horizontalBar',
-//         data: pneumonia_data, 
-//         options: {
-//             scales: {
-//                 yAxes: [{
-//                     display: false,
-//                     barThickness: 2
-//                     }],
-//                 xAxes: [{
-//                     display: true,
-//                     ticks: {
-//                             min: 60, // minimum value
-//                             max: 100 // maximum value
-//                             }
-//                     }],
-//             },
-//             legend: {
-//                 display: false
-//             },
-//             title: {
-//                 display: true,
-//                 text: 'Agency Checked Pneumonia Vaccine:',
-//                 fontSize: 16,
-//                 position: 'top'
-//             }
-//         }
-//     });
-    
-
-
-    var myChart = new Chart(first_score_ctx, {
-      type: 'doughnut',
-      data: first_score_data,
-          options: {
-            responsive: true,
-            animation: {
-            onProgress : function() {
-                var cx = first_score_canvas.width / 4;
-                var cy = first_score_canvas.height / 3.25;
-                first_score_ctx.textAlign = 'center';
-                first_score_ctx.textBaseline = 'middle';
-                first_score_ctx.font = '35px helvetica';
-                first_score_ctx.fillStyle = 'black';
-                first_score_ctx.fillText(first_score[0].toFixed(), cx, cy);
-                },
-            },
-            legend: {
-                display: false
-              },
-            title: {
-                display: true,
-                text: good_name.substring(0, 20)
-            },
-            layout: {
-                padding: {
-                    left: 10,
-                    right: 10
-                  },
-               },
-            cutoutPercentage: 60,
-          },
-        });
-
-    
-    
-    
-    var myChart = new Chart(second_score_ctx, {
-      type: 'doughnut',
-      data: second_score_data,
-          options: {
-            responsive: true,
-            animation: {
-            onProgress : function() {
-                var second_cx = second_score_canvas.width / 4;
-                var second_cy = second_score_canvas.height / 3.25;
-                second_score_ctx.textAlign = 'center';
-                second_score_ctx.textBaseline = 'middle';
-                second_score_ctx.font = '35px helvetica';
-                second_score_ctx.fillStyle = 'black';
-                second_score_ctx.fillText(second_score[0].toFixed(), second_cx, second_cy);
-                },
-            },
-            legend: {
-                display: false
-              },
-            title: {
-                display: true,
-                text: better_name.substring(0, 20)
-            },
-            layout: {
-                padding: {
-                    left: 10,
-                    right: 10
-                  },
-               },
-            cutoutPercentage: 60,
-          },
-        });
-
-    var myChart = new Chart(third_score_ctx, {
-      type: 'doughnut',
-      data: third_score_data,
-          options: {
-            responsive: true,
-            animation: {
-            onProgress : function() {
-                var third_cx = third_score_canvas.width / 4;
-                var third_cy = third_score_canvas.height / 3.25;
-                third_score_ctx.textAlign = 'center';
-                third_score_ctx.textBaseline = 'middle';
-                third_score_ctx.font = '35px helvetica';
-                third_score_ctx.fillStyle = 'black';
-                third_score_ctx.fillText(third_score[0].toFixed(), third_cx, third_cy);
-                },
-            },
-            legend: {
-                display: false
-              },
-            title: {
-                display: true,
-                text: best_name.substring(0, 20)
-            },
-            layout: {
-                padding: {
-                    left: 10,
-                    right: 10
-                  },
-               },
-            cutoutPercentage: 60,
-          },
-        });
-    
-    var myChart = new Chart(first_timely_ctx, {
-      type: 'doughnut',
-      data: first_timely_data,
-          options: {
-            responsive: true,
-            animation: {
-            onProgress : function() {
-                var first_timely_cx = first_timely_canvas.width / 4;
-                var first_timely_cy = first_timely_canvas.height / 4;
-                first_timely_ctx.textAlign = 'center';
-                first_timely_ctx.textBaseline = 'middle';
-                first_timely_ctx.font = '35px arial';
-                first_timely_ctx.fillStyle = 'black';
-                first_timely_ctx.fillText(first_timely[0].toFixed()+"%", first_timely_cx, 
-                                          first_timely_cy);
-                },
-            },
-            legend: {
-                display: false
-              },
-            title: {
-                display: false,
-                text: 'Timely Manner'
-              },
-            layout: {
-                padding: {
-                    left: 50,
-                    right: 50
-                  },
-               },
-            cutoutPercentage: 60,
-            },
-        });
-
-    var myChart = new Chart(second_timely_ctx, {
-      type: 'doughnut',
-      data: second_timely_data,
-      options: {
-            responsive: true,
-            animation: {
-            onProgress : function() {
-                var second_timely_cx = second_timely_canvas.width / 4;
-                var second_timely_cy = second_timely_canvas.height / 4;
-                second_timely_ctx.textAlign = 'center';
-                second_timely_ctx.textBaseline = 'middle';
-                second_timely_ctx.font = '35px arial';
-                second_timely_ctx.fillStyle = 'black';
-                second_timely_ctx.fillText(second_timely[0].toFixed()+"%", second_timely_cx,
-                                           second_timely_cy);
-                },
-            },
-          legend: {
-            display: false
-          },
-        title: {
-            display: false,
-            text: 'Timely Manner'
-        },
-            layout: {
-                padding: {
-                    left: 50,
-                    right: 50
-                  },
-               },
-            cutoutPercentage: 60,
-        },
-    });
-
-    
-    
-    var myChart = new Chart(third_timely_ctx, {
-      type: 'doughnut',
-      data: third_timely_data,
-          options: {
-            responsive: true,
-            animation: {
-            onProgress : function() {
-                var third_timely_cx = third_timely_canvas.width / 4;
-                var third_timely_cy = third_timely_canvas.height / 4;
-                third_timely_ctx.textAlign = 'center';
-                third_timely_ctx.textBaseline = 'middle';
-                third_timely_ctx.font = '35px arial';
-                third_timely_ctx.fillStyle = 'black';
-                third_timely_ctx.fillText(third_timely[0].toFixed()+"%", third_timely_cx,
-                                           third_timely_cy);
-                },
-            },            legend: {
-                display: false
-              },
-            title: {
-                display: false,
-                text: 'Timely Manner'
-            },
-            layout: {
-                padding: {
-                    left: 50,
-                    right: 50
-                  },
-               },
-            cutoutPercentage: 60,
-            },
-        });
-    
-
-
-    
 </script>
     
 </body>

@@ -14,6 +14,10 @@ import re
 import os
 from app.preprocess import *
 
+def return_agency_data(df3, column):
+    all_data = list(map(lambda x: [x, round(100-x,2)],
+                        df3[column].tolist()))
+    return all_data
 
 def get_hh_agencies(zipcode: str):
     "Get a df of Home Health agencies that cover a given zipcode."
@@ -94,7 +98,7 @@ def get_top_agencies():
     cms_nums = df_zip[df_zip[' ZIP Code'] == 94014]['CMS Certification Number (CCN)']
     df_filter = df_cal[df_cal['CMS Certification Number (CCN)'].isin(list(cms_nums))]
     bool_services = [True, True, True, True, True, True]
-    flagged_qtopic = {'Q5':True, 'Q16':True}
+    flagged_qtopic = {}
     pipe_prep = Pipeline([('Drop Unnecessary Columns', Drop()),
                               ('Rename Columns', Rename()),
                               ('Filter Offered Services',
