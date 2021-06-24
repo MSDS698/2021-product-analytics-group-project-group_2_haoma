@@ -57,7 +57,7 @@
                 {% for i in range(num_agencies) %}
                 <div class="col-xl">
                     <div class="card bg-light mb-3">
-                    <h5 class="card-header" style="color: {{colors_arr[i]}};">{{name_arr[i][1:-1][0:25].title()}}</h5>
+                    <h5 class="card-header" style="color: {{colors_arr[i]}};">{{name_arr[i].title()}}</h5>
                     </div>
                 </div>
                 {% endfor %}
@@ -129,7 +129,7 @@
         const score_canvas = document.getElementById(`score${i}`);
         const score_ctx = score_canvas.getContext('2d');
         const score_data = {
-            labels: ['Percentage'],
+            labels: [name[i]],
             datasets: [
                 {
                 label: `Dataset ${i+1}`,
@@ -211,7 +211,7 @@
                 });
             } else {
                 const card_data = {
-                    labels: ['Percentage'],
+                    labels: [name[i]],
                     datasets: [
                         {
                             label: `Dataset ${i+1}`,
