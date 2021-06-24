@@ -211,7 +211,8 @@ def patient():
         if len(list(request.form.keys())) != 4:
             print('Error with number of agencies selected')
         else:
-            resulting_agencies = list(request.form.keys())[:-1]
+            print(request.form.keys())
+            resulting_agencies = list(request.form.keys())[1:]
             df_agency['preventable_readmission'] = round(df_agency['preventable_readmission']/2,2)
             df3 = df_agency[df_agency.name.isin(resulting_agencies)]
             patient_name = patient.first
