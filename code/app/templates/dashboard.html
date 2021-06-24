@@ -8,27 +8,27 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
     
 <div>
+<body>
     <div class="agency-header">   
         <div class="container">
             <div class="row">
                 <div class="col-xl-6">
+                </div>
+                <div class="col-xl-6">
                     <div class="card bg-light mb-3">
-                        <h5 class="card-header"><b>Personalized Haoma Score for {{patient_name}}</b></h5>
+                        <h5 class="card-header" style="text-align:center"><b>Personalized Haoma Score for {{patient_name}}</b></h5>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+
     
-<body>
-    <div class="agency-header">   
         <div class="container">
             <div class="row">    
                 <div class="col-xl-6">
                     <div class="card-body">
-                        <h1 class="align-middle" style="font-family:tahoma;color:#376b69"><b>Haoma Compare</b></h1>
-                        <h3 class="align-middle">Based on Official Medicare Surveys</h3>
+                        <h1 class="align-middle" style="font-family:tahoma;color:#376b69;text-align:center"><br><b>Haoma Compare</b></h1>
+                        <h3 class="align-middle" style="text-align:center">Based on Official Medicare Surveys</h3>
                         <p class="card-text">
                         </p>
                     </div>
@@ -129,7 +129,7 @@
         const score_canvas = document.getElementById(`score${i}`);
         const score_ctx = score_canvas.getContext('2d');
         const score_data = {
-            labels: [name[i]],
+            labels: ['Percentage'],
             datasets: [
                 {
                 label: `Dataset ${i+1}`,
@@ -211,7 +211,7 @@
                 });
             } else {
                 const card_data = {
-                    labels: [name[i]],
+                    labels: ['Percentage'],
                     datasets: [
                         {
                             label: `Dataset ${i+1}`,
