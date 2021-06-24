@@ -1,0 +1,2760 @@
+{% extends "headerbase.html" %}
+{% block content %}
+
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+    
+ 
+<body>     
+<div class="agency-header">   
+    <div class="container">
+        <div class="row">    
+            <div class="col-xl-6">
+                <div class="card-body">
+                    <h3 class="align-middle"></h3>
+                    <p class="card-text"></p>
+                </div>
+            </div>
+            <div class="col-xl-6">
+                <div class="card bg-light mb-3">
+                  <h5 class="card-header" style = "text-align: center"><b>Personalized Haoma Score for {{patient_name}}</b></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">    
+            <div class="col-xl-6">
+                    <div class="card-body">
+                        <h1 class="align-middle" style="font-family:tahoma;color:#376b69;text-align: center"><b>Haoma Dashboard</b></h1>
+                        <h3 class="align-middle" style = "text-align: center">Compare Home Health Agencies</h3>
+                        <p class="card-text">
+                        </p>
+                    </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="score1"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="score2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="score3"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="container">
+        <div class="row">    
+            <div class="col-xl">
+                <div class="card bg-white mb-3">
+                  <h5 class="card-header">&nbsp; </h5>
+                </div>
+            </div>
+            <div class="col-xl">
+                <div class="card bg-light mb-3">
+                  <h5 class="card-header" style="color: #cc3d33; text-align: center">{{name1[1:-1][0:26].title()}}</h5>
+                </div>
+            </div>
+            <div class="col-xl">
+                <div class="card bg-light mb-3">
+                  <h5 class="card-header" style="color: #dea004; text-align: center">{{name2[1:-1][0:26].title()}}</h5>
+                </div>
+            </div>
+            <div class="col-xl">
+                <div class="card bg-light mb-3">
+                  <h5 class="card-header" style="color: #3378cc; text-align: center"> {{name3[1:-1][0:26].title()}}</h5>
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>
+
+
+<body>    
+<div class="agency-body">  
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card text-left">
+                    <div class="card-body" style="position: relative; height:13rem">
+                        <h5 class="card-title"><b>Managing Daily Activities</b></h5>
+                        <h8 class="card-text" style="line-height:2">How often the patient got better at:</h8>
+                        
+                        <ul>
+                            <li>Bathing</li>
+                            <li>Getting In and Out of the Bed</li>
+                            <li>Walking or Moving Around</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body" style="position: relative; height:13rem">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="daily1" height="200%"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body" style="position: relative; height:13rem">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="daily2" height="200%"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body" style="position: relative; height:13rem">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="daily3" height="200%"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card align-items-left">
+                    <div class="card-body" style="position: relative; height:13rem">
+                        <h5 class="card-title align-items-left"><b>Treating Symptoms</b></h5>
+                        <ul>
+                            <li>How often breathing improved</li>
+                            <li>How often wounds improved</li>
+                            <li>How often ulcers didn't worsen</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body" style="position: relative; height:13rem">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="symptom1" height="200%"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body" style="position: relative; height:13rem">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="symptom2" height="200%"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body" style="position: relative; height:13rem">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="symptom3" height="200%"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">    
+            <div class="col-xl-12">
+                <div class="card bg-white mb-3">
+                    <h5 class="card-header"><b>&nbsp;</b></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">  
+            <div class="col-md-3">
+                <div class="card card-style mb-3">
+                    <div class="card-body" style="position: relative; height:19rem">
+                        <h5 class="card-title"><b>Timely Manner</b></h5>
+                        <p class="card-text">
+                          How often did the agency begin their patients' care in a timely manner?
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="time1"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="time2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="time3"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card card-style mb-3 ">
+                    <div class="card-body" style="position: relative; height:19rem">
+                        <h5 class="card-title"><b>Preventable Readmission</b></h5>
+                        <p class="card-text">
+                         The risk-standardized rate of unplanned, potentially preventable readmissions for
+                         patients within 30 days of discharge.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="ppr1"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="ppr2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="ppr3"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card card-style mb-3 ">
+                    <div class="card-body" style="position: relative; height:19rem">
+                        <h5 class="card-title"><b>Discharge to Community</b></h5>
+                        <p class="card-text">
+                        Percent of patients who were discharged to the community within 100 
+                        days of the start of the episode, and remained in the community for 30 
+                        consecutive days 
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="dtc1"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="dtc2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="dtc3"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card card-style mb-3 ">
+                    <div class="card-body" style="position: relative; height:19rem">
+                        <h5 class="card-title"><b>ER Visits</b></h5>
+                        <p class="card-text">
+                        How often patients receiving home health care needed any urgent, unplanned care in the hospital emergency room – without being admitted to the hospital
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="er1"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="er2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="er3"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card card-style mb-3 ">
+                    <div class="card-body" style="position: relative; height:19rem">
+                        <h5 class="card-title"><b>Readmitted </b></h5>
+                        <p class="card-text">
+                        How often home health patients did not have to be admitted to the hospital
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="adm1"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="adm2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="adm3"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">    
+            <div class="col-xl-12">
+                <div class="card bg-white mb-3">
+                    <h5 class="card-header"><b>&nbsp;</b></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card card-style mb-3 ">
+                    <div class="card-body" style="position: relative; height:19rem">
+                        <h5 class="card-title"><b>Risk of Falling</b></h5>
+                        <p class="card-text">
+                         How often the home health team checked patients' risk of falling?
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="fall1"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="fall2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="fall3"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card card-style mb-3 ">
+                    <div class="card-body" style="position: relative; height:19rem">
+                        <h5 class="card-title"><b>Depression</b></h5>
+                        <p class="card-text">
+                         How often the home health team checked patients for depression?
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="depr1"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="depr2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="depr3"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card card-style mb-3 ">
+                    <div class="card-body" style="position: relative; height:19rem">
+                        <h5 class="card-title"><b>Pneumococcal Vaccine  </b></h5>
+                        <p class="card-text">
+                         How often the home health team made sure that their patients have received a pneumococcal vaccine (pneumonia shot)
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="pneu1"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="pneu2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="pneu3"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card card-style mb-3 ">
+                    <div class="card-body" style="position: relative; height:19rem">
+                        <h5 class="card-title"><b>Flu Shot</b></h5>
+                        <p class="card-text">
+                        How often the home health team determined whether patients received a flu shot for the current flu season
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="flu1"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="flu2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="flu3"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">    
+            <div class="col-xl-12">
+                <div class="card bg-white mb-3">
+                    <h5 class="card-header"><b>&nbsp;</b></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card card-style mb-3 ">
+                    <div class="card-body" style="position: relative; height:19rem">
+                        <h5 class="card-title"><b>Meds</b></h5>
+                        <p class="card-text">
+                        How often patients got better at taking their drugs correctly by mouth
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="med1"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="med2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="med3"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card card-style mb-3 ">
+                    <div class="card-body" style="position: relative; height:19rem">
+                        <h5 class="card-title"><b>Taught Meds</b></h5>
+                        <p class="card-text">
+                        How often the home health team taught patients (or their family caregivers) about their drugs
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="tmed1"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="tmed2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="tmed3"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">   
+            <div class="col-md-3">
+                <div class="card card-style mb-3 ">
+                    <div class="card-body" style="position: relative; height:19rem">
+                        <h5 class="card-title"><b>Diabetes and Foot Care</b></h5>
+                        <p class="card-text">
+                        For patients with diabetes, how often the home health team got doctor's orders, gave foot care, and taught patients about foot care
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="diab1"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="diab2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="diab3"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+    
+    
+{% block javascript %}
+<script>
+    
+    
+    
+let daily1 = JSON.parse({{daily1 | tojson }});
+let daily2 = JSON.parse({{daily2 | tojson }});
+let daily3 = JSON.parse({{daily3 | tojson }});
+var daily1_ctx = document.getElementById('daily1').getContext('2d');
+var daily2_ctx = document.getElementById('daily2').getContext('2d');
+var daily3_ctx = document.getElementById('daily3').getContext('2d');   
+
+
+let name1 = JSON.parse({{name1 | tojson }});
+let name2 = JSON.parse({{name2 | tojson }});
+let name3 = JSON.parse({{name3 | tojson }});
+
+let symp1 = JSON.parse({{symp1 | tojson }});
+let symp2 = JSON.parse({{symp2 | tojson }});
+let symp3 = JSON.parse({{symp3 | tojson }});
+var symp1_ctx = document.getElementById('symptom1').getContext('2d');
+var symp2_ctx = document.getElementById('symptom2').getContext('2d');
+var symp3_ctx = document.getElementById('symptom3').getContext('2d');
+
+
+let score1 = JSON.parse({{score1 | tojson }});
+let score2 = JSON.parse({{score2 | tojson }});
+let score3 = JSON.parse({{score3 | tojson }});
+var score1_canvas = document.getElementById('score1');
+var score1_ctx = score1_canvas.getContext('2d');
+var score2_canvas = document.getElementById('score2');
+var score2_ctx = score2_canvas.getContext('2d');
+var score3_canvas = document.getElementById('score3');
+var score3_ctx = score3_canvas.getContext('2d');
+
+
+let time1 = JSON.parse({{time1 | tojson }});
+var time1_canvas = document.getElementById('time1');
+var time1_ctx = time1_canvas.getContext('2d');
+
+let time2 = JSON.parse({{time2 | tojson }});
+var time2_canvas = document.getElementById('time2');
+var time2_ctx = time2_canvas.getContext('2d');
+
+let time3 = JSON.parse({{time3 | tojson }});
+var time3_canvas = document.getElementById('time3');
+var time3_ctx = time3_canvas.getContext('2d');
+
+let ppr1 = JSON.parse({{ppr1 | tojson }});
+var ppr1_canvas = document.getElementById('ppr1')
+var ppr1_ctx = ppr1_canvas.getContext('2d');
+
+let ppr2 = JSON.parse({{ppr2 | tojson }});
+var ppr2_canvas = document.getElementById('ppr2')
+var ppr2_ctx = ppr2_canvas.getContext('2d');   
+
+
+let ppr3 = JSON.parse({{ppr3 | tojson }});
+var ppr3_canvas = document.getElementById('ppr3')
+var ppr3_ctx = ppr3_canvas.getContext('2d');    
+
+let fall1 = JSON.parse({{fall1 | tojson }});
+var fall1_canvas = document.getElementById('fall1');
+var fall1_ctx = fall1_canvas.getContext('2d');
+
+let fall2 = JSON.parse({{fall2 | tojson }});
+var fall2_canvas = document.getElementById('fall2');
+var fall2_ctx = fall2_canvas.getContext('2d');
+
+let fall3 = JSON.parse({{fall3 | tojson }});
+var fall3_canvas = document.getElementById('fall3');
+var fall3_ctx = fall3_canvas.getContext('2d');
+
+let depr1 = JSON.parse({{depr1 | tojson }});
+var depr1_canvas = document.getElementById('depr1');
+var depr1_ctx = depr1_canvas.getContext('2d');
+
+let depr2 = JSON.parse({{depr2 | tojson }});
+var depr2_canvas = document.getElementById('depr2');
+var depr2_ctx = depr2_canvas.getContext('2d');
+
+let depr3 = JSON.parse({{depr3 | tojson }});
+var depr3_canvas = document.getElementById('depr3');
+var depr3_ctx = depr3_canvas.getContext('2d');
+
+
+let pneu1 = JSON.parse({{pneu1 | tojson }});
+var pneu1_canvas = document.getElementById('pneu1');
+var pneu1_ctx = pneu1_canvas.getContext('2d');
+
+let pneu2 = JSON.parse({{pneu2 | tojson }});
+var pneu2_canvas = document.getElementById('pneu2');
+var pneu2_ctx = pneu2_canvas.getContext('2d');
+
+let pneu3 = JSON.parse({{pneu3 | tojson }});
+var pneu3_canvas = document.getElementById('pneu3');
+var pneu3_ctx = pneu3_canvas.getContext('2d');
+
+let flu1 = JSON.parse({{flu1 | tojson }});
+var flu1_canvas = document.getElementById('flu1');
+var flu1_ctx = flu1_canvas.getContext('2d');
+
+let flu2 = JSON.parse({{flu2 | tojson }});
+var flu2_canvas = document.getElementById('flu2');
+var flu2_ctx = flu2_canvas.getContext('2d');
+
+let flu3 = JSON.parse({{flu3 | tojson }});
+var flu3_canvas = document.getElementById('flu3');
+var flu3_ctx = flu3_canvas.getContext('2d');
+
+    
+
+let med1 = JSON.parse({{med1 | tojson }});
+var med1_canvas = document.getElementById('med1');
+var med1_ctx = med1_canvas.getContext('2d');
+
+let med2 = JSON.parse({{med2 | tojson }});
+var med2_canvas = document.getElementById('med2');
+var med2_ctx = med2_canvas.getContext('2d');
+    
+let med3 = JSON.parse({{med3 | tojson }});
+var med3_canvas = document.getElementById('med3');
+var med3_ctx = med3_canvas.getContext('2d');
+
+let tmed1 = JSON.parse({{tmed1 | tojson }});
+var tmed1_canvas = document.getElementById('tmed1');
+var tmed1_ctx = tmed1_canvas.getContext('2d');
+
+let tmed2 = JSON.parse({{tmed2 | tojson }});
+var tmed2_canvas = document.getElementById('tmed2');
+var tmed2_ctx = tmed2_canvas.getContext('2d');
+    
+let tmed3 = JSON.parse({{tmed3 | tojson }});
+var tmed3_canvas = document.getElementById('tmed3');
+var tmed3_ctx = tmed3_canvas.getContext('2d');    
+
+    
+let diab1 = JSON.parse({{diab1 | tojson }});
+var diab1_canvas = document.getElementById('diab1')
+var diab1_ctx = diab1_canvas.getContext('2d');
+
+let diab2 = JSON.parse({{diab2 | tojson }});
+var diab2_canvas = document.getElementById('diab2')
+var diab2_ctx = diab2_canvas.getContext('2d');
+
+let diab3 = JSON.parse({{diab3 | tojson }});
+var diab3_canvas = document.getElementById('diab3')
+var diab3_ctx = diab3_canvas.getContext('2d'); 
+
+
+let dtc1 = JSON.parse({{dtc1 | tojson }});
+var dtc1_canvas = document.getElementById('dtc1');
+var dtc1_ctx = dtc1_canvas.getContext('2d');
+
+let dtc2 = JSON.parse({{dtc2 | tojson }});
+var dtc2_canvas = document.getElementById('dtc2');
+var dtc2_ctx = dtc2_canvas.getContext('2d');
+    
+let dtc3 = JSON.parse({{dtc3 | tojson }});
+var dtc3_canvas = document.getElementById('dtc3');
+var dtc3_ctx = dtc3_canvas.getContext('2d');
+
+let er1 = JSON.parse({{er1 | tojson }});
+var er1_canvas = document.getElementById('er1');
+var er1_ctx = er1_canvas.getContext('2d');
+
+let er2 = JSON.parse({{er2 | tojson }});
+var er2_canvas = document.getElementById('er2');
+var er2_ctx = er2_canvas.getContext('2d');
+    
+let er3 = JSON.parse({{er3 | tojson }});
+var er3_canvas = document.getElementById('er3');
+var er3_ctx = er3_canvas.getContext('2d');
+
+let adm1 = JSON.parse({{adm1 | tojson }});
+var adm1_canvas = document.getElementById('adm1');
+var adm1_ctx = adm1_canvas.getContext('2d');
+
+let adm2 = JSON.parse({{adm2 | tojson }});
+var adm2_canvas = document.getElementById('adm2');
+var adm2_ctx = adm2_canvas.getContext('2d');
+
+let adm3 = JSON.parse({{adm3 | tojson }});
+var adm3_canvas = document.getElementById('adm3');
+var adm3_ctx = adm3_canvas.getContext('2d');
+
+
+
+
+var d_score1 = {
+      labels: [name1, ' '],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: score1,
+          backgroundColor: ['rgba(204, 61, 51, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+var d_score2 = {
+      labels: [name1, ' '],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: score2,
+          backgroundColor: ['rgba(222, 160, 4, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+var d_score3 = {
+      labels: [name1, ' '],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: score3,
+          backgroundColor: ['rgba(51, 120, 204, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+var myChart = new Chart(score1_ctx, {
+    type: 'doughnut',
+    data: d_score1,
+    options: {
+        plugin_height: 1.7,
+        plugin_denominator: 70, 
+        plugin_text: score1[0].toFixed(),
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: true,
+            text: name1.substring(0, 20)
+        },
+        layout: {
+            padding: {
+                left: 10,
+                right: 10
+              },
+           },
+        cutoutPercentage: 60,
+      },
+    });
+
+
+
+
+var myChart = new Chart(score2_ctx, {
+  type: 'doughnut',
+  data: d_score2,
+      options: {
+        plugin_height: 1.7,
+        plugin_text: score2[0].toFixed(),
+        plugin_denominator: 70, 
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: true,
+            text: name2.substring(0, 20)
+        },
+        layout: {
+            padding: {
+                left: 10,
+                right: 10
+              },
+           },
+        cutoutPercentage: 60,
+      },
+    });
+
+var myChart = new Chart(score3_ctx, {
+  type: 'doughnut',
+  data: d_score3,
+      options: {
+        plugin_height: 1.7,
+        plugin_denominator: 70, 
+        plugin_text: score3[0].toFixed(),
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: true,
+            text: name3.substring(0, 20)
+        },
+        layout: {
+            padding: {
+                left: 10,
+                right: 10
+              },
+           },
+        cutoutPercentage: 60,
+      },
+    });
+
+
+
+
+
+
+var d_daily1 = {
+    labels: ['Bath', 'Bed', 'Move'],
+    datasets:[{
+                backgroundColor: 'rgba(204, 61, 51, 0.8)',
+                data: daily1
+            }]};  
+
+var d_daily2 = {
+    labels: ['Bath', 'Bed', 'Move'],
+    datasets:[{
+                backgroundColor: 'rgba(222, 160, 4, 0.8)',
+                data: daily2
+            }]};  
+
+var d_daily3 = {
+    labels: ['Bath', 'Bed', 'Move'],
+    datasets:[{
+                backgroundColor: "rgba(51, 120, 204, 0.8)",
+                data: daily3
+            }]};  
+
+var myChart = new Chart(daily1_ctx, {
+    type: 'bar',
+    data: d_daily1, 
+    options: {
+        legend: {
+            display: false
+          },
+        scales: {
+            xAxes: [{
+                display: true,
+                barThickness: 30,
+            }],
+            yAxes: [{
+                display: true,
+                barThickness: 5,
+                ticks: {
+                    min: 0,  
+                    max: 100   
+                },
+            }],
+        },
+        layout: {
+            padding: {
+                top: 15,
+                bottom: -5
+            },
+        },
+    }
+});
+
+var myChart = new Chart(daily2_ctx, {
+    type: 'bar',
+    data: d_daily2, 
+    options: {
+        legend: {
+            display: false
+          },
+        scales: {
+            xAxes: [{
+                display: true,
+                barThickness: 30
+            }],
+            yAxes: [{
+                display: true,
+                ticks: {
+                    min: 0,  
+                    max: 100   
+                },
+            }],
+        },
+        layout: {
+            padding: {
+                top: 15,
+                bottom: -5
+            },
+        },
+    }
+});
+
+var myChart = new Chart(daily3_ctx, {
+    type: 'bar',
+    data: d_daily3, 
+    options: {
+        legend: {
+            display: false
+          },
+        scales: {
+            xAxes: [{
+                display: true,
+                barThickness: 30
+            }],
+            yAxes: [{
+                display: true,
+                ticks: {
+                    min: 0,  
+                    max: 100   
+                },
+            }],
+        },
+        layout: {
+            padding: {
+                top: 15,
+                bottom: -5
+            },
+        },
+    }
+});
+
+
+var d_symp1 = {
+    labels: ['Breathing', 'Wounds', 'Skin'],
+    datasets:[{
+                backgroundColor: 'rgba(204, 61, 51, 0.8)',
+                data: symp1
+            }]};  
+var d_symp2 = {
+    labels: ['Breathing', 'Wounds', 'Skin'],
+    datasets:[{
+                backgroundColor: 'rgba(222, 160, 4, 0.8)',
+                data: symp2
+            }]};  
+var d_symp3 = {
+    labels: ['Breathing', 'Wounds', 'Skin'],
+    datasets:[{
+                backgroundColor: "rgba(51, 120, 204, 0.8)",
+                data: symp3
+            }]}; 
+
+var myChart = new Chart(symp1_ctx, {
+    type: 'bar',
+    data: d_symp1, 
+    options: {
+        legend: {
+            display: false
+          },
+        scales: {
+            yAxes: [{
+                display: true,
+                ticks: {
+                    min: 0,  
+                    max: 100,   
+                },
+
+            }],
+            xAxes: [{
+                display: true,
+                barThickness: 30
+            }],
+        },
+        layout: {
+            padding: {
+                top: 15,
+                bottom: -5
+            },
+        },
+    }
+});
+
+var myChart = new Chart(symp2_ctx, {
+    type: 'bar',
+    data: d_symp2, 
+    options: {
+        legend: {
+            display: false
+          },
+        scales: {
+            yAxes: [{
+                display: true,
+                ticks: {
+                    min: 0,  
+                    max: 100,
+                },
+
+            }],
+            xAxes: [{
+                display: true,
+                barThickness: 30
+            }],
+        },
+        layout: {
+            padding: {
+                top: 15,
+                bottom: -5
+            },
+        },
+    }
+});
+
+var myChart = new Chart(symp3_ctx, {
+    type: 'bar',
+    data: d_symp3, 
+    options: {
+        legend: {
+            display: false
+          },
+        scales: {
+            yAxes: [{
+                display: true,
+                ticks: {
+                    min: 0,  
+                    max: 100
+                },
+
+            }],
+          xAxes: [{
+                display: true,
+                barThickness: 30   
+
+          }],
+        },
+        layout: {
+            padding: {
+                top: 15,
+                bottom: -5
+            },
+        },
+    }
+});
+
+
+
+
+
+
+
+
+
+
+var d_time1 = {
+      labels: ['Red', 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: time1,
+          backgroundColor: ['rgba(204, 61, 51, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+var d_time2 = {
+      labels: ['Red', 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: time2,
+          backgroundColor: ['rgba(222, 160, 4, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+var d_time3 = {
+      labels: ['Red', 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: time3,
+          backgroundColor: ['rgba(51, 120, 204, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+var myChart = new Chart(time1_ctx, {
+  type: 'doughnut',
+  data: d_time1,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: time1[0].toFixed() + '%',
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: false,
+          },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(time2_ctx, {
+  type: 'doughnut',
+  data: d_time2,
+  options: {
+        responsive: true,
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: time2[0].toFixed() + '%',
+
+      legend: {
+        display: false
+      },
+    title: {
+        display: false,
+    },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+    },
+});
+
+
+
+var myChart = new Chart(time3_ctx, {
+  type: 'doughnut',
+  data: d_time3,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: time3[0].toFixed() + '%',
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+
+
+
+
+
+
+
+
+
+
+var d_ppr1 = {
+      labels: [name1, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: ppr1,
+          backgroundColor: ['rgba(204, 61, 51, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_ppr2 = {
+      labels: [name2, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: ppr2,
+          backgroundColor: ['rgba(222, 160, 4, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_ppr3 = {
+      labels: [name3, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: ppr3,
+          backgroundColor: ['rgba(51, 120, 204, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };  
+
+var myChart = new Chart(ppr1_ctx, {
+  type: 'doughnut',
+  data: d_ppr1,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: ppr1[0].toFixed() + '%',
+        responsive: true,           
+            legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(ppr2_ctx, {
+  type: 'doughnut',
+  data: d_ppr2,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: ppr2[0].toFixed() + '%',
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(ppr3_ctx, {
+  type: 'doughnut',
+  data: d_ppr3,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        responsive: true,
+        plugin_text: ppr3[0].toFixed() + '%',
+        legend: {
+            display: false
+          },
+        title: {
+            text: 'Timely Manner'
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+var d_fall1 = {
+      labels: [name1, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: fall1,
+          backgroundColor: ['rgba(204, 61, 51, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_fall2 = {
+      labels: [name2, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: fall2,
+          backgroundColor: ['rgba(222, 160, 4, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_fall3 = {
+      labels: [name3, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: fall3,
+          backgroundColor: ['rgba(51, 120, 204, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };  
+
+var myChart = new Chart(fall1_ctx, {
+  type: 'doughnut',
+  data: d_fall1,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: fall1[0].toFixed() + '%',
+        responsive: true,           
+            legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(fall2_ctx, {
+  type: 'doughnut',
+  data: d_fall2,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: fall2[0].toFixed() + '%',
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(fall3_ctx, {
+  type: 'doughnut',
+  data: d_fall3,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        responsive: true,
+        plugin_text: fall3[0].toFixed() + '%',
+        legend: {
+            display: false
+          },
+        title: {
+            text: 'Timely Manner'
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+
+
+
+
+
+
+
+
+
+
+var d_depr1 = {
+      labels: [name1, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: depr1,
+          backgroundColor: ['rgba(204, 61, 51, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_depr2 = {
+      labels: [name2, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: depr2,
+          backgroundColor: ['rgba(222, 160, 4, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_depr3 = {
+      labels: [name3, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: depr3,
+          backgroundColor: ['rgba(51, 120, 204, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };  
+
+var myChart = new Chart(depr1_ctx, {
+  type: 'doughnut',
+  data: d_depr1,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: depr1[0].toFixed() + '%',
+        responsive: true,           
+            legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(depr2_ctx, {
+  type: 'doughnut',
+  data: d_depr2,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: depr2[0].toFixed() + '%',
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(depr3_ctx, {
+  type: 'doughnut',
+  data: d_depr3,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        responsive: true,
+        plugin_text: depr3[0].toFixed() + '%',
+        legend: {
+            display: false
+          },
+        title: {
+            text: 'Timely Manner'
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+
+
+
+
+
+
+
+
+
+
+var d_pneu1 = {
+      labels: [name1, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: pneu1,
+          backgroundColor: ['rgba(204, 61, 51, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_pneu2 = {
+      labels: [name2, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: pneu2,
+          backgroundColor: ['rgba(222, 160, 4, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_pneu3 = {
+      labels: [name3, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: pneu3,
+          backgroundColor: ['rgba(51, 120, 204, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };  
+
+var myChart = new Chart(pneu1_ctx, {
+  type: 'doughnut',
+  data: d_pneu1,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: pneu1[0].toFixed() + '%',
+        responsive: true,           
+            legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(pneu2_ctx, {
+  type: 'doughnut',
+  data: d_pneu2,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: pneu2[0].toFixed() + '%',
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(pneu3_ctx, {
+  type: 'doughnut',
+  data: d_pneu3,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        responsive: true,
+        plugin_text: pneu3[0].toFixed() + '%',
+        legend: {
+            display: false
+          },
+        title: {
+            text: 'Timely Manner'
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+
+
+
+
+
+
+
+
+
+
+var d_flu1 = {
+      labels: [name1, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: flu1,
+          backgroundColor: ['rgba(204, 61, 51, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_flu2 = {
+      labels: [name2, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: flu2,
+          backgroundColor: ['rgba(222, 160, 4, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_flu3 = {
+      labels: [name3, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: flu3,
+          backgroundColor: ['rgba(51, 120, 204, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };  
+
+var myChart = new Chart(flu1_ctx, {
+  type: 'doughnut',
+  data: d_flu1,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: flu1[0].toFixed() + '%',
+        responsive: true,           
+            legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(flu2_ctx, {
+  type: 'doughnut',
+  data: d_flu2,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: flu2[0].toFixed() + '%',
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+    
+var myChart = new Chart(flu3_ctx, {
+  type: 'doughnut',
+  data: d_flu3,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        responsive: true,
+        plugin_text: flu3[0].toFixed() + '%',
+        legend: {
+            display: false
+          },
+        title: {
+            text: 'Timely Manner'
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+    
+
+
+   
+
+
+
+
+
+
+
+
+
+
+var d_med1 = {
+      labels: [name1, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: med1,
+          backgroundColor: ['rgba(204, 61, 51, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_med2 = {
+      labels: [name2, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: med2,
+          backgroundColor: ['rgba(222, 160, 4, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_med3 = {
+      labels: [name3, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: med3,
+          backgroundColor: ['rgba(51, 120, 204, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };  
+
+var myChart = new Chart(med1_ctx, {
+  type: 'doughnut',
+  data: d_med1,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: med1[0].toFixed() + '%',
+        responsive: true,           
+            legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(med2_ctx, {
+  type: 'doughnut',
+  data: d_med2,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: med2[0].toFixed() + '%',
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+    
+var myChart = new Chart(med3_ctx, {
+  type: 'doughnut',
+  data: d_med3,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        responsive: true,
+        plugin_text: med3[0].toFixed() + '%',
+        legend: {
+            display: false
+          },
+        title: {
+            text: 'Timely Manner'
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+    
+    
+
+
+
+
+
+
+var d_tmed1 = {
+      labels: [name1, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: tmed1,
+          backgroundColor: ['rgba(204, 61, 51, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_tmed2 = {
+      labels: [name2, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: tmed2,
+          backgroundColor: ['rgba(222, 160, 4, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_tmed3 = {
+      labels: [name3, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: tmed3,
+          backgroundColor: ['rgba(51, 120, 204, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };  
+
+var myChart = new Chart(tmed1_ctx, {
+  type: 'doughnut',
+  data: d_tmed1,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: tmed1[0].toFixed() + '%',
+        responsive: true,           
+            legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(tmed2_ctx, {
+  type: 'doughnut',
+  data: d_tmed2,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: tmed2[0].toFixed() + '%',
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+    
+var myChart = new Chart(tmed3_ctx, {
+  type: 'doughnut',
+  data: d_tmed3,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        responsive: true,
+        plugin_text: tmed3[0].toFixed() + '%',
+        legend: {
+            display: false
+          },
+        title: {
+            text: 'Timely Manner'
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+    
+
+
+
+
+
+
+
+
+
+
+var d_diab1 = {
+      labels: [name1, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: diab1,
+          backgroundColor: ['rgba(204, 61, 51, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_diab2 = {
+      labels: [name2, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: diab2,
+          backgroundColor: ['rgba(222, 160, 4, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_diab3 = {
+      labels: [name3, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: diab3,
+          backgroundColor: ['rgba(51, 120, 204, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };  
+
+var myChart = new Chart(diab1_ctx, {
+  type: 'doughnut',
+  data: d_diab1,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: diab1[0].toFixed() + '%',
+        responsive: true,           
+            legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(diab2_ctx, {
+  type: 'doughnut',
+  data: d_diab2,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: diab2[0].toFixed() + '%',
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+    
+var myChart = new Chart(diab3_ctx, {
+  type: 'doughnut',
+  data: d_diab3,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        responsive: true,
+        plugin_text: diab3[0].toFixed() + '%',
+        legend: {
+            display: false
+          },
+        title: {
+            text: 'Timely Manner'
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+var d_dtc1 = {
+      labels: [name1, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: dtc1,
+          backgroundColor: ['rgba(204, 61, 51, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_dtc2 = {
+      labels: [name2, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: dtc2,
+          backgroundColor: ['rgba(222, 160, 4, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_dtc3 = {
+      labels: [name3, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: dtc3,
+          backgroundColor: ['rgba(51, 120, 204, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };  
+
+var myChart = new Chart(dtc1_ctx, {
+  type: 'doughnut',
+  data: d_dtc1,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: dtc1[0].toFixed() + '%',
+        responsive: true,           
+            legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(dtc2_ctx, {
+  type: 'doughnut',
+  data: d_dtc2,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: dtc2[0].toFixed() + '%',
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+    
+var myChart = new Chart(dtc3_ctx, {
+  type: 'doughnut',
+  data: d_dtc3,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        responsive: true,
+        plugin_text: dtc3[0].toFixed() + '%',
+        legend: {
+            display: false
+          },
+        title: {
+            text: 'Timely Manner'
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+var d_er1 = {
+      labels: [name1, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: er1,
+          backgroundColor: ['rgba(204, 61, 51, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_er2 = {
+      labels: [name2, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: er2,
+          backgroundColor: ['rgba(222, 160, 4, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_er3 = {
+      labels: [name3, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: er3,
+          backgroundColor: ['rgba(51, 120, 204, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };  
+
+var myChart = new Chart(er1_ctx, {
+  type: 'doughnut',
+  data: d_er1,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: er1[0].toFixed() + '%',
+        responsive: true,           
+            legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(er2_ctx, {
+  type: 'doughnut',
+  data: d_er2,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: er2[0].toFixed() + '%',
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+    
+var myChart = new Chart(er3_ctx, {
+  type: 'doughnut',
+  data: d_er3,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        responsive: true,
+        plugin_text: er3[0].toFixed() + '%',
+        legend: {
+            display: false
+          },
+        title: {
+            text: 'Timely Manner'
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+var d_adm1 = {
+      labels: [name1, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: adm1,
+          backgroundColor: ['rgba(204, 61, 51, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_adm2 = {
+      labels: [name2, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: adm2,
+          backgroundColor: ['rgba(222, 160, 4, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };
+
+
+var d_adm3 = {
+      labels: [name3, 'Orange'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: adm3,
+          backgroundColor: ['rgba(51, 120, 204, 0.8)',
+            'rgba(255, 255, 255, 0.8)'],
+        }
+      ]
+    };  
+
+var myChart = new Chart(adm1_ctx, {
+  type: 'doughnut',
+  data: d_adm1,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: adm1[0].toFixed() + '%',
+        responsive: true,           
+            legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+var myChart = new Chart(adm2_ctx, {
+  type: 'doughnut',
+  data: d_adm2,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        plugin_text: adm2[0].toFixed() + '%',
+        responsive: true,
+        legend: {
+            display: false
+          },
+        title: {
+            display: false,
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+    
+var myChart = new Chart(adm3_ctx, {
+  type: 'doughnut',
+  data: d_adm3,
+      options: {
+        plugin_denominator:  120,
+        plugin_height: 2,
+        responsive: true,
+        plugin_text: adm3[0].toFixed() + '%',
+        legend: {
+            display: false
+          },
+        title: {
+            text: 'Timely Manner'
+        },
+        layout: {
+            padding: {
+                left: 50,
+                right: 50
+              },
+           },
+        cutoutPercentage: 60,
+        },
+    });
+
+Chart.pluginService.register({
+  beforeDraw: function(chart) {
+      if (chart.options.plugin_text && chart.options.plugin_denominator && chart.options.plugin_height) {
+        var width = chart.chart.width,
+        height = chart.chart.height,
+        ctx = chart.chart.ctx;
+
+        ctx.restore();
+
+        var denominator = chart.options.plugin_denominator;
+        var fontSize = (height / denominator).toFixed(2);
+        ctx.font = fontSize + "em sans-serif";
+        ctx.textBaseline = "middle";
+
+        var text = chart.options.plugin_text,
+            textX = Math.round((width - ctx.measureText(text).width) / 2),
+            textY = height / chart.options.plugin_height;
+
+        ctx.fillText(text, textX, textY);
+        ctx.save();   
+      }
+    }
+}); 
+</script>
+    
+</body>
+{% endblock %}
+{% endblock %}
