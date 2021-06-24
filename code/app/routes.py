@@ -144,8 +144,8 @@ def discharge():
 
         db.session.add(patient)
         db.session.commit()
-        if(~os.path.exists('code/app/upload_temp/recs')): os.mkdir('code/app/upload_temp/recs')
-        if(~os.path.exists('code/app/upload_temp/dfs')): os.mkdir('code/app/upload_temp/dfs')
+        if(not os.path.exists('code/app/upload_temp/recs')): os.mkdir('code/app/upload_temp/recs')
+        if(not os.path.exists('code/app/upload_temp/dfs')): os.mkdir('code/app/upload_temp/dfs')
         df_rec.to_pickle(f'code/app/upload_temp/recs/{patient.id}')
         df_agency.to_pickle(f'code/app/upload_temp/recs/dash{patient.id}')
         return redirect(url_for('discharge'))
