@@ -13,3 +13,4 @@ code/app/db/credentials.csv
 code/app/upload_temp/*
 .flaskenv
 .vscode
+code/app/.ipynb_checkpoints
