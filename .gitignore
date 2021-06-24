@@ -14,4 +14,6 @@ code/app/upload_temp/*
 .flaskenv
 .vscode
 code/app/.ipynb_checkpoints
-**.DS_Store
+*.DS_Store
+*/.DS_Store
+*/*/.DS_Store
