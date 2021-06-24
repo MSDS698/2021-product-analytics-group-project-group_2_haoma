@@ -20,7 +20,7 @@ class Recommender():
         # Hyperparameters
         self.tier_weights = {'star': 0, 'flagged': 2,
                              'ppr': 2, 'dtc': 1}
-        self.num_agencies = 50
+        self.num_agencies = 20
 
     def check_provider_name(self, name):
         "This is used to check that the agency username being registered is a real agency name"
