@@ -124,25 +124,25 @@ def discharge():
         summary = patient_info['summary']
 
         df = recommender_instance.filter_zipcode(zipcode)
-        recommendations, df_rec = recommender_instance.recommend(df,
-                                                                 boolservices,
-                                                                 path)
+        df_agency, df_rec = recommender_instance.recommend(df,
+                                                           boolservices,
+                                                           path)
 
         patient = classes.Patient(planner_username=planner_username,
                                   first=first,
                                   last=last,
                                   insurance=insurance,
                                   summary=summary,
-                                  recommendations=recommendations,
+                                  recommendations=df_agency.name.tolist(),
                                   boolservices=boolservices,
                                   zipcode=zipcode,
                                   path=path,
-                                  rec_status=["A"]*len(recommendations))
+                                  rec_status=["A"]*20)
 
         db.session.add(patient)
         db.session.commit()
         df_rec.to_pickle(f'code/app/upload_temp/recs/{patient.id}')
-        recommendations.to_pickle(f'code/app/upload_temp/dfs/{patient.id}')
+        df_agency.to_pickle(f'code/app/upload_temp/recs/dash{patient.id}')
         return redirect(url_for('discharge'))
 
     patients = classes.Patient.query. \
@@ -193,10 +193,12 @@ def patient():
         abort(401)
 
     df = recommender_instance.filter_zipcode(patient.zipcode)
-    if(os.path.exists(f'code/app/upload_temp/recs/{patient.id}')):
+    if os.path.exists(f'code/app/upload_temp/recs/{patient.id}'):
         df_rec = pd.read_pickle(f'code/app/upload_temp/recs/{patient.id}')
+        df_agency = pd.read_pickle(f'code/app/upload_temp/recs/dash{patient.id}')
+
     else:
-        _, df_rec = recommender_instance.recommend(df,
+        df_agency, df_rec = recommender_instance.recommend(df,
                                                 patient.boolservices,
                                                 patient.path)
         
@@ -205,10 +207,9 @@ def patient():
             print('Error with number of agencies selected')
         else:
             resulting_agencies = list(request.form.keys())[:-1]
-            agency_df = pd.read_pickle(f'code/app/upload_temp/dfs/{patient.id}')
-            agency_df['preventable_readmission'] = round(agency_df['preventable_readmission']/2,2)
-            df3 = agency_df[agency_df.name.isin(resulting_agencies)]
-            patient_name = 'ENTER NAME'
+            df_agency['preventable_readmission'] = round(df_agency['preventable_readmission']/2,2)
+            df3 = df_agency[df_agency.name.isin(resulting_agencies)]
+            patient_name = patient.first
 
             names = df3.name.tolist()
             name1 = names[0]
@@ -279,7 +280,7 @@ def patient():
                                    adm3 = json.dumps(adm3), ppr1 = json.dumps(ppr1),
                                    ppr2 = json.dumps(ppr2), ppr3 = json.dumps(ppr3))
 
-    rec_status = patient.rec_status
+    rec_status = patient.rec_status[:20]
     df_available, df_requested, df_confirmed, df_denied, df_removed = df_rec.loc[[e == "A" for e in rec_status]],\
                                                                       df_rec.loc[[e == "W" for e in rec_status]],\
                                                                       df_rec.loc[[e == "C" for e in rec_status]],\
