@@ -18,11 +18,6 @@ def return_agency_data(df3, column):
     all_data = list(map(lambda x: [x, round(100-x,2)],
                         df3[column].tolist()))
     return all_data
-
-def return_agency_data(df3, column):
-    all_data = list(map(lambda x: [x, round(100-x,2)],
-                        df3[column].tolist()))
-    return all_data[0], all_data[1], all_data[2]
     
 
 def get_hh_agencies(zipcode: str):
@@ -85,7 +80,6 @@ def extract_patient_info(instance_path, filename, file) -> dict:
     extracted_info['summary'] = "summary example"
     return extracted_info
 
-
 def get_top_agencies():
     response = s3.get_object(Bucket="haoma-bucket",
                                  Key="HH_Provider_Oct2020.csv")
@@ -119,4 +113,3 @@ def get_top_agencies():
     df_rec['rank'] = range(1, len(df_rec)+1)
     df_rec = df_rec[['rank'] + list(df_rec.columns[:-1])]
     return df
-# get_hh_agencies()

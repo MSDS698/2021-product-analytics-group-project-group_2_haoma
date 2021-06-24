@@ -24,7 +24,26 @@
   <center>
     <div class="container">
       <div class="header"><br>
-        <h3 class="text-muted">{{patient.first}}'s recommendations</h3>
+        <h3 class="text-muted">
+
+            <div align="center" style="color:#211F1F;font-size:35px">
+                <strong>{{patient.first}}'s recommendations:</strong>
+            </div>
+            <div align="left" style="color:#211F1F;font-size:22px">
+            <br>Below are agencies that serve <p style="display:inline;color:#376b69"><strong>{{patient.zipcode}}</strong></p> and offer
+            {% if specific_services|length == 1 %}
+                <p style="display:inline;color:#376b69"><strong>{{specific_services[0]}}</strong></p>.
+            {% elif specific_services|length == 2 %}
+                <p style="display:inline;color:#376b69"><strong>{{specific_services[0]}}</strong></p> and <p style="display:inline;color:#376b69"><strong>{{specific_services[1]}}</strong></p>.
+            {% else %}
+                {% for service in specific_services[:-1] %}
+                    <p style="display:inline;color:#376b69"><strong>{{service}}</strong></p>,
+                {% endfor %}
+                    and <p style="display:inline;color:#376b69"><strong>{{specific_services[-1]}}</strong></p>.
+            {% endif %}
+            </div>
+            <br>
+          </h3>
       </div>
       <ul class="nav nav-tabs" id="status" role="tablist">
         <li class="nav-item" role="presentation">
@@ -51,33 +70,39 @@
 
       <div class="tab-content" id="tabContent">
         <!-- Available Pane -->
+<!--         <form method="POST"> -->
+        <!-- Available Pane -->
         <div class="tab-pane active" id="available" role="tabpanel" aria-labelledby="available-tab">
-          <div class="container">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  {% for col_name in columns %}
-                  <th scope="col">{{col_name}}</th>
+          <form method="POST">
+            <div class="container">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    {% for col_name in columns %}
+                    <th scope="col">{{col_name}}</th>
+                    {% endfor %}
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for row in data_available %}
+                  <tr>
+                    {% for cell in row %}
+                    <td>{{cell}}</td>
+                    {% endfor %}
+                    <td><button type="button" class="btn btn-success" onclick="requestRec('{{row[0]-1}}');">
+                      Request
+                    </button></td>
+                    <td><input type="checkbox" name="{{row[1]}}"></td>
+                    <td><button type="button" class="btn btn-warning" onclick="removeRec('{{row[0]-1}}');">
+                      <i class="bi bi-trash"></i>
+                    </button></td>
+                  </tr>
                   {% endfor %}
-                </tr>
-              </thead>
-              <tbody>
-                {% for row in data_available %}
-                <tr>
-                  {% for cell in row %}
-                  <td>{{cell}}</td>
-                  {% endfor %}
-                  <td><button type="button" class="btn btn-success" onclick="requestRec('{{row[0]-1}}');">
-                    Request
-                  </button></td>
-                  <td><button type="button" class="btn btn-warning" onclick="removeRec('{{row[0]-1}}');">
-                    <i class="bi bi-trash"></i>
-                  </button></td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
+                </tbody>
+              </table>
+            </div>
+            <button type="submit" name="compare" value="company.index" style="margin-left:45%">Compare</button>
+          </form>
         </div>
         <!-- Requested Pane -->
         <div class="tab-pane" id="requested" role="tabpanel" aria-labelledby="requested-tab">
