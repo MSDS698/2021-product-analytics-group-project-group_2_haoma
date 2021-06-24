@@ -2,7 +2,6 @@
 {% block content %}
 
 <link href="https://fonts.googleapis.com/css?family=Fira+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/test.css') }}">
@@ -11,13 +10,7 @@
 <div>
     <div class="agency-header">   
         <div class="container">
-            <div class="row">    
-                <div class="col-xl-6">
-                    <div class="card-body">
-                        <h3 class="align-middle"></h3>
-                        <p class="card-text"></p>
-                    </div>
-                </div>
+            <div class="row">
                 <div class="col-xl-6">
                     <div class="card bg-light mb-3">
                         <h5 class="card-header"><b>Personalized Haoma Score for {{patient_name}}</b></h5>
@@ -150,7 +143,7 @@
             type: 'doughnut',
             data: score_data,
             options: {
-                plugin_denominator:  70,
+                plugin_denominator:  130,
                 plugin_height: 1.7,
                 responsive: true,
                 plugin_text: Math.round(score[i][0]) + '%',
@@ -167,7 +160,8 @@
                 layout: {
                     padding: {
                         left: 10,
-                        right: 10
+                        right: 10,
+                        bottom: 10
                     },
                 },
                 cutoutPercentage: 60,
@@ -230,7 +224,7 @@
                     type: 'doughnut',
                     data: card_data,
                     options: {
-                        plugin_denominator:  120,
+                        plugin_denominator: 120,
                         plugin_height: 2,
                         responsive: true,
                         plugin_text: Math.round(data[j][i][0]) + '%',
@@ -247,7 +241,8 @@
                         layout: {
                             padding: {
                                 left: 50,
-                                right: 50
+                                right: 50,
+                                bottom: 30
                             },
                         },
                         cutoutPercentage: 60,

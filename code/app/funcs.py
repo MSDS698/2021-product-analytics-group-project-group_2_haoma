@@ -19,6 +19,12 @@ def return_agency_data(df3, column):
                         df3[column].tolist()))
     return all_data
 
+def return_agency_data(df3, column):
+    all_data = list(map(lambda x: [x, round(100-x,2)],
+                        df3[column].tolist()))
+    return all_data[0], all_data[1], all_data[2]
+    
+
 def get_hh_agencies(zipcode: str):
     "Get a df of Home Health agencies that cover a given zipcode."
     response = s3.get_object(Bucket="haoma-bucket", Key="HH_Zip_Oct2020.csv")
