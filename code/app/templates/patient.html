@@ -14,6 +14,11 @@
         location.reload();
       })
     }
+    function restoreRec(idx) {
+      $.post("{{url_for('change_rec_status')}}", { idx: idx, status: "A", patient_id: patient_id }, function (response) {
+        location.reload();
+      })
+    }
     function requestRec(idx) {
       $.post("{{url_for('request_rec')}}", { idx: idx, patient_id: patient_id }, function (response) {
         location.reload();
@@ -95,15 +100,15 @@
                     <tr>
                       
                       {% for cell in row %}
-                      <td style="vertical-align: middle;">{{cell}}</td>
+                      <td class="align-middle">{{cell}}</td>
                       {% endfor %}
-                      <td><button type="button" class="btn btn-success" style="vertical-align: middle;" onclick="requestRec('{{row[0]-1}}');">
+                      <td class="align-middle"><button type="button" class="btn btn-success" onclick="requestRec('{{row[0]-1}}');">
                         Request
                       </button></td>
-                      <td><button type="button" class="btn btn-warning" style="vertical-align: middle;" onclick="removeRec('{{row[0]-1}}');">
+                      <td class="align-middle"><button type="button" class="btn btn-warning" onclick="removeRec('{{row[0]-1}}');">
                         <i class="bi bi-trash"></i>
                       </button></td>
-                      <td class="compare-checkbox"><input type="checkbox" name="{{row[1]}}"></td>
+                      <td class="compare-checkbox align-middle"><input type="checkbox" name="{{row[1]}}"></td>
 
                     </tr>
                     {% endfor %}
@@ -126,18 +131,14 @@
                     {% for col_name in columns %}
                     <th scope="col">{{col_name}}</th>
                     {% endfor %}
-                    <th></th>
-                    <th class="compare-button"><button type="submit" name="compare" class="btn btn-primary">Compare</button></th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for row in data_requested %}
                   <tr>
                     {% for cell in row %}
-                    <td>{{cell}}</td>
+                    <td class="align-middle">{{cell}}</td>
                     {% endfor %}
-                    <td></td>
-                    <td class="compare-checkbox"><input type="checkbox" name="{{row[1]}}"></td>
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -154,14 +155,18 @@
                   {% for col_name in columns %}
                   <th scope="col">{{col_name}}</th>
                   {% endfor %}
+                  <th></th>
+                  <th class="compare-button"><button type="submit" name="compare" class="btn btn-primary">Compare</button></th>
                 </tr>
               </thead>
               <tbody>
                 {% for row in data_confirmed %}
                 <tr>
                   {% for cell in row %}
-                  <td>{{cell}}</td>
+                  <td class="align-middle">{{cell}}</td>
                   {% endfor %}
+                  <td></td>
+                  <td class="compare-checkbox align-middle"><input type="checkbox" name="{{row[1]}}"></td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -183,7 +188,7 @@
                 {% for row in data_denied %}
                 <tr>
                   {% for cell in row %}
-                  <td>{{cell}}</td>
+                  <td class="align-middle">{{cell}}</td>
                   {% endfor %}
                 </tr>
                 {% endfor %}
@@ -200,14 +205,18 @@
                   {% for col_name in columns %}
                   <th scope="col">{{col_name}}</th>
                   {% endfor %}
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 {% for row in data_removed %}
                 <tr>
                   {% for cell in row %}
-                  <td>{{cell}}</td>
+                  <td class="align-middle">{{cell}}</td>
                   {% endfor %}
+                  <td class="align-middle"><button type="button" class="btn btn-success" style="vertical-align: middle;" onclick="restoreRec('{{row[0]-1}}');">
+                    Restore
+                  </button></td>
                 </tr>
                 {% endfor %}
               </tbody>
