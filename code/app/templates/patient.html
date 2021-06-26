@@ -9,8 +9,14 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
   <script type="text/javascript">
     let patient_id = {{ patient.id }};
+    let idx = null;
     function removeRec(idx) {
       $.post("{{url_for('change_rec_status')}}", { idx: idx, status: "R", patient_id: patient_id }, function (response) {
+        location.reload();
+      })
+    }
+    function acceptRec(idx) {
+      $.post("{{url_for('change_rec_status')}}", { idx: idx, status: "M", patient_id: patient_id }, function (response) {
         location.reload();
       })
     }
@@ -167,6 +173,10 @@
                   {% endfor %}
                   <td></td>
                   <td class="compare-checkbox align-middle"><input type="checkbox" name="{{row[1]}}"></td>
+                  <td class="align-middle"><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#acceptRecModal" 
+                    onclick="patient_id={{patient['id']}};idx={{row[0]-1}};document.getElementById('deletePatientModalLabel').innerHTML='Accept Recommendation '+idx;return false;">
+                    Accept
+                  </button></td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -223,6 +233,19 @@
             </table>
           </div>
         </div>
+      </div>
+
+      <!-- Accept rec modal -->
+      <div class="modal fade" id="acceptRecModal" tabindex="-1" aria-labelledby="acceptRecModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="acceptRecModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <button class="btn btn-success" onclick="acceptRec(idx);return false;">Accept</button>
+            </div>
+          </div>
       </div>
 
     </div>

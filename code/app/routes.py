@@ -152,8 +152,8 @@ def discharge():
 
     patients = classes.Patient.query. \
         filter_by(planner_username=current_user.username).all()
-    active_patients = [p for p in patients if not p.matched and p.status == 'A']
-    history_patients = [p for p in patients if p.matched or p.status == 'R']
+    active_patients = [p for p in patients if p.status == 'A']
+    history_patients = [p for p in patients if p.status == 'M' or p.status == 'R']
     table_keys, table_names = classes.Patient.get_display_columns()
     return render_template('discharge.html',
                            loggedin=current_user.is_authenticated,
@@ -310,7 +310,7 @@ def patient():
     return render_template('patient.html',
                            loggedin=current_user.is_authenticated,
                            patient=patient,
-                           columns=df_rec.columns,
+                           columns=df_rec.columns.values,
                            data_available=df_available.values,
                            data_requested=df_requested.values,
                            data_confirmed=df_confirmed.values,
