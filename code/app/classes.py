@@ -57,12 +57,12 @@ class Patient(db.Model):
     summary = db.Column(db.Text(), nullable=False)
     recommendations = db.Column(db.ARRAY(db.String(100)))
     rec_status = db.Column(db.ARRAY(db.String(1))) # "A" = available, "R" = removed, "C" = HHA confirmed, "D" = HHA denied, "W" = waiting for HHA confirmed, "M" = matched with HHA
-    status = db.Column(db.String(1)) # "A" = active, "R" = removed, "M" = matched with HHA
+    status = db.Column(db.String(1), default='A') # "A" = active, "R" = removed, "M" = matched with HHA
+    num_readmitted = db.Column(db.Integer(), default=0)
     
     boolservices = db.Column(db.ARRAY(db.Boolean), nullable = False)
     zipcode = db.Column(db.Integer, nullable=False)
     path = db.Column(db.String(100), nullable=False)
-    matched = db.Column(db.Boolean(), nullable=False)
     agency_requests = db.relationship('AgencyRequest', backref='patient', lazy=True)
                           
         

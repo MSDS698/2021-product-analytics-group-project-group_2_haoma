@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/patient.css') }}">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
   <script type="text/javascript">
-    let patient_id = {{ patient.id }};
+    let patient_id = {{ patient['id'] }};
     let idx = null;
     function removeRec(idx) {
       $.post("{{url_for('change_rec_status')}}", { idx: idx, status: "R", patient_id: patient_id }, function (response) {
@@ -174,7 +174,7 @@
                   <td></td>
                   <td class="compare-checkbox align-middle"><input type="checkbox" name="{{row[1]}}"></td>
                   <td class="align-middle"><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#acceptRecModal" 
-                    onclick="patient_id={{patient['id']}};idx={{row[0]-1}};document.getElementById('deletePatientModalLabel').innerHTML='Accept Recommendation '+idx;return false;">
+                    onclick="idx={{row[0]-1}};document.getElementById('acceptRecModalLabel').innerHTML='Accept Recommendation '+idx;return false;">
                     Accept
                   </button></td>
                 </tr>
