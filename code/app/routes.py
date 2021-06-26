@@ -330,9 +330,11 @@ def change_rec_status():
         patient = classes.Patient.query.filter_by(id=patient_id).first()
         if(patient.planner_username != current_user.username):
             abort(401)
-        idx = int(request.form['idx'])
-        status = request.form['status']
-        patient.update_rec_status(idx, status)
+        if('idx' in request.form): 
+            patient.update_rec_status(idx=request.form['idx'], status=request.form['status'])
+        else:
+            patient.update_rec_status(status=request.form['status'])
+        
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
 

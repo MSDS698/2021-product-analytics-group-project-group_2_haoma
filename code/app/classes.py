@@ -77,10 +77,12 @@ class Patient(db.Model):
             names += [" ".join(k.split("_")).title()]
         return Patient.display_columns, names
 
-    def update_rec_status(self, idx, status):
+    def update_rec_status(self, idx=None, status=None):
         rec_status = self.rec_status.copy()
-        rec_status[idx] = status
-        self.rec_status = rec_status
+        if(idx == None):
+            self.rec_status = rec_status
+        else:
+            rec_status[idx] = status
         db.session.commit()
 
 
