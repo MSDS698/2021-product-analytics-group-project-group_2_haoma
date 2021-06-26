@@ -10,7 +10,6 @@
 <body>
 </br>
     <div class="agency-header"> 
-    
         <div class="container">
             <div class="row">    
                 <div class="col-{{col_first_size}}">
@@ -36,23 +35,24 @@
                 {% endfor %}
             </div>
         </div>
-    
-        <div class="container">
-            <div class="row">    
-                <div class="col-{{col_first_size}}">
-                    <div class="card bg-white mb-3">
-                    <h5 class="card-header">&nbsp;</h5>
+        <div class="agency-header">
+            <div class="container">
+                <div class="row">    
+                    <div class="col-{{col_first_size}}">
+                        <div class="card bg-white mb-3">
+                        <h5 class="card-header">&nbsp;</h5>
+                        </div>
                     </div>
-                </div>
-                {% for i in range(num_agencies) %}
-                <div class="col-{{col_size}}">
-                    <div class="card bg-light mb-3">
-                    <h5 class="card-header" style="color: {{colors_arr[i]}};">{{name_arr[i].title()}}</h5>
+                    {% for i in range(num_agencies) %}
+                    <div class="col-{{col_size}}">
+                        <div class="card bg-light mb-3">
+                        <h5 class="card-header" style="color: {{colors_arr[i]}};">{{name_arr[i].title()}}</h5>
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
-        </div>
+        </div>    
     </div>
 
     <div class="agency-body">
