@@ -171,20 +171,27 @@ def agency():
     "Agency user's request dashboard"
     if(current_user.account_type != "agency"): abort(401)
     agency_requests = classes.AgencyRequest.query. \
-        filter_by(agency_name=current_user.username, acknowledged=False).all()
-    patients = []
+        filter_by(agency_name=current_user.username).all()
+    requested_patients = []
+    accepted_patients = []
     for agency_request in agency_requests:
-        patient = classes.Patient.query.filter_by(id=agency_request.patient_id).first()
-        patients += [{
+        patient = agency_request.patient
+        patient_info = [{
             'request_id': agency_request.id,
             'insurance': patient.insurance,
             'summary': patient.summary,
         }]
+        status = patient.rec_status[[i for i,rec in enumerate(patient.recommendations) if rec == agency_request.agency_name][0]]
+        if(status == 'A'):
+            requested_patients += patient_info
+        elif(status == 'M'):
+            accepted_patients += patient_info
     return render_template('agency.html',
                            loggedin=current_user.is_authenticated,
                            username=current_user.username,
                            table_keys=['request_id', 'insurance', 'summary'],
-                           patients=patients)
+                           requested_patients=requested_patients,
+                           accepted_patients=accepted_patients)
 
 
 
@@ -279,11 +286,12 @@ def patient():
 
 
     rec_status = patient.rec_status[:20]
-    df_available, df_requested, df_confirmed, df_denied, df_removed = df_rec.loc[[e == "A" for e in rec_status]],\
+    df_available, df_requested, df_confirmed, df_denied, df_removed, df_matched = df_rec.loc[[e == "A" for e in rec_status]],\
                                                                       df_rec.loc[[e == "W" for e in rec_status]],\
                                                                       df_rec.loc[[e == "C" for e in rec_status]],\
                                                                       df_rec.loc[[e == "D" for e in rec_status]],\
-                                                                      df_rec.loc[[e == "R" for e in rec_status]]
+                                                                      df_rec.loc[[e == "R" for e in rec_status]],\
+                                                                      df_rec.loc[[e == "M" for e in rec_status]]
     # Manipulating boolean services
     services = ['nursing care', 'physical therapy', 'occupational therapy', 'speech therapy', 'medical social services', 'home health aide']
     specific_services = [services[i] for i,b in enumerate(patient.boolservices) if b]
@@ -316,6 +324,7 @@ def patient():
                            data_confirmed=df_confirmed.values,
                            data_denied=df_denied.values,
                            data_removed=df_removed.values,
+                           data_matched=df_matched.values,
                            specific_services=specific_services)
 
 
@@ -330,10 +339,13 @@ def change_rec_status():
         patient = classes.Patient.query.filter_by(id=patient_id).first()
         if(patient.planner_username != current_user.username):
             abort(401)
-        if('idx' in request.form): 
-            patient.update_rec_status(idx=request.form['idx'], status=request.form['status'])
+        status = request.form['status']
+        if('idx' in request.form):
+            patient.update_rec_status(idx=int(request.form['idx']), status=status)
+            if(status == 'M'):
+                patient.update_rec_status(status=status)
         else:
-            patient.update_rec_status(status=request.form['status'])
+            patient.update_rec_status(status=status)
         
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 

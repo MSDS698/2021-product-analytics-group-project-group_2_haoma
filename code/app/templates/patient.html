@@ -86,6 +86,10 @@
           <button class="nav-link" id="removed-tab" data-bs-toggle="tab" data-bs-target="#removed" type="button"
             role="tab" aria-controls="removed" aria-selected="false">Removed</button>
         </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="matched-tab" data-bs-toggle="tab" data-bs-target="#matched" type="button"
+            role="tab" aria-controls="matched" aria-selected="false">Matched</button>
+        </li>
       </ul>
 
       <div class="tab-content" id="tabContent">
@@ -233,6 +237,30 @@
                   <td class="align-middle"><button type="button" class="btn btn-success" style="vertical-align: middle;" onclick="restoreRec('{{row[0]-1}}');">
                     Restore
                   </button></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Matched Pane -->
+        <div class="tab-pane" id="matched" role="tabpanel" aria-labelledby="matched-tab">
+          <div class="container">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  {% for col_name in columns %}
+                  <th scope="col">{{col_name}}</th>
+                  {% endfor %}
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in data_matched %}
+                <tr>
+                  {% for cell in row %}
+                  <td class="align-middle">{{cell}}</td>
+                  {% endfor %}
                 </tr>
                 {% endfor %}
               </tbody>

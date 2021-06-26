@@ -27,30 +27,78 @@
             </div>
             <br>
             <br>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        {% for col_name in table_keys %}
-                            <th scope="col">{{col_name}}</th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for patient in patients %}
-                        <tr>
-                            {% for k in table_keys %}
-                                <td>{{patient[k]}}</td>
-                            {% endfor %}
-                            <td width="5%"><button type="button" class="btn btn-success" onclick="respondRequest({{patient['request_id']}}, 'C');return false;">
-                                Confirm
-                            </button></td>
-                            <td width="5%"><button type="button" class="btn btn-warning" onclick="respondRequest({{patient['request_id']}}, 'D');return false;">
-                                Deny
-                            </button></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <ul class="nav nav-tabs" id="status" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="requests-tab" data-bs-toggle="tab" data-bs-target="#requests"
+                    type="button" role="tab" aria-controls="requests" aria-selected="true">Requests</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="accepted-tab" data-bs-toggle="tab" data-bs-target="#accepted" type="button"
+                    role="tab" aria-controls="accepted" aria-selected="false">Accepted</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="tabContent">
+                <!-- Requests Pane -->
+                <div class="tab-pane active" id="requests" role="tabpanel" aria-labelledby="requests-tab">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="container col-md-12 compare-table">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            {% for col_name in table_keys %}
+                                                <th scope="col">{{col_name}}</th>
+                                            {% endfor %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for patient in requested_patients %}
+                                            <tr>
+                                                {% for k in table_keys %}
+                                                    <td class="align-middle">{{patient[k]}}</td>
+                                                {% endfor %}
+                                                <td class="align-middle" width="5%"><button type="button" class="btn btn-success" onclick="respondRequest({{patient['request_id']}}, 'C');return false;">
+                                                    Confirm
+                                                </button></td>
+                                                <td class="align-middle" width="5%"><button type="button" class="btn btn-warning" onclick="respondRequest({{patient['request_id']}}, 'D');return false;">
+                                                    Deny
+                                                </button></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- Accepted Pane -->
+                <div class="tab-pane" id="accepted" role="tabpanel" aria-labelledby="accepted-tab">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="container col-md-12 compare-table">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            {% for col_name in table_keys %}
+                                                <th scope="col">{{col_name}}</th>
+                                            {% endfor %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for patient in accepted_patients %}
+                                            <tr>
+                                                {% for k in table_keys %}
+                                                    <td class="align-middle">{{patient[k]}}</td>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
