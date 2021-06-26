@@ -57,6 +57,7 @@ class Patient(db.Model):
     summary = db.Column(db.Text(), nullable=False)
     recommendations = db.Column(db.ARRAY(db.String(100)))
     rec_status = db.Column(db.ARRAY(db.String(1))) # "A" = available, "R" = removed, "C" = HHA confirmed, "D" = HHA denied, "W" = waiting for HHA confirmd
+    status = db.Column(db.String(1)) # "A" = active, "R" = removed
     
     boolservices = db.Column(db.ARRAY(db.Boolean), nullable = False)
     zipcode = db.Column(db.Integer, nullable=False)
@@ -80,9 +81,10 @@ class Patient(db.Model):
     def update_rec_status(self, idx=None, status=None):
         rec_status = self.rec_status.copy()
         if(idx == None):
-            self.rec_status = rec_status
+            self.status = status
         else:
             rec_status[idx] = status
+            self.rec_status = rec_status
         db.session.commit()
 
 

@@ -150,10 +150,10 @@ def discharge():
         df_agency.to_pickle(f'code/app/upload_temp/recs/dash{patient.id}')
         return redirect(url_for('discharge'))
 
-    active_patients = classes.Patient.query. \
-        filter_by(planner_username=current_user.username, matched=False).all()
-    history_patients = classes.Patient.query. \
-        filter_by(planner_username=current_user.username, matched=True).all()
+    patients = classes.Patient.query. \
+        filter_by(planner_username=current_user.username).all()
+    active_patients = [p for p in patients if not p.matched and p.status == 'A']
+    history_patients = [p for p in patients if p.matched or p.status == 'R']
     table_keys, table_names = classes.Patient.get_display_columns()
     return render_template('discharge.html',
                            loggedin=current_user.is_authenticated,
@@ -348,7 +348,7 @@ def request_rec():
         if(patient.planner_username != current_user.username):
             abort(401)
         idx = int(request.form['idx'])
-        patient.update_rec_status(idx, "W")
+        patient.update_rec_status(idx=idx, status="W")
         agency_request = classes.AgencyRequest(patient_id=patient_id, planner_username=patient.planner_username, agency_name=patient.recommendations[idx])
         db.session.add(agency_request)
         db.session.commit()
