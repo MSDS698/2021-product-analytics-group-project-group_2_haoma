@@ -9,32 +9,22 @@
 <div>
 <body>
 </br>
-    <div class="agency-header">   
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-6">
-                </div>
-                <div class="col-xl-6">
-                    <div class="card bg-light mb-3">
-                        <h5 class="card-header" style="text-align:center"><b>Personalized Haoma Score for {{patient_name}}</b></h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+    <div class="agency-header"> 
     
         <div class="container">
             <div class="row">    
-                <div class="col-xl-6">
+                <div class="col-{{col_first_size}}">
                     <div class="card-body">
                         <h1 class="align-middle" style="font-family:tahoma;color:#376b69;text-align:center"><br><b>Haoma Compare</b></h1>
-                        <h3 class="align-middle" style="text-align:center">Based on Official Medicare Surveys</h3>
+                        {% if show_haoma_desc %}  
+                        <!-- <h3 class="align-middle" style="text-align:center">Based on Official Medicare Surveys</h3> -->
+                        {% endif %}
                         <p class="card-text">
                         </p>
                     </div>
                 </div>
                 {% for i in range(num_agencies) %}
-                <div class="col-md-2">
+                <div class="col-{{col_size}}">
                     <div class="card card-style mb-3">
                         <div class="card-body">
                             <div class="chart-container" style="position: relative;">
@@ -49,15 +39,15 @@
     
         <div class="container">
             <div class="row">    
-                <div class="col-xl">
+                <div class="col-{{col_first_size}}">
                     <div class="card bg-white mb-3">
                     <h5 class="card-header">&nbsp;</h5>
                     </div>
                 </div>
                 {% for i in range(num_agencies) %}
-                <div class="col-xl">
+                <div class="col-{{col_size}}">
                     <div class="card bg-light mb-3">
-                    <h5 class="card-header" style="color: {{colors_arr[i]}};">{{name_arr[i][0:25].title()}}</h5>
+                    <h5 class="card-header" style="color: {{colors_arr[i]}};">{{name_arr[i].title()}}</h5>
                     </div>
                 </div>
                 {% endfor %}
@@ -69,20 +59,23 @@
         {% for k in dashboard_key_order %}
         <div class="container">
             <div class="row">   
-                <div class="col-md-3">
+                <div class="col-{{col_first_size}}">
                     <div class="card card-body" style="position: relative; height: {{dashboard_info[k]['height_desc']}};">
                         <div class="chart-container">
                             <h5 class="card-title"><b>{{dashboard_info[k]['title']}}</b></h5>
-                            {{dashboard_info[k]['body']|safe}}
+                            <div>
+                                {{dashboard_info[k]['body']|safe}}
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
                 {% for i in range(num_agencies) %}
-                <div class="col-md-3">
+                <div class="col-{{col_size}}">
                     <div class="card card-style mb-2">
                         <div class="card-body">
-                            <div class="chart-container" style="position: relative; height: {{dashboard_info[k]['height_data']}};">
-                                <canvas id="{{k}}{{i}}"></canvas>
+                            <div class="chart-container" style="position: relative;">
+                                <canvas id="{{k}}{{i}}" style="height: 100%; width: 100%;"></canvas>
                             </div>
                         </div>
                     </div>
@@ -129,7 +122,7 @@
         const score_canvas = document.getElementById(`score${i}`);
         const score_ctx = score_canvas.getContext('2d');
         const score_data = {
-            labels: ['Percentage'],
+            labels: [name[i]],
             datasets: [
                 {
                 label: `Dataset ${i+1}`,
@@ -159,9 +152,9 @@
                 },
                 layout: {
                     padding: {
-                        left: 10,
-                        right: 10,
-                        bottom: 10
+                        left: 0,
+                        right: 0,
+                        bottom: 0
                     },
                 },
                 cutoutPercentage: 60,
@@ -182,7 +175,7 @@
                 };
                 new Chart(ctx, {
                     type: 'bar',
-                    data: card_data, 
+                    data: card_data,
                     options: {
                         scales: {
                             xAxes: [{
@@ -211,7 +204,7 @@
                 });
             } else {
                 const card_data = {
-                    labels: ['Percentage'],
+                    labels: [name[i]],
                     datasets: [
                         {
                             label: `Dataset ${i+1}`,
@@ -235,14 +228,14 @@
                             display: false
                         },
                         title: {
-                            display: true,
+                            display: false,
                             text: name[i].substring(0, 20)
                         },
                         layout: {
                             padding: {
-                                left: 50,
-                                right: 50,
-                                bottom: 30
+                                left: 0,
+                                right: 0,
+                                bottom: 0
                             },
                         },
                         cutoutPercentage: 60,
@@ -262,7 +255,7 @@ Chart.pluginService.register({
             ctx.restore();
 
             var denominator = chart.options.plugin_denominator;
-            var fontSize = (height / denominator).toFixed(2);
+            var fontSize = ((height + 1 * num_agencies) / 100).toFixed(2);
             ctx.font = fontSize + "em sans-serif";
             ctx.textBaseline = "middle";
 

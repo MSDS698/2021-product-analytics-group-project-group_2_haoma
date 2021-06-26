@@ -208,7 +208,7 @@ def patient():
                                                 patient.path)
         
     if request.method == "POST":
-        if len(list(request.form.keys())) != 4:
+        if len(list(request.form.keys())) < 3 or len(list(request.form.keys())) > 6:
             print('Error with number of agencies selected')
         else:
             print(request.form.keys())
@@ -247,6 +247,17 @@ def patient():
                 'colors': json.dumps(dashboard_colors),
                 'bg_colors': json.dumps(background_colors)
             }
+
+            col_first_size = 5
+            col_size = 2
+            if(num_agencies == 3):
+                col_first_size = 4
+                col_size = 2
+            elif(num_agencies == 4):
+                col_first_size = 4
+                col_size = 2
+            elif(num_agencies == 5):
+                col_first_size = col_size = 2
             
             return render_template("dashboard.html",
                                 loggedin=current_user.is_authenticated,
@@ -256,6 +267,9 @@ def patient():
                                 dashboard_barchart_labels=json.dumps(dashboard_barchart_labels),
                                 dashboard_chart_titles=json.dumps(dashboard_chart_titles),
                                 dashboard_info=dashboard_info,
+                                show_haoma_desc=num_agencies<4,
+                                col_first_size=col_first_size,
+                                col_size=col_size,
                                 name_arr=names, 
                                 colors_arr=dashboard_colors, 
                                 **colors, **data)
