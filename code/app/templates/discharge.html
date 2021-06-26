@@ -1,12 +1,12 @@
-{% extends 'sidebar-user.html' %}
+{% extends "sidebar-user.html" %}
 
-{% block patient_list %}
-
+{% block content %}
 <br><br>
 <html>
     <head>
         {% block head %}
         {{ super() }}
+        {% include "ga.html" %}
         <script type="text/javascript">
             let patient_id = null;
             function removePatient(idx) {

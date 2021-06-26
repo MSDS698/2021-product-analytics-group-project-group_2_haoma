@@ -1,6 +1,11 @@
 {% include "headerbase.html" %}
 {% extends "loginRegisterBase.html" %}
 
+{% block head %}
+{{ super() }}
+{% include "ga.html" %}
+{% endblock %}
+
 {% block content %}
 {{form.csrf_token}}
 <h2>Login</h2>

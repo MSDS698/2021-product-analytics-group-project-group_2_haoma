@@ -63,6 +63,7 @@ class Patient(db.Model):
     boolservices = db.Column(db.ARRAY(db.Boolean), nullable = False)
     zipcode = db.Column(db.Integer, nullable=False)
     path = db.Column(db.String(100), nullable=False)
+    matched = db.Column(db.Boolean(), default=False)
     agency_requests = db.relationship('AgencyRequest', backref='patient', lazy=True)
                           
         
