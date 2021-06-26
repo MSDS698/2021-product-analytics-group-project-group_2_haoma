@@ -4,9 +4,8 @@
 <br><br>
 <html>
     <head>
-        {% block head %}
+        {% block header %}
         {{ super() }}
-        {% include "ga.html" %}
         <script type="text/javascript">
             let patient_id = null;
             function removePatient(idx) {
