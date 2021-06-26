@@ -21,37 +21,91 @@
                 <h3 class="agency-head" style="font-family:arial;color:#094d41"><b>Patients for: {{username | title}}</b></h3>
             </div>
             <br>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        {% for col_name in table_names %}
-                            <th scope="col">{{col_name}}</th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for patient in patients %}
-                        <tr>
-                            {% for k in table_keys %}
-                                <td>{{patient[k]}}</td>
-                            {% endfor %}
-                            <td width="5%"><button type="button" class="btn btn-success" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
-                                View
-                            </button></td>
-                            <td width="5%"><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#deletePatientModal" 
-                                onclick="patientId={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patientId;return false;">
-                                <i class="bi bi-trash"></i>
-                            </button></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <ul class="nav nav-tabs" id="status" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active"
+                    type="button" role="tab" aria-controls="active" aria-selected="true">Active</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button"
+                    role="tab" aria-controls="history" aria-selected="false">History</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="tabContent">
+                <!-- Active Pane -->
+                <div class="tab-pane active" id="active" role="tabpanel" aria-labelledby="active-tab">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="container col-md-12 compare-table">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            {% for col_name in table_names %}
+                                                <th scope="col">{{col_name}}</th>
+                                            {% endfor %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for patient in active_patients %}
+                                            <tr>
+                                                {% for k in table_keys %}
+                                                    <td>{{patient[k]}}</td>
+                                                {% endfor %}
+                                                <td width="5%"><button type="button" class="btn btn-success" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
+                                                    View
+                                                </button></td>
+                                                <td width="5%"><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#deletePatientModal" 
+                                                    onclick="patientId={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patientId;return false;">
+                                                    <i class="bi bi-trash"></i>
+                                                </button></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- History Pane -->
+                <div class="tab-pane" id="history" role="tabpanel" aria-labelledby="history-tab">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="container col-md-12 compare-table">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            {% for col_name in table_names %}
+                                                <th scope="col">{{col_name}}</th>
+                                            {% endfor %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for patient in history_patients %}
+                                            <tr>
+                                                {% for k in table_keys %}
+                                                    <td>{{patient[k]}}</td>
+                                                {% endfor %}
+                                                <td width="5%"><button type="button" class="btn btn-success" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
+                                                    View
+                                                </button></td>
+                                                <td width="5%"><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#deletePatientModal" 
+                                                    onclick="patientId={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patientId;return false;">
+                                                    <i class="bi bi-trash"></i>
+                                                </button></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
         <center>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#patientUploadModal">
                 Add Patient
             </button>
-
         </center>
 
         <!-- Delete patient modal -->

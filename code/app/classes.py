@@ -61,7 +61,7 @@ class Patient(db.Model):
     boolservices = db.Column(db.ARRAY(db.Boolean), nullable = False)
     zipcode = db.Column(db.Integer, nullable=False)
     path = db.Column(db.String(100), nullable=False)
-    match = db.Column(db.String(100))
+    matched = db.Column(db.Boolean(), nullable=False)
     agency_requests = db.relationship('AgencyRequest', backref='patient', lazy=True)
                           
         
@@ -93,8 +93,7 @@ class AgencyRequest(db.Model):
     planner_username = db.Column(db.String(100), nullable=False)
     acknowledged = db.Column(db.Boolean(), default=False)
     agency_name = db.Column(db.String(100), nullable=False)
-    completed = db.Column(db.Boolean(), default=False, nullable=False)
-                          
+
         
     def get_column_names():
         names = []

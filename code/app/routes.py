@@ -150,13 +150,16 @@ def discharge():
         df_agency.to_pickle(f'code/app/upload_temp/recs/dash{patient.id}')
         return redirect(url_for('discharge'))
 
-    patients = classes.Patient.query. \
-        filter_by(planner_username=current_user.username).all()
+    active_patients = classes.Patient.query. \
+        filter_by(planner_username=current_user.username, matched=False).all()
+    history_patients = classes.Patient.query. \
+        filter_by(planner_username=current_user.username, matched=True).all()
     table_keys, table_names = classes.Patient.get_display_columns()
     return render_template('discharge.html',
                            loggedin=current_user.is_authenticated,
                            username=current_user.username,
-                           patients=patients,
+                           active_patients=active_patients,
+                           history_patients=history_patients,
                            table_keys=table_keys,
                            table_names=table_names,
                            patient_upload_form=patient_upload_form)
