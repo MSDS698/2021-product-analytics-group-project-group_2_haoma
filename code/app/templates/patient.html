@@ -9,13 +9,18 @@
 <html>
 
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
-  <link href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+<!--   <link href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet"> -->
   <link href="{{ url_for('static', filename='vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/patient.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/discharge.css') }}">
+
+    <!--   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+ -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
   <script type="text/javascript">
     let patient_id = {{ patient['id'] }};
@@ -44,6 +49,11 @@
 </head>
 
 <body>
+     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap.min.js"></script><br><br>
+    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><br><br>
   <div id="mySidenav" class="sidenav">
     <a id="home" href="{{ url_for('index') }}">
     <div class="icon"><i class=" ri-home-heart-line" style="font-size:x-large;"></i></div>
@@ -58,18 +68,32 @@
     Agency
     </a>
   </div>
-  <br><br>
     <div class="container">
       <div class="header"><br>
-        <h3 class="text-muted">
-            <!-- <div>
-              <a href="{{ url_for('discharge') }}" class="btn btn-primary">Patients List</a>
-            </div> -->
-            <div align="center" style="color:#211F1F;font-size:35px">
-                <strong>{{patient.first}}'s recommendations:</strong>
-            </div>
+       <div class="container">
+            <div class="row" style = 'width:100%; height:15%'>
+                <div class = "col-md-2">
+                    <a href="{{ url_for('discharge') }}" style='float:left' class="btn-two blue rounded small" style='left:10'>All Patients</a>
+                </div>
+                <div class="col-md-6">
+                    <div class="card-body"><br><br>
+                        <br><br>
+                        <h1 class = 'display-5' style="font-family:Lato;font-weight:400;color:#094d41;text-align:left">{{patient.first | title}}'s Recommendations</h1><br><br>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <br><br>
+                    <img src="{{ url_for('static', filename='more-med-chars.png') }}" height="100%" class="card-img-right"><br>
+                </div>
+                <div class="col-sm-12">
+                    <br><br>
+                    <div style='border-bottom:1px solid #ccc;'></div>
+                </div>
+              </div></div>
+                    <br><br><br>
+            <br>
             <div align="left" style="color:#211F1F;font-size:22px">
-            <br>Below are top 20 agencies for {{patient.first}} that serve <p style="display:inline;color:#376b69"><strong>{{patient.zipcode}}</strong></p> and offer
+            <br>Below are top 20 agencies for {{patient.first}} that serve <p style="display:inline;color:#376b69;font-family:Lato;font-weight:400"><strong>{{patient.zipcode}}</strong></p> and offer
             {% if specific_services|length == 1 %}
                 <p style="display:inline;color:#376b69"><strong>{{specific_services[0]}}</strong></p>.
             {% elif specific_services|length == 2 %}
@@ -81,32 +105,31 @@
                     and <p style="display:inline;color:#376b69"><strong>{{specific_services[-1]}}</strong></p>.
             {% endif %}
             </div>
-            <br>
-          </h3>
+            <br><br>
       </div>
       <ul class="nav nav-tabs" id="status" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="available-tab" data-bs-toggle="tab" data-bs-target="#available"
+          <button class="nav-link active" id="available-tab" style = 'color:#25787a' data-bs-toggle="tab" data-bs-target="#available"
             type="button" role="tab" aria-controls="available" aria-selected="true">Available</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="requested-tab" data-bs-toggle="tab" data-bs-target="#requested" type="button"
+          <button class="nav-link" id="requested-tab" style = 'color:#25787a' data-bs-toggle="tab" data-bs-target="#requested" type="button"
             role="tab" aria-controls="requested" aria-selected="false">Requested</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="confirmed-tab" data-bs-toggle="tab" data-bs-target="#confirmed" type="button"
+          <button class="nav-link" id="confirmed-tab" style = 'color:#25787a' data-bs-toggle="tab" data-bs-target="#confirmed" type="button"
             role="tab" aria-controls="confirmed" aria-selected="false">Confirmed</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="denied-tab" data-bs-toggle="tab" data-bs-target="#denied" type="button"
+          <button class="nav-link" id="denied-tab" style = 'color:#25787a' data-bs-toggle="tab" data-bs-target="#denied" type="button"
             role="tab" aria-controls="denied" aria-selected="false">Denied</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="removed-tab" data-bs-toggle="tab" data-bs-target="#removed" type="button"
+          <button class="nav-link" id="removed-tab" style = 'color:#25787a' data-bs-toggle="tab" data-bs-target="#removed" type="button"
             role="tab" aria-controls="removed" aria-selected="false">Removed</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="matched-tab" data-bs-toggle="tab" data-bs-target="#matched" type="button"
+          <button class="nav-link" id="matched-tab" style = 'color:#25787a' data-bs-toggle="tab" data-bs-target="#matched" type="button"
             role="tab" aria-controls="matched" aria-selected="false">Matched</button>
         </li>
       </ul>
@@ -119,7 +142,8 @@
           <form method="POST">
             <div class="row">
               <div class="container col-md-12 compare-table">
-                <table class="table table-hover">
+                  <br>
+                <table id="myTable1" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="display table-hover table-striped" width="100%">
                   <thead>
                     <tr>
                       {% for col_name in columns %}
@@ -127,7 +151,7 @@
                       {% endfor %}
                       <th></th>
                       <th></th>
-                      <th class="compare-button"><button type="submit" name="compare" id ="compare-btn" class="btn btn-primary">Compare</button></th>
+                      <th class="compare-button"><button type="submit" name="compare" id ="compare-btn" class="btn-two blue rounded small">Compare</button></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -135,12 +159,12 @@
                     <tr>
                       
                       {% for cell in row %}
-                      <td class="align-middle">{{cell}}</td>
+                      <td class="align-middle">{{cell|title}}</td>
                       {% endfor %}
-                      <td class="align-middle"><button type="button" class="btn btn-success" onclick="requestRec('{{row[0]-1}}');">
+                      <td><button type="button" class="btn-two green rounded small" style="vertical-align: middle;" onclick="requestRec('{{row[0]-1}}');">
                         Request
                       </button></td>
-                      <td class="align-middle"><button type="button" class="btn btn-warning" onclick="removeRec('{{row[0]-1}}');">
+                      <td width = '5%'><button type="button" class="btn-two red rounded small" onclick="removeRec('{{row[0]-1}}');">
                         <i class="bi bi-trash"></i>
                       </button></td>
                       <td class="compare-checkbox align-middle"><input type="checkbox" name="{{row[1]}}"></td>
@@ -160,7 +184,7 @@
         <div class="tab-pane" id="requested" role="tabpanel" aria-labelledby="requested-tab">
           <form method="POST">
             <div class="container">
-              <table class="table table-hover">
+              <table id="myTable2" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="display table-hover table-striped" width="100%">
                 <thead>
                   <tr>
                     {% for col_name in columns %}
@@ -184,7 +208,7 @@
         <!-- Confirmed Pane -->
         <div class="tab-pane" id="confirmed" role="tabpanel" aria-labelledby="confirmed-tab">
           <div class="container">
-            <table class="table table-hover">
+            <table id="myTable3" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="display table-hover table-striped" width="100%">
               <thead>
                 <tr>
                   {% for col_name in columns %}
@@ -215,7 +239,7 @@
         <!-- Denied Pane -->
         <div class="tab-pane" id="denied" role="tabpanel" aria-labelledby="denied-tab">
           <div class="container">
-            <table class="table table-hover">
+            <table id="myTable4" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="display table-hover table-striped" width="100%">
               <thead>
                 <tr>
                   {% for col_name in columns %}
@@ -238,7 +262,7 @@
         <!-- Removed Pane -->
         <div class="tab-pane" id="removed" role="tabpanel" aria-labelledby="removed-tab">
           <div class="container">
-            <table class="table table-hover">
+            <table id="myTable5" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="display table-hover table-striped" width="100%">
               <thead>
                 <tr>
                   {% for col_name in columns %}
@@ -265,7 +289,7 @@
         <!-- Matched Pane -->
         <div class="tab-pane" id="matched" role="tabpanel" aria-labelledby="matched-tab">
           <div class="container">
-            <table class="table table-hover">
+            <table id="myTable6" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="display table-hover table-striped" width="100%">
               <thead>
                 <tr>
                   {% for col_name in columns %}
@@ -302,7 +326,27 @@
       </div>
 
     </div>
+    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css" rel="stylesheet">
 </body>
 
+<script>
+    $('.display').DataTable({
+      responsive: false,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": false,
+        columnDefs: [
+           { orderable: false, targets: [-1, -2, -3]}
+        ]
+        });
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+          $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+        });    
+
+</script>
+    
+     <br><br><br> <br><br><br>
 </html>
 {% endblock %}

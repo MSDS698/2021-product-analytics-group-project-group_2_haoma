@@ -1,19 +1,19 @@
 {% extends "headerbase.html" %}
-
-{% block head %}
-{{ super() }}
-{% include "ga.html" %}
-{% endblock %}
-
 {% block content %}
-<br><br>
 <html>
     <head>
-        <link href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+<!--         <link href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet"> -->
         <link href="{{ url_for('static', filename='vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/patient.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-        <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/discharge.css') }}">
+
+<!--         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> -->
+<!--         <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+         -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+        
+        
         <script type="text/javascript">
             let patient_id = null;
             function removePatient(idx) {
@@ -24,35 +24,61 @@
         </script>
     </head>
     <body>
-    
-    </br>
-    </br>
-        <div id="mySidenav" class="sidenav">
-            <a id="home" href="{{ url_for('index') }}">
-            <div class="icon"><i class=" ri-home-heart-line" style="font-size:x-large;"></i></div>
-            Home
-            </a>
-            <a id="patients-list" href="{{ url_for('discharge') }}">
-            <div class="icon"><i class="ri-list-check-2" style="font-size:x-large;"></i></div>
-            Patients
-            </a>
-            <a id="find-agency" href="{{ url_for('zipcode_search') }}">
-            <div class="icon"><i class="ri-hospital-line" style="font-size:x-large;"></i></div>
-            Agency
-            </a>
-        </div>
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap.min.js"></script><br><br>
+        <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+
+        <br><br>
+
+            <div id="mySidenav" class="sidenav">
+                <a id="home" href="{{ url_for('index') }}">
+                <div class="icon"><i class=" ri-home-heart-line" style="font-size:x-large;"></i></div>
+                Home
+                </a>
+                <a id="patients-list" href="{{ url_for('discharge') }}">
+                <div class="icon"><i class="ri-list-check-2" style="font-size:x-large;"></i></div>
+                Patients
+                </a>
+                <a id="find-agency" href="{{ url_for('zipcode_search') }}">
+                <div class="icon"><i class="ri-hospital-line" style="font-size:x-large;"></i></div>
+                Agency
+                </a>
+            </div>
+            <div class="container">
+                <div class="header">
+                <center>
+            <div class="row" style = 'width:100%; height:20%'>
+                <div class="col-md-8">
+                    <div class="card-body"><br><br>
+                        <h1 class = 'display-4' style="font-family:Lato;font-weight:400;color:#094d41;text-align:left">Welcome {{username|title}},</h1><br><br>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <img src="{{ url_for('static', filename='med-chars.png') }}" height="100%" class="card-img-right"><br>
+                </div>
+                <div class="col-sm-12">
+                    <div style='border-bottom:1px solid #ccc;'></div>
+                </div>
+                    </div></center></div>
+                </div>
+
+            <br>
+        
         <div class="container">
             <div class="header">
-                <h3 class="agency-head" style="font-family:arial;color:#094d41"><b>Patients for: {{username | title}}</b></h3>
+                    <h3 class="agency-head" style="font-family:Lato;font-weight:400;color:#094d41"><b>Your Patients</b></h3>
             </div>
             <br>
+            
             <ul class="nav nav-tabs" id="status" role="tablist">
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active"
+                      <button class="nav-link active" id="active-tab" style = 'color:#25787a' data-bs-toggle="tab" data-bs-target="#active"
                     type="button" role="tab" aria-controls="active" aria-selected="true">Active</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button"
+                      <button class="nav-link" id="history-tab" style = 'color:#25787a' data-bs-toggle="tab" data-bs-target="#history" type="button"
                     role="tab" aria-controls="history" aria-selected="false">History</button>
                 </li>
             </ul>
@@ -62,12 +88,15 @@
                     <form method="POST">
                         <div class="row">
                             <div class="container col-md-12 compare-table">
-                                <table class="table table-hover">
+                                <br>
+                                <table id="table1" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="table table-hover table-striped" width="100%">
                                     <thead>
                                         <tr>
                                             {% for col_name in table_names %}
                                                 <th scope="col">{{col_name}}</th>
                                             {% endfor %}
+                                            <th></th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -76,10 +105,10 @@
                                                 {% for k in table_keys %}
                                                     <td class="align-middle">{{patient[k]}}</td>
                                                 {% endfor %}
-                                                <td class="align-middle" width="5%"><button type="button" class="btn btn-success" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
+                                                <td width="5%"><button type="button" class="btn-two green rounded small" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
                                                     View
                                                 </button></td>
-                                                <td class="align-middle" width="5%"><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#deletePatientModal" 
+                                                <td width="5%"><button type="button" class="btn-two red rounded small" data-bs-toggle="modal" data-bs-target="#deletePatientModal" 
                                                     onclick="patient_id={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patient_id;return false;">
                                                     <i class="bi bi-trash"></i>
                                                 </button></td>
@@ -96,11 +125,13 @@
                     <form method="POST">
                         <div class="row">
                             <div class="container col-md-12 compare-table">
-                                <table class="table table-hover">
+                                <table id="table2" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="table table-hover table-striped" width="100%">
                                     <thead>
                                         <tr>
                                             {% for col_name in table_names %}
                                                 <th scope="col">{{col_name}}</th>
+                                            <th></th>
+                                            <th></th>
                                             {% endfor %}
                                         </tr>
                                     </thead>
@@ -110,10 +141,10 @@
                                                 {% for k in table_keys %}
                                                     <td class="align-middle">{{patient[k]}}</td>
                                                 {% endfor %}
-                                                <td class="align-middle" width="5%"><button type="button" class="btn btn-success" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
+                                                <td width="5%"><button type="button" class="btn-two green small" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
                                                     View
                                                 </button></td>
-                                                <td class="align-middle" width="5%"><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#deletePatientModal" 
+                                                <td width="5%"><button type="button" style = "width:2%; height:10%" class="btn-two red mini" data-bs-toggle="modal" data-bs-target="#deletePatientModal" 
                                                     onclick="patient_id={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patient_id;return false;">
                                                     <i class="bi bi-trash"></i>
                                                 </button></td>
@@ -128,7 +159,7 @@
             </div>
         </div>
         <center>
-            <button id="addPatientButton" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#patientUploadModal">
+            <button type="button" class="btn-two blue rounded" data-bs-toggle="modal" data-bs-target="#patientUploadModal">
                 Add Patient
             </button>
         </center>
@@ -146,53 +177,78 @@
             </div>
         </div>
 
-        <!-- Upload patient modal -->
+         <!-- Upload patient modal -->
         <div class="modal fade" id="patientUploadModal" tabindex="-1" aria-labelledby="patientUploadModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="patientUploadModalLabel">Add Patient</h5>
+                  
+                <div class="modal-header" style = "vertical-align:middle; background-color:#7fb5aa">
+                    <h4 class="modal-title"  style = "font-family:Lato;font-weight:400;color:#1d2424" id="patientUploadModalLabel"><b>&nbsp;&nbsp;Add Patient</b></h4>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="POST" enctype="multipart/form-data">
                     {{patient_upload_form.csrf_token}}
-                    <div class="modal-body">
+                    <div class="modal-body" style = "font-family:Lato;font-weight:400;">
                         <div class="file-upload-wrapper">
-                            <div class="mb-3">
-                                {{patient_upload_form.first.label}}
+                            <br>
+                            <div class="mb-3" style = 'margin-left:55'>
+                                <b>{{patient_upload_form.first.label}}</b>
                                 {{patient_upload_form.first()}}
                             </div>
-                            <div class="mb-3">
-                                {{patient_upload_form.last.label}}
+                            <div class="mb-3" style = 'margin-left:55'>
+                                <b> {{patient_upload_form.last.label}}</b>
                                 {{patient_upload_form.last()}}
                             </div>
 
-                            <div class="mb-3">
-                                {{patient_upload_form.zipcode.label}}
-                                {{patient_upload_form.zipcode()}}
+                            <div class="mb-3" style = 'margin-left:55'>
+                                <b> {{patient_upload_form.zipcode.label}}</b>
+                                   &nbsp;&nbsp;&nbsp; {{patient_upload_form.zipcode()}}
                             </div>
-                            <div class="mb-3 no-bullets">
-                                {{patient_upload_form.service.label}}
+                            <div class="mb-3 no-bullets" style = 'margin-left:55'>
+                                <b> {{patient_upload_form.service.label}}</b>
                                 {{patient_upload_form.service(style="list-style:none")}}
                             </div>
-                            <div class="mb-3">
-                                {{patient_upload_form.num_readmitted.label}}
-                                {{patient_upload_form.num_readmitted()}}
-                            </div>
-                            <div class="mb-3">
-                                {{patient_upload_form.file.label}}<br>
+                            <div class="mb-3" style = 'margin-left:55'>
+                                <b> {{patient_upload_form.file.label}}</b><br>
                                 {{patient_upload_form.file()}}
                             </div>
 
                         </div>
                     </div>
                     <div class="modal-footer">
-                        {{patient_upload_form.submit(class_="btn btn-success")}}
+                        {{patient_upload_form.submit(class_="btn-two green rounded small")}}
                     </div>
                 </form>
               </div>
             </div>
         </div>
+    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css" rel="stylesheet">
+
     </body>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#table1').DataTable({
+              responsive: true,
+              "bPaginate": false,
+                "bLengthChange": false,
+                "bFilter": true,
+                "bInfo": false,
+            });
+            $('#table2').DataTable({
+              responsive: true,
+              "bPaginate": false,
+                "bLengthChange": false,
+                "bFilter": true,
+                "bInfo": false,
+            });
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+          $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+        })
+          });
+
+
+    </script>
+    <br><br><br> <br><br><br> <br><br><br>
 </html>
-{% endblock %}
+{%endblock%}
