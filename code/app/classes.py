@@ -1,4 +1,5 @@
 import datetime
+from tokenize import String
 
 from flask.app import Flask
 from flask_login import UserMixin
@@ -8,7 +9,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 from wtforms import StringField, IntegerField, SubmitField, \
                     PasswordField, SelectMultipleField, \
-                    SelectField, widgets
+                    SelectField, widgets, BooleanField, RadioField
 from wtforms.validators import DataRequired, NumberRange, Length
 
 
@@ -59,14 +60,18 @@ class Patient(db.Model):
     rec_status = db.Column(db.ARRAY(db.String(1))) # "A" = available, "R" = removed, "C" = HHA confirmed, "D" = HHA denied, "W" = waiting for HHA confirmed, "M" = matched with HHA
     status = db.Column(db.String(1), default='A') # "A" = active, "R" = removed, "M" = matched with HHA
     num_readmitted = db.Column(db.Integer(), default=0)
-    
+
+    age = db.Column(db.Integer(), nullable=False)
+    gender = db.Column(db.String(100))
+    urgent = db.Column(db.Boolean(), default=False)
+
     boolservices = db.Column(db.ARRAY(db.Boolean), nullable = False)
     zipcode = db.Column(db.Integer, nullable=False)
     path = db.Column(db.String(100), nullable=False)
     matched = db.Column(db.Boolean(), default=False)
     agency_requests = db.relationship('AgencyRequest', backref='patient', lazy=True)
-                          
-        
+
+
     def get_column_names():
         names = []
         for k in Patient.__table__.columns:
@@ -99,7 +104,7 @@ class AgencyRequest(db.Model):
     acknowledged = db.Column(db.Boolean(), default=False)
     agency_name = db.Column(db.String(100), nullable=False)
 
-        
+
     def get_column_names():
         names = []
         for k in AgencyRequest.__table__.columns:
@@ -151,9 +156,14 @@ class MultiCheckboxField(SelectMultipleField):
 
 class PatientUploadForm(FlaskForm):
     "Form for adding a patient"
-    first = StringField(label='First Name', validators=[DataRequired()])
-    last = StringField(label='Last Name', validators=[DataRequired()])
-    zipcode = IntegerField(label='Zip Code', validators=[DataRequired()])
+    first = StringField(label='First Name', validators=[DataRequired()], render_kw={"placeholder": "Jane"})
+    last = StringField(label='Last Name', validators=[DataRequired()], render_kw={"placeholder": "Doe"})
+    zipcode = IntegerField(label='Zip Code', validators=[DataRequired()], render_kw={"placeholder": "94105"})
+
+    age = IntegerField(label='Age', validators=[DataRequired()], render_kw={"placeholder": "24"})
+    gender = RadioField(label='Gender', validators=[DataRequired()], choices = ['Female', 'Male', 'Other'], render_kw={"placeholder": "Gender"})#label='Gender', choices=['Female', 'Male', 'Other'], validators=[DataRequired()])
+    urgent = BooleanField(label='Urgent')#, validators=[DataRequired()])
+
     service = MultiCheckboxField('Services',
                                  choices=[('1', 'Nursing'),
                                           ('2', 'PT'),
@@ -164,7 +174,7 @@ class PatientUploadForm(FlaskForm):
     num_readmitted = IntegerField(label='Number of times admitted', default=0)
     file = FileField(label='Referral Form PDF', validators=[FileRequired()])
     submit = SubmitField(label='Submit')
-    
+
 
 @login_manager.user_loader
 def load_user(id):
