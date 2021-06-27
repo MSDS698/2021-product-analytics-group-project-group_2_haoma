@@ -183,6 +183,10 @@ def agency():
             'insurance': patient.insurance,
             'summary': patient.summary,
             'num_readmitted': patient.num_readmitted,
+            'first': patient.first,
+            'last': patient.last,
+            'zipcode': patient.zipcode,
+            'referral date': patient.referral_date
         }]
         status = patient.rec_status[[i for i,rec in enumerate(patient.recommendations) if rec == agency_request.agency_name][0]]
         if(status == 'A'):
@@ -192,7 +196,9 @@ def agency():
     return render_template('agency.html',
                            loggedin=current_user.is_authenticated,
                            username=current_user.username,
-                           table_keys=['request_id', 'insurance', 'summary', 'num_readmitted'],
+                           table_keys=['request_id', 'first', 'last',
+                                       'insurance', 'zipcode',
+                                      'num_readmitted'],
                            requested_patients=requested_patients,
                            accepted_patients=accepted_patients)
 
