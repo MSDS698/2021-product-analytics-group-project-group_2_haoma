@@ -179,11 +179,17 @@ def agency():
             'request_id': agency_request.id,
             'insurance': patient.insurance,
             'summary': patient.summary,
+            'first': patient.first,
+            'last': patient.last,
+            'zipcode': patient.zipcode,
+            'referral date': patient.referral_date
         }]
     return render_template('agency.html',
                            loggedin=current_user.is_authenticated,
                            username=current_user.username,
-                           table_keys=['request_id', 'insurance', 'summary'],
+                           table_keys=['request_id', 'first', 'last', 
+                                       'insurance', 'zipcode',
+                                      'referral date'],
                            patients=patients)
 
 
