@@ -28,8 +28,10 @@
     <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
 
         <br><br>
-        <center>
-            <div class="row" style = 'width:65%; height:20%'>
+        
+            <div class="container">
+                <center>
+            <div class="row" style = 'width:100%; height:20%'>
                 <div class="col-md-8">
                     <div class="card-body"><br><br>
                         <h1 class = 'display-4' style="font-family:Lato;font-weight:400;color:#094d41;text-align:left">Welcome {{username|title}},</h1><br><br>
@@ -42,7 +44,7 @@
                     <div style='border-bottom:1px solid #ccc;'></div>
                 </div>
             </div>
-        </center>
+                </center></div>
 
         <br><br>
             <div class="container">
@@ -73,6 +75,8 @@
                                             {% for col_name in table_names %}
                                                 <th scope="col">{{col_name}}</th>
                                             {% endfor %}
+                                             <th></th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -81,7 +85,7 @@
                                                 {% for k in table_keys %}
                                                     <td>{{patient[k]}}</td>
                                                 {% endfor %}
-                                                <td><button type="button" class="btn-two green rounded small" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
+                                                <td width="5%"><button type="button" class="btn-two green rounded small" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
                                                     View
                                                 </button></td>
                                                 <td width="5%"><button type="button" class="btn-two red rounded small" data-bs-toggle="modal" data-bs-target="#deletePatientModal" 
