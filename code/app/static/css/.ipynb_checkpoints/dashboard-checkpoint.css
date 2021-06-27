@@ -1,0 +1,41 @@
+.agency-header{
+    position: fixed;
+    width: 100%;
+    background-color: white;
+    padding-top: 3rem;
+    z-index: 100;
+}
+
+.agency-body{
+    padding-top: 23rem;
+    z-index: 1;
+} 
+
+
+body {
+  font-family: "Lato";
+  color: #444444;
+}
+
+
+ul{
+    display: inline-block;
+    text-align:left;    
+}        
+
+ul li{
+    margin-bottom:1em;
+}    
+
+.card-text{
+    text-align:left;
+    line-height:3;
+}    
+
+.card-title{
+    text-align:left; 
+    padding-top: 20px;
+    color: #376b69;
+}    
+
+

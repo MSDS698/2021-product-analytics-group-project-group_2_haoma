@@ -1,0 +1,283 @@
+{% extends "headerbase.html" %}
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css?family=Fira+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    
+<div>
+<body>
+</br>
+    <div class="agency-header">   
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6">
+                </div>
+                <div class="col-xl-6">
+                    <div class="card bg-light mb-3">
+                        <h5 class="card-header" style="text-align:center"><b>Personalized Haoma Score for {{patient_name}}</b></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    
+        <div class="container">
+            <div class="row">    
+                <div class="col-xl-6">
+                    <div class="card-body">
+                        <h1 class="align-middle" style="font-family:tahoma;color:#376b69;text-align:center"><br><b>Haoma Compare</b></h1>
+                        <h3 class="align-middle" style="text-align:center">Based on Official Medicare Surveys</h3>
+                        <p class="card-text">
+                        </p>
+                    </div>
+                </div>
+                {% for i in range(num_agencies) %}
+                <div class="col-md-2">
+                    <div class="card card-style mb-3">
+                        <div class="card-body">
+                            <div class="chart-container" style="position: relative;">
+                                <canvas id="score{{i}}"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    
+        <div class="container">
+            <div class="row">    
+                <div class="col-xl">
+                    <div class="card bg-white mb-3">
+                    <h5 class="card-header">&nbsp;</h5>
+                    </div>
+                </div>
+                {% for i in range(num_agencies) %}
+                <div class="col-xl">
+                    <div class="card bg-light mb-3">
+                    <h5 class="card-header" style="color: {{colors_arr[i]}};">{{name_arr[i][1:-1][0:25].title()}}</h5>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="agency-body">
+        {% for k in dashboard_key_order %}
+        <div class="container">
+            <div class="row">   
+                <div class="col-md-3">
+                    <div class="card card-body" style="position: relative; height: {{dashboard_info[k]['height_desc']}};">
+                        <div class="chart-container">
+                            <h5 class="card-title"><b>{{dashboard_info[k]['title']}}</b></h5>
+                            {{dashboard_info[k]['body']|safe}}
+                        </div>
+                    </div>
+                </div>
+                {% for i in range(num_agencies) %}
+                <div class="col-md-3">
+                    <div class="card card-style mb-2">
+                        <div class="card-body">
+                            <div class="chart-container" style="position: relative; height: {{dashboard_info[k]['height_data']}};">
+                                <canvas id="{{k}}{{i}}"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+    
+</center>
+{% block javascript %}
+<script>
+    const colors = JSON.parse({{colors | tojson }});
+    const bg_colors = JSON.parse({{bg_colors | tojson }});
+
+    const name = JSON.parse({{name | tojson}});
+    const num_agencies = JSON.parse({{num_agencies | tojson}});
+
+    const score = JSON.parse({{score | tojson }});
+    const dashboard_key_order = JSON.parse({{dashboard_key_order_json | tojson}});
+    const dashboard_chart_types = JSON.parse({{dashboard_chart_types | tojson}});
+    const dashboard_barchart_labels = JSON.parse({{dashboard_barchart_labels | tojson}});
+    const dashboard_chart_titles = JSON.parse({{dashboard_chart_titles | tojson}});
+    const data = [
+        JSON.parse({{daily | tojson }}),
+        JSON.parse({{symptom | tojson }}),
+        JSON.parse({{timely | tojson }}),
+        JSON.parse({{ppr | tojson }}),
+        JSON.parse({{dtc | tojson }}),
+        JSON.parse({{er | tojson }}),
+        JSON.parse({{readmitted | tojson }}),
+        JSON.parse({{falling | tojson }}),
+        JSON.parse({{depression | tojson }}),
+        JSON.parse({{pneumonia | tojson }}),
+        JSON.parse({{flu | tojson }}),
+        JSON.parse({{timely_med | tojson }}),
+        JSON.parse({{taught_med | tojson }}),
+        JSON.parse({{diabetes | tojson }}),
+    ];
+
+    for(let i=0; i<num_agencies; i++) {
+        const score_canvas = document.getElementById(`score${i}`);
+        const score_ctx = score_canvas.getContext('2d');
+        const score_data = {
+            labels: ['Percentage'],
+            datasets: [
+                {
+                label: `Dataset ${i+1}`,
+                data: score[i],
+                backgroundColor: [bg_colors[i],
+                    'rgba(255, 255, 255, 0.8)'],
+                }
+            ]
+        };
+        new Chart(score_ctx, {
+            type: 'doughnut',
+            data: score_data,
+            options: {
+                plugin_denominator:  130,
+                plugin_height: 1.7,
+                responsive: true,
+                plugin_text: Math.round(score[i][0]) + '%',
+                legend: {
+                    display: false
+                },
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: name[i].substring(0, 20)
+                },
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 10,
+                        bottom: 10
+                    },
+                },
+                cutoutPercentage: 60,
+            },
+        });
+
+        for(let j in dashboard_key_order) {
+            const k = dashboard_key_order[j];
+            const canvas = document.getElementById(`${k}${i}`);
+            const ctx = canvas.getContext('2d');
+            if(dashboard_chart_types[k] === 'bar') {
+                const card_data = {
+                    labels: dashboard_barchart_labels[k],
+                    datasets:[{
+                        backgroundColor: bg_colors[i],
+                        data: data[j][i]
+                    }]
+                };
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: card_data, 
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                display: true,
+                                barThickness: 30,
+                            }],
+                            yAxes: [{
+                                display: true,
+                                barThickness: 5,
+                                ticks: {
+                                    min: 0, // minimum value
+                                    max: 100 // maximum value
+                                },
+                            }],
+                        },
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: false,
+                            text: dashboard_chart_titles[k],
+                            fontSize: 15,
+                            position: 'top'
+                        }
+                    }
+                });
+            } else {
+                const card_data = {
+                    labels: ['Percentage'],
+                    datasets: [
+                        {
+                            label: `Dataset ${i+1}`,
+                            data: data[j][i],
+                            backgroundColor: [bg_colors[i], 'rgba(255, 255, 255, 0.8)'],
+                        }
+                    ]
+                };
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: card_data,
+                    options: {
+                        plugin_denominator: 120,
+                        plugin_height: 2,
+                        responsive: true,
+                        plugin_text: Math.round(data[j][i][0]) + '%',
+                        legend: {
+                            display: false
+                        },
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: name[i].substring(0, 20)
+                        },
+                        layout: {
+                            padding: {
+                                left: 50,
+                                right: 50,
+                                bottom: 30
+                            },
+                        },
+                        cutoutPercentage: 60,
+                    },
+                });
+            }
+        }
+    }
+
+Chart.pluginService.register({
+    beforeDraw: function(chart) {
+        if (chart.options.plugin_text && chart.options.plugin_denominator && chart.options.plugin_height) {
+            var width = chart.chart.width,
+            height = chart.chart.height,
+            ctx = chart.chart.ctx;
+
+            ctx.restore();
+
+            var denominator = chart.options.plugin_denominator;
+            var fontSize = (height / denominator).toFixed(2);
+            ctx.font = fontSize + "em sans-serif";
+            ctx.textBaseline = "middle";
+
+            var text = chart.options.plugin_text,
+                textX = Math.round((width - ctx.measureText(text).width) / 2),
+                textY = height / chart.options.plugin_height;
+
+            ctx.fillText(text, textX, textY);
+            ctx.save();   
+        }
+    }
+}); 
+
+</script>
+    
+</body>
+{% endblock %}
+{% endblock %}
