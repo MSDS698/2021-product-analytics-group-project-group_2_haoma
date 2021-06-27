@@ -1,3 +1,4 @@
+from pkg_resources import parse_version
 from app.funcs import return_agency_data
 from flask_login.utils import login_user, logout_user, \
                               current_user, login_required
@@ -116,6 +117,9 @@ def discharge():
         last = patient_upload_form.last.data
         zipcode = patient_upload_form.zipcode.data
         services = patient_upload_form.service.data
+        gender = patient_upload_form.gender.data
+        age = patient_upload_form.age.data
+        urgent = patient_upload_form.urgent.data
         num_readmitted = patient_upload_form.num_readmitted.data
 
         # Change e.g. ['1', '3', '4'] to
@@ -140,6 +144,9 @@ def discharge():
                                   recommendations=df_agency.name.tolist(),
                                   boolservices=boolservices,
                                   zipcode=zipcode,
+                                  age=age,
+                                  urgent=urgent,
+                                  gender=gender,
                                   path=path,
                                   rec_status=["A"]*20,
                                   num_readmitted=num_readmitted)
@@ -151,6 +158,28 @@ def discharge():
         df_rec.to_pickle(f'code/app/upload_temp/recs/{patient.id}')
         df_agency.to_pickle(f'code/app/upload_temp/recs/dash{patient.id}')
         return redirect(url_for('discharge'))
+
+    elif request.method == 'POST' and not patient_upload_form.validate():
+        print('Cant validate')
+        planner_username = current_user.username
+        first = patient_upload_form.first.data
+        last = patient_upload_form.last.data
+        zipcode = patient_upload_form.zipcode.data
+        services = patient_upload_form.service.data
+        gender = patient_upload_form.gender.data
+        age = patient_upload_form.age.data
+        urgent = patient_upload_form.urgent.data
+        num_readmitted = patient_upload_form.num_readmitted.data
+        print(planner_username)
+        print(first)
+        print(last)
+        print(zipcode)
+        print(services)
+        print(gender)
+        print(age)
+        print(urgent)
+
+        pass
 
     patients = classes.Patient.query. \
         filter_by(planner_username=current_user.username).all()
@@ -182,17 +211,28 @@ def agency():
             'request_id': agency_request.id,
             'insurance': patient.insurance,
             'summary': patient.summary,
+            'first name': patient.first,
+            'last name': patient.last,
+            'age': patient.age,
+            'gender': patient.gender,
+            'location': patient.zipcode,
+            'urgent': patient.urgent,
             'num_readmitted': patient.num_readmitted,
         }]
         status = patient.rec_status[[i for i,rec in enumerate(patient.recommendations) if rec == agency_request.agency_name][0]]
-        if(status == 'A'):
+        print(patient_info)
+        print(status)
+        if(status in ['C', 'A']):
             requested_patients += patient_info
-        elif(status == 'M'):
+        elif(status in ['W', 'M']):
             accepted_patients += patient_info
+        # elif(status == 'W'):   #### ASK WHAT W MEANS TODO
+        #     requested_patients += patient_info
     return render_template('agency.html',
                            loggedin=current_user.is_authenticated,
                            username=current_user.username,
-                           table_keys=['request_id', 'insurance', 'summary', 'num_readmitted'],
+                           table_keys=['request_id', 'insurance', 'summary', 'first name', 'last name', 'age',
+                                        'gender', 'location', 'urgent', 'num_readmitted'],
                            requested_patients=requested_patients,
                            accepted_patients=accepted_patients)
 
@@ -202,7 +242,7 @@ def agency():
 @login_required
 def patient():
     "Discharge planner's patient-recommendations dashboard"
-    
+
 
     if(current_user.account_type != "discharge planner"): abort(401)
     id = request.args.get('id', type=int)
@@ -219,7 +259,7 @@ def patient():
         df_agency, df_rec = recommender_instance.recommend(df,
                                                 patient.boolservices,
                                                 patient.path)
-        
+
     if request.method == "POST":
         if len(list(request.form.keys())) < 3 or len(list(request.form.keys())) > 6:
             print('Error with number of agencies selected')
@@ -271,7 +311,7 @@ def patient():
                 col_size = 2
             elif(num_agencies == 5):
                 col_first_size = col_size = 2
-            
+
             return render_template("dashboard.html",
                                 loggedin=current_user.is_authenticated,
                                 dashboard_key_order=dashboard_key_order,
@@ -283,8 +323,8 @@ def patient():
                                 show_haoma_desc=num_agencies<4,
                                 col_first_size=col_first_size,
                                 col_size=col_size,
-                                name_arr=names, 
-                                colors_arr=dashboard_colors, 
+                                name_arr=names,
+                                colors_arr=dashboard_colors,
                                 **colors, **data)
 
 
@@ -349,7 +389,7 @@ def change_rec_status():
                 patient.update_rec_status(status=status)
         else:
             patient.update_rec_status(status=status)
-        
+
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
 
