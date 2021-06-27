@@ -1,11 +1,14 @@
-{% extends "sidebar-user.html" %}
+{% extends "headerbase.html" %}
+
+{% block head %}
+{{ super() }}
+{% include "ga.html" %}
+{% endblock %}
 
 {% block content %}
 <br><br>
 <html>
     <head>
-        {% block header %}
-        {{ super() }}
         <script type="text/javascript">
             let patient_id = null;
             function removePatient(idx) {
@@ -14,7 +17,6 @@
                 })
             }
         </script>
-        {% endblock %}
     </head>
     <body>
     
