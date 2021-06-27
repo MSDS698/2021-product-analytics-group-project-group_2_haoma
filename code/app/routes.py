@@ -1,4 +1,3 @@
-from code.app.readmission import service_pie
 from app.funcs import return_agency_data
 from flask_login.utils import login_user, logout_user, \
                               current_user, login_required
@@ -404,7 +403,7 @@ def logout():
 def readmission():
     gender_hist_graph = gender_hist()
     service_pie_graph = service_pie()
-    age_hist_graph = age_hist
+    age_hist_graph = age_hist()
     return render_template('readmission.html', 
                             gender_hist_graph=gender_hist_graph,
                             service_pie_graph=service_pie_graph,

@@ -29,6 +29,7 @@ def gender_hist():
 
     fig.update_layout(
         xaxis_title_text='Time', # xaxis label
+        title='Number of Re-admission',
         bargap=0.1, # gap between bars of adjacent location coordinates
         bargroupgap=0.03 # gap between bars of the same location coordinates
     )
@@ -37,9 +38,10 @@ def gender_hist():
 
 def service_pie():
     df_sample, _, _ = load_data_()
-    data = df_sample.groupby(by='Service')['Date'].count().reset_index()
-    fig = px.pie(data, values=data['Date'], names=data['Service'], color_discrete_sequence=px.colors.qualitative.T10)
+    data = df_sample.groupby(by='Service')['Date'].count().reset_index().rename(columns={'Date': 'Count'})
+    fig = px.pie(data, values=data['Count'], names=data['Service'], color_discrete_sequence=px.colors.qualitative.T10)
     fig.update_traces(textposition='inside', textinfo='percent+label')
+    fig.update_layout(title='Re-admission per Service Type')
     output = plotly.offline.plot(fig, include_plotlyjs=True, output_type='div')
     return output
 
@@ -48,6 +50,7 @@ def age_hist():
     fig = px.histogram(df_sample, x="Age", color_discrete_sequence=['#40a1e5'], opacity=0.75)
     fig.update_layout(
         xaxis_title_text='Age', # xaxis label
+        title='Age Distribution',
         bargap=0.1, # gap between bars of adjacent location coordinates
         bargroupgap=0.03 # gap between bars of the same location coordinates
     )

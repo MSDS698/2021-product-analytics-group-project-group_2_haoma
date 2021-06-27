@@ -7,17 +7,35 @@
 </head>
 
 <body>
+    <br>
+    <br>
     <div class="container">
         <div class="row">
-            {{gender_hist | safe}}
+            <h1>Haoma Re-admission Analytics<br><br></h1>
+            <div class="col-md-6 align-middle">
+                <h2>XYZ Home Health Agency</h2>
+            </div>
+            <div class="col-md-3 align-middle">
+                <p>How often patients were re-admitted to the hospital for a potentially-preventable condition after discharge from home health?</p>
+            </div>
+            <div class="col-md-3 align-middle text-center">
+                <h1 class="display-1">4.3%</h1>
+            </div>
         </div>
     </div>
-    <div class="container">
+
+    
+    <div class="container col-md-12 border">
         <div class="row">
-            <div class="col-md-6">
-                {{age_hist | safe}}
+                {{gender_hist_graph | safe}}
+        </div>
+    </div>
+    <div class="container ">
+        <div class="row">
+            <div class="col-md-6 d flex border">
+                {{age_hist_graph | safe}}
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 d flex border">
                 {{service_pie_graph | safe}}
             </div>
         </div>
