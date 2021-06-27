@@ -1,3 +1,4 @@
+from code.app.readmission import service_pie
 from app.funcs import return_agency_data
 from flask_login.utils import login_user, logout_user, \
                               current_user, login_required
@@ -8,6 +9,7 @@ from flask import render_template, url_for, jsonify, request, redirect, abort, f
 import os
 import json
 import pandas as pd
+from app.readmission import gender_hist, service_pie, age_hist
 
 
 @app.route('/')
@@ -396,3 +398,14 @@ def logout():
     return render_template('logout.html',
                            loggedin=current_user.is_authenticated,
                            username=username)
+
+
+@app.route('/readmission', methods=['GET', 'POST'])
+def readmission():
+    gender_hist_graph = gender_hist()
+    service_pie_graph = service_pie()
+    age_hist_graph = age_hist
+    return render_template('readmission.html', 
+                            gender_hist_graph=gender_hist_graph,
+                            service_pie_graph=service_pie_graph,
+                            age_hist_graph=age_hist_graph)

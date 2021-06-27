@@ -1,0 +1,25 @@
+{% include "headerbase.html" %}
+<head>
+    <script src="https://cdn.plot.ly/plotly-2.1.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            {{gender_hist | safe}}
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                {{age_hist | safe}}
+            </div>
+            <div class="col-md-6">
+                {{service_pie_graph | safe}}
+            </div>
+        </div>
+    </div>
+</body>
