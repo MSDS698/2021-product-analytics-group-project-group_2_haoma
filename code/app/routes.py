@@ -222,9 +222,9 @@ def agency():
         status = patient.rec_status[[i for i,rec in enumerate(patient.recommendations) if rec == agency_request.agency_name][0]]
         print(patient_info)
         print(status)
-        if(status in ['C', 'A']):
+        if(status in ['W', 'A']):
             requested_patients += patient_info
-        elif(status in ['W', 'M']):
+        elif(status == 'M'):
             accepted_patients += patient_info
         # elif(status == 'W'):   #### ASK WHAT W MEANS TODO
         #     requested_patients += patient_info
