@@ -189,7 +189,7 @@ def agency():
             'referral date': patient.referral_date
         }]
         status = patient.rec_status[[i for i,rec in enumerate(patient.recommendations) if rec == agency_request.agency_name][0]]
-        if(status == 'A'):
+        if(status == 'A' or status == 'W'):
             requested_patients += patient_info
         elif(status == 'M'):
             accepted_patients += patient_info
