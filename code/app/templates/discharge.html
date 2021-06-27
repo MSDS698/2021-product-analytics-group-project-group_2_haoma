@@ -24,7 +24,7 @@
         </script>
     </head>
     <body>
-    
+
     </br>
     </br>
         <div id="mySidenav" class="sidenav">
@@ -79,7 +79,7 @@
                                                 <td class="align-middle" width="5%"><button type="button" class="btn btn-success" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
                                                     View
                                                 </button></td>
-                                                <td class="align-middle" width="5%"><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#deletePatientModal" 
+                                                <td class="align-middle" width="5%"><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#deletePatientModal"
                                                     onclick="patient_id={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patient_id;return false;">
                                                     <i class="bi bi-trash"></i>
                                                 </button></td>
@@ -113,7 +113,7 @@
                                                 <td class="align-middle" width="5%"><button type="button" class="btn btn-success" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
                                                     View
                                                 </button></td>
-                                                <td class="align-middle" width="5%"><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#deletePatientModal" 
+                                                <td class="align-middle" width="5%"><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#deletePatientModal"
                                                     onclick="patient_id={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patient_id;return false;">
                                                     <i class="bi bi-trash"></i>
                                                 </button></td>
@@ -158,31 +158,82 @@
                     {{patient_upload_form.csrf_token}}
                     <div class="modal-body">
                         <div class="file-upload-wrapper">
-                            <div class="mb-3">
-                                {{patient_upload_form.first.label}}
-                                {{patient_upload_form.first()}}
-                            </div>
-                            <div class="mb-3">
-                                {{patient_upload_form.last.label}}
-                                {{patient_upload_form.last()}}
+
+                            <div class="row">
+                                <div class="col">
+                                    {{patient_upload_form.first.label}}
+                                    <div class="mb-3">
+                                        <div class="mb-3" id="first" >{{patient_upload_form.first()}}</div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    {{patient_upload_form.last.label}}
+                                    <div class="mb-3">
+                                        <div class="mb-3" id="last" >{{patient_upload_form.last()}}</div>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="mb-3">
-                                {{patient_upload_form.zipcode.label}}
-                                {{patient_upload_form.zipcode()}}
-                            </div>
-                            <div class="mb-3 no-bullets">
-                                {{patient_upload_form.service.label}}
+                            <div class="row">
+                                <div class="col">
+                                    {{patient_upload_form.age.label}}
+                                    <div class="mb-3">
+                                        <div class="mb-3" id="age" >{{patient_upload_form.age()}}</div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    {{patient_upload_form.zipcode.label}}
+                                    <div class="mb-3">
+                                        <div class="mb-3" id="age" >{{patient_upload_form.zipcode()}}</div>
+                                    </div>
+                                </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3" id="gender" >{{patient_upload_form.gender.label}}</div>
+                                {% for subfield in patient_upload_form.gender %}
+                                    <tr>
+                                        <td>{{ subfield }}</td>
+                                        <td>{{ subfield.label }}</td>
+                                    </tr>
+                                {% endfor %}
+
+                                </div>
+                                    <div class="col">
+                                          {{patient_upload_form.num_readmitted.label}}
+                                          <div class="mb-3">
+                                              <div class="mb-3" id="age" >{{patient_upload_form.num_readmitted()}}</div>
+                                          </div>
+                                    </div>
+                                    </div>
+
+
+
+
+                              <div class="mb-3 no-bullets">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text" id="service">{{patient_upload_form.service.label}}</span>
+                                </div>
                                 {{patient_upload_form.service(style="list-style:none")}}
-                            </div>
+                              </div>
+
+
+
                             <div class="mb-3">
-                                {{patient_upload_form.num_readmitted.label}}
-                                {{patient_upload_form.num_readmitted()}}
-                            </div>
-                            <div class="mb-3">
-                                {{patient_upload_form.file.label}}<br>
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text" id="file">{{patient_upload_form.file.label}}</span>
+                                </div>
                                 {{patient_upload_form.file()}}
-                            </div>
+                              </div>
+
+                              <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="urgent">
+
+
+                                <label class="form-check-label" for="urgent">{{patient_upload_form.urgent.label}}</label>
+                              </div>
 
                         </div>
                     </div>
