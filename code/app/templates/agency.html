@@ -12,7 +12,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-        
+
         <link rel="stylesheet" href="{{ url_for('static', filename='css/agency.css') }}">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
         <script type="text/javascript">
@@ -30,7 +30,7 @@
         <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap.min.js"></script><br><br>
         <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
-        
+
                   <div class="container">
                 <center>
             <div class="row" style = 'width:100%; height:20%'>
@@ -47,7 +47,7 @@
                 </div>
             </div>
                 </center></div>
-        
+
         <center>
         <div class="container">
             <br>
@@ -57,6 +57,10 @@
                   <button class="nav-link active" id="requests-tab" style = 'color:#25787a' data-bs-toggle="tab" data-bs-target="#requests"
                     type="button" role="tab" aria-controls="requests" aria-selected="true">Requests</button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pending-tab" data-bs-toggle="tab" style = 'color:#25787a' data-bs-target="#pending" type="button"
+                      role="tab" aria-controls="pending" aria-selected="false">Pending</button>
+                  </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="accepted-tab" data-bs-toggle="tab" style = 'color:#25787a' data-bs-target="#accepted" type="button"
                     role="tab" aria-controls="accepted" aria-selected="false">Accepted</button>
@@ -101,6 +105,32 @@
                         </div>
                     </form>
                 </div>
+                 <!-- Pending Pane -->
+                 <div class="tab-pane" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="container col-md-12 compare-table">
+                <table id="myTable3" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="display table-hover table-striped" width="100%">
+                                    <thead>
+                                        <tr>
+                                            {% for col_name in table_keys %}
+                                                <th scope="col">{{col_name}}</th>
+                                            {% endfor %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for patient in pending_patients %}
+                                            <tr>
+                                                {% for k in table_keys %}
+                                                    <td class="align-middle">{{patient[k]}}</td>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 <!-- Accepted Pane -->
                 <div class="tab-pane" id="accepted" role="tabpanel" aria-labelledby="accepted-tab">
                     <form method="POST">
@@ -146,7 +176,7 @@
         });
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
-        });    
+        });
 
 </script>
 </html>

@@ -203,8 +203,11 @@ def agency():
     if(current_user.account_type != "agency"): abort(401)
     agency_requests = classes.AgencyRequest.query. \
         filter_by(agency_name=current_user.username).all()
+    print(agency_requests)
+    print("FOR:", current_user.username)
     requested_patients = []
     accepted_patients = []
+    pending_patients = []
     for agency_request in agency_requests:
         patient = agency_request.patient
         patient_info = [{
@@ -230,15 +233,17 @@ def agency():
             requested_patients += patient_info
         elif(status == 'M'):
             accepted_patients += patient_info
-        # elif(status == 'W'):   #### ASK WHAT W MEANS TODO
-        #     requested_patients += patient_info
+        elif status == 'C':
+            pending_patients += patient_info
+
     return render_template('agency.html',
                            loggedin=current_user.is_authenticated,
                            username=current_user.username,
                            table_keys=['request_id', 'insurance', 'summary', 'first name', 'last name', 'age',
                                         'gender', 'location', 'urgent', 'num_readmitted'],
                            requested_patients=requested_patients,
-                           accepted_patients=accepted_patients)
+                           accepted_patients=accepted_patients,
+                           pending_patients=pending_patients)
 
 
 
