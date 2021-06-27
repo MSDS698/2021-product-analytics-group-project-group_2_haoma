@@ -65,6 +65,10 @@
                   <button class="nav-link" id="accepted-tab" data-bs-toggle="tab" style = 'color:#25787a' data-bs-target="#accepted" type="button"
                     role="tab" aria-controls="accepted" aria-selected="false">Accepted</button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="readmitted-tab" data-bs-toggle="tab" style = 'color:#25787a' data-bs-target="#readmitted" type="button"
+                      role="tab" aria-controls="readmitted" aria-selected="false">Readmitted</button>
+                </li>
             </ul>
             <div class="tab-content" id="tabContent">
                 <!-- Requests Pane -->
@@ -73,7 +77,7 @@
                         <div class="row">
                             <div class="container col-md-12 compare-table">
                                 <br>
-                <table id="myTable1" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="display table-hover table-striped" width="100%">
+                                <table id="myTable1" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="display table-hover table-striped" width="100%">
                                     <thead>
                                         <tr>
                                             {% for col_name in table_keys %}
@@ -110,7 +114,7 @@
                     <form method="POST">
                         <div class="row">
                             <div class="container col-md-12 compare-table">
-                <table id="myTable3" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="display table-hover table-striped" width="100%">
+                                <table id="myTable3" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="display table-hover table-striped" width="100%">
                                     <thead>
                                         <tr>
                                             {% for col_name in table_keys %}
@@ -139,7 +143,7 @@
                     <form method="POST">
                         <div class="row">
                             <div class="container col-md-12 compare-table">
-                <table id="myTable2" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="display table-hover table-striped" width="100%">
+                                <table id="myTable2" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="display table-hover table-striped" width="100%">
                                     <thead>
                                         <tr>
                                             {% for col_name in table_keys %}
@@ -162,7 +166,37 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    </form>
+                </div>
+                <!-- Readmitted Pane -->
+                <div class="tab-pane" id="readmitted" role="tabpanel" aria-labelledby="readmitted-tab">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="container col-md-12 compare-table">
+                                <table id="myTable2" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="display table-hover table-striped" width="100%">
+                                    <thead>
+                                        <tr>
+                                            {% for col_name in table_keys %}
+                                                <th scope="col">{{col_name}}</th>
+                                            {% endfor %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for patient in readmitted_patients %}
+                                            <tr>
+                                                {% for k in table_keys %}
+                                                    <td class="align-middle">{{patient[k]}}</td>
+                                                {% endfor %}
+                                                <td width="5%"><button type="button" class="btn-two blue rounded small">
+                                                    View
+                                                </button></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
             </div></center>

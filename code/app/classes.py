@@ -58,8 +58,7 @@ class Patient(db.Model):
     summary = db.Column(db.Text(), nullable=False)
     recommendations = db.Column(db.ARRAY(db.String(100)))
     rec_status = db.Column(db.ARRAY(db.String(1))) # "A" = available, "R" = removed, "C" = HHA confirmed, "D" = HHA denied, "W" = waiting for HHA confirmed, "M" = matched with HHA
-    status = db.Column(db.String(1), default='A') # "A" = active, "R" = removed, "M" = matched with HHA
-    num_readmitted = db.Column(db.Integer(), default=0)
+    status = db.Column(db.String(1), default='A') # "A" = active, "R" = removed, "M" = matched with HHA, "Z" = readmitted
 
     age = db.Column(db.Integer(), nullable=False)
     gender = db.Column(db.String(100))

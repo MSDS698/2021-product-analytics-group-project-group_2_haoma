@@ -27,6 +27,11 @@
                     location.reload();
                 })
             }
+            function readmitPatient(idx) {
+                $.post("{{url_for('change_rec_status')}}", { status: "Z", patient_id: patient_id }, function (response) {
+                    location.reload();
+                })
+            }
         </script>
     </head>
     <body>
@@ -154,6 +159,10 @@
                                                     onclick="patient_id={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patient_id;return false;">
                                                     <i class="bi bi-trash"></i>
                                                 </button></td>
+                                                <td width="5%"><button type="button" class="btn-two red rounded small" data-bs-toggle="modal" data-bs-target="#readmitPatientModal"
+                                                    onclick="patient_id={{patient['id']}};document.getElementById('readmitPatientModalLabel').innerHTML='Readmit Patient '+patient_id;return false;">
+                                                    Readmit
+                                                </button></td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -179,6 +188,19 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <button class="btn btn-danger" onclick="removePatient(patient_id);return false;">Delete</button>
+              </div>
+            </div>
+        </div>
+
+        <!-- Readmit patient Modal -->
+        <div class="modal fade" id="readmitPatientModal" tabindex="-1" aria-labelledby="readmitPatientModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="readmitPatientModalLabel"></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <button class="btn btn-danger" onclick="readmitPatient(patient_id);return false;">Readmit</button>
               </div>
             </div>
         </div>
@@ -239,12 +261,6 @@
                                 {% endfor %}
 
                                 </div>
-                                    <div class="col">
-                                         <b> {{patient_upload_form.num_readmitted.label}}</b>
-                                          <div class="mb-3">
-                                              <div class="mb-3" id="age" >{{patient_upload_form.num_readmitted()}}</div>
-                                          </div>
-                                    </div>
                                     </div>
 
 
@@ -311,6 +327,8 @@
               </div>
             </div>
         </div>
+
+
     <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css" rel="stylesheet">
 

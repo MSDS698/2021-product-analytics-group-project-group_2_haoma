@@ -120,7 +120,6 @@ def discharge():
         gender = patient_upload_form.gender.data
         age = patient_upload_form.age.data
         urgent = patient_upload_form.urgent.data
-        num_readmitted = patient_upload_form.num_readmitted.data
 
         # Change e.g. ['1', '3', '4'] to
         # [True, False, True, True, False, False]
@@ -148,8 +147,7 @@ def discharge():
                                   urgent=urgent,
                                   gender=gender,
                                   path=path,
-                                  rec_status=["A"]*20,
-                                  num_readmitted=num_readmitted)
+                                  rec_status=["A"]*20)
 
         db.session.add(patient)
         db.session.commit()
@@ -169,7 +167,6 @@ def discharge():
         gender = patient_upload_form.gender.data
         age = patient_upload_form.age.data
         urgent = patient_upload_form.urgent.data
-        num_readmitted = patient_upload_form.num_readmitted.data
         print(planner_username)
         print(first)
         print(last)
@@ -183,7 +180,7 @@ def discharge():
 
     patients = classes.Patient.query. \
         filter_by(planner_username=current_user.username).all()
-    active_patients = [p for p in patients if p.status == 'A']
+    active_patients = [p for p in patients if p.status == 'A' or p.status == 'Z']
     history_patients = [p for p in patients if p.status == 'M' or p.status == 'R']
     table_keys, table_names = classes.Patient.get_display_columns()
     return render_template('discharge.html',
@@ -208,6 +205,7 @@ def agency():
     requested_patients = []
     accepted_patients = []
     pending_patients = []
+    readmitted_patients = []
     for agency_request in agency_requests:
         patient = agency_request.patient
         patient_info = [{
@@ -220,7 +218,6 @@ def agency():
             'gender': patient.gender,
             'location': patient.zipcode,
             'urgent': patient.urgent,
-            'num_readmitted': patient.num_readmitted,
             'first': patient.first,
             'last': patient.last,
             'zipcode': patient.zipcode,
@@ -229,12 +226,15 @@ def agency():
         status = patient.rec_status[[i for i,rec in enumerate(patient.recommendations) if rec == agency_request.agency_name][0]]
         print(patient_info)
         print(status)
-        if(status in ['A','W']):
+        if patient.status == 'Z':
+            readmitted_patients += patient_info
+        elif(status in ['A','W']):
             requested_patients += patient_info
         elif(status == 'M'):
             accepted_patients += patient_info
         elif status == 'C':
             pending_patients += patient_info
+        
 
     return render_template('agency.html',
                            loggedin=current_user.is_authenticated,
@@ -245,7 +245,8 @@ def agency():
                                        'location', 'urgent'],
                            requested_patients=requested_patients,
                            accepted_patients=accepted_patients,
-                           pending_patients=pending_patients)
+                           pending_patients=pending_patients,
+                           readmitted_patients=readmitted_patients)
 
 
 
