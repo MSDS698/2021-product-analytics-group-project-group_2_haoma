@@ -53,12 +53,12 @@
                                         {% for patient in active_patients %}
                                             <tr>
                                                 {% for k in table_keys %}
-                                                    <td>{{patient[k]}}</td>
+                                                    <td class="align-middle">{{patient[k]}}</td>
                                                 {% endfor %}
-                                                <td width="5%"><button type="button" class="btn btn-success" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
+                                                <td class="align-middle" width="5%"><button type="button" class="btn btn-success" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
                                                     View
                                                 </button></td>
-                                                <td width="5%"><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#deletePatientModal" 
+                                                <td class="align-middle" width="5%"><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#deletePatientModal" 
                                                     onclick="patient_id={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patient_id;return false;">
                                                     <i class="bi bi-trash"></i>
                                                 </button></td>
@@ -87,12 +87,12 @@
                                         {% for patient in history_patients %}
                                             <tr>
                                                 {% for k in table_keys %}
-                                                    <td>{{patient[k]}}</td>
+                                                    <td class="align-middle">{{patient[k]}}</td>
                                                 {% endfor %}
-                                                <td width="5%"><button type="button" class="btn btn-success" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
+                                                <td class="align-middle" width="5%"><button type="button" class="btn btn-success" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
                                                     View
                                                 </button></td>
-                                                <td width="5%"><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#deletePatientModal" 
+                                                <td class="align-middle" width="5%"><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#deletePatientModal" 
                                                     onclick="patient_id={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patient_id;return false;">
                                                     <i class="bi bi-trash"></i>
                                                 </button></td>
@@ -153,6 +153,10 @@
                             <div class="mb-3 no-bullets">
                                 {{patient_upload_form.service.label}}
                                 {{patient_upload_form.service(style="list-style:none")}}
+                            </div>
+                            <div class="mb-3">
+                                {{patient_upload_form.num_readmitted.label}}
+                                {{patient_upload_form.num_readmitted()}}
                             </div>
                             <div class="mb-3">
                                 {{patient_upload_form.file.label}}<br>

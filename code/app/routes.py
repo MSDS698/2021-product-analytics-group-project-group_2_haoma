@@ -116,6 +116,7 @@ def discharge():
         last = patient_upload_form.last.data
         zipcode = patient_upload_form.zipcode.data
         services = patient_upload_form.service.data
+        num_readmitted = patient_upload_form.num_readmitted.data
 
         # Change e.g. ['1', '3', '4'] to
         # [True, False, True, True, False, False]
@@ -140,7 +141,8 @@ def discharge():
                                   boolservices=boolservices,
                                   zipcode=zipcode,
                                   path=path,
-                                  rec_status=["A"]*20)
+                                  rec_status=["A"]*20,
+                                  num_readmitted=num_readmitted)
 
         db.session.add(patient)
         db.session.commit()
@@ -180,6 +182,7 @@ def agency():
             'request_id': agency_request.id,
             'insurance': patient.insurance,
             'summary': patient.summary,
+            'num_readmitted': patient.num_readmitted,
         }]
         status = patient.rec_status[[i for i,rec in enumerate(patient.recommendations) if rec == agency_request.agency_name][0]]
         if(status == 'A'):
@@ -189,7 +192,7 @@ def agency():
     return render_template('agency.html',
                            loggedin=current_user.is_authenticated,
                            username=current_user.username,
-                           table_keys=['request_id', 'insurance', 'summary'],
+                           table_keys=['request_id', 'insurance', 'summary', 'num_readmitted'],
                            requested_patients=requested_patients,
                            accepted_patients=accepted_patients)
 
