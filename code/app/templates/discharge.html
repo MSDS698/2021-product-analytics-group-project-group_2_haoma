@@ -114,10 +114,11 @@
                                                 <td width="5%"><button type="button" class="btn-two green rounded small" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
                                                     View
                                                 </button></td>
-                                                <td width="5%"><button type="button" class="btn-two red rounded small" data-bs-toggle="modal" data-bs-target="#deletePatientModal"
-                                                    onclick="patient_id={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patient_id;return false;">
+                                                <td width="5%">
+                                                    <button type="button" class="btn-two red rounded small" data-bs-toggle="modal" data-bs-target="#deletePatientModal" onclick="patient_id={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patient_id;return false;">
                                                     <i class="bi bi-trash"></i>
-                                                </button></td>
+                                                    </button>
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -136,24 +137,27 @@
                                         <tr>
                                             {% for col_name in table_names %}
                                                 <th scope="col">{{col_name}}</th>
-                                            <th></th>
-                                            <th></th>
                                             {% endfor %}
+                                            <th></th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for patient in history_patients %}
                                             <tr>
                                                 {% for k in table_keys %}
-                                                    <td class="align-middle">{{patient[k]}}</td>
+                                                <td class="align-middle">{{patient[k]}}</td>
                                                 {% endfor %}
-                                                <td width="5%"><button type="button" class="btn-two green small" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
-                                                    View
-                                                </button></td>
-                                                <td width="5%"><button type="button" style = "width:2%; height:10%" class="btn-two red mini" data-bs-toggle="modal" data-bs-target="#deletePatientModal"
-                                                    onclick="patient_id={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patient_id;return false;">
+                                                <td width="5%">
+                                                    <button type="button" class="btn-two green small" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
+                                                        View
+                                                    </button>
+                                                </td>
+                                                <td width="5%">
+                                                    <button type="button" class="btn-two red rounded small" data-bs-toggle="modal" data-bs-target="#deletePatientModal" onclick="patient_id={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patient_id;return false;">
                                                     <i class="bi bi-trash"></i>
-                                                </button></td>
+                                                    </button>
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -323,6 +327,9 @@
                 "bLengthChange": false,
                 "bFilter": true,
                 "bInfo": false,
+                columnDefs: [{ 
+                    orderable: false, 
+                    targets: [-1, -2]}]
             });
             $('#table2').DataTable({
               responsive: true,
@@ -330,6 +337,9 @@
                 "bLengthChange": false,
                 "bFilter": true,
                 "bInfo": false,
+                columnDefs: [{ 
+                    orderable: false, 
+                    targets: [-1, -2]}]
             });
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
