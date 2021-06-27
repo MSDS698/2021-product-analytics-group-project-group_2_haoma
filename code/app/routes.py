@@ -239,8 +239,10 @@ def agency():
     return render_template('agency.html',
                            loggedin=current_user.is_authenticated,
                            username=current_user.username,
-                           table_keys=['request_id', 'insurance', 'summary', 'first name', 'last name', 'age',
-                                        'gender', 'location', 'urgent', 'num_readmitted'],
+                           table_keys=['request_id', 'first name', 
+                                       'last name', 'age',
+                                       'insurance', 'gender', 
+                                       'location', 'urgent'],
                            requested_patients=requested_patients,
                            accepted_patients=accepted_patients,
                            pending_patients=pending_patients)
