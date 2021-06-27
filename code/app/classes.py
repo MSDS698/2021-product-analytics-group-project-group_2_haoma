@@ -48,7 +48,7 @@ class Patient(db.Model):
     "Class for the patients table"
     __tablename__ = "patient"
     __table_args__ = {"schema": "public"}
-    display_columns = ["id", "first", "last", "referral_date", "insurance", "num_readmitted"]
+    display_columns = ["id", "first", "last", "age", "gender", "urgent", "referral_date", "insurance", "num_readmitted"]
     id = db.Column(db.Integer, primary_key=True)
     planner_username = db.Column(db.String(100), nullable=False)
     first = db.Column(db.String(100), nullable=False)
