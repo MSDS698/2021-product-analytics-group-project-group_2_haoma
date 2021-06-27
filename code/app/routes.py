@@ -251,8 +251,6 @@ def agency():
 @login_required
 def patient():
     "Discharge planner's patient-recommendations dashboard"
-
-
     if(current_user.account_type != "discharge planner"): abort(401)
     id = request.args.get('id', type=int)
     patient = classes.Patient.query.filter_by(id=id).first()

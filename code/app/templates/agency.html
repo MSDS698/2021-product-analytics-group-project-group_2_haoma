@@ -124,7 +124,10 @@
                                                 {% for k in table_keys %}
                                                     <td class="align-middle">{{patient[k]}}</td>
                                                 {% endfor %}
-                                            </tr>
+                                            <td width="5%"><button type="button" class="btn-two blue rounded small">
+                                                View
+                                            </button></td>
+                                        </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
@@ -150,6 +153,9 @@
                                                 {% for k in table_keys %}
                                                     <td class="align-middle">{{patient[k]}}</td>
                                                 {% endfor %}
+                                                <td width="5%"><button type="button" class="btn-two blue rounded small">
+                                                    View
+                                                </button></td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
