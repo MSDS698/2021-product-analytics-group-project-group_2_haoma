@@ -6,12 +6,16 @@
 {% endblock %}
 
 {% block content %}
-<br><br>
 <html>
 
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/patient.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
   <script type="text/javascript">
     let patient_id = {{ patient['id'] }};
@@ -40,12 +44,27 @@
 </head>
 
 <body>
+  <div id="mySidenav" class="sidenav">
+    <a id="home" href="{{ url_for('index') }}">
+    <div class="icon"><i class=" ri-home-heart-line" style="font-size:x-large;"></i></div>
+    Home
+    </a>
+    <a id="patients-list" href="{{ url_for('discharge') }}">
+    <div class="icon"><i class="ri-list-check-2" style="font-size:x-large;"></i></div>
+    Patients
+    </a>
+    <a id="find-agency" href="{{ url_for('zipcode_search') }}">
+    <div class="icon"><i class="ri-hospital-line" style="font-size:x-large;"></i></div>
+    Agency
+    </a>
+  </div>
+  <br><br>
     <div class="container">
       <div class="header"><br>
         <h3 class="text-muted">
-            <div>
+            <!-- <div>
               <a href="{{ url_for('discharge') }}" class="btn btn-primary">Patients List</a>
-            </div>
+            </div> -->
             <div align="center" style="color:#211F1F;font-size:35px">
                 <strong>{{patient.first}}'s recommendations:</strong>
             </div>

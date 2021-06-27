@@ -6,3 +6,55 @@
     text-align: center; 
     vertical-align: middle;
 }
+
+#mySidenav a:hover {
+    background-color: #389695;
+  }
+
+.sidenav {
+    position: fixed;
+    /* left: -80px; */
+    transition: 0.3s;
+    padding-top: 5px;
+    top: 0%;
+    width: 100px;
+    height: 100%;
+    background-color: #075958;
+  }
+
+/* #user {
+    top: 5rem;
+    background-color: #075958;
+    font-size: 16px;
+    width: 150px;
+    padding: 10px;
+    } */
+
+#mySidenav a{
+    position: fixed;
+    /* left: -80px; */
+    transition: 0.3s;
+    width: 100px;
+    height: 100%;
+    background-color: #075958;
+    text-decoration: none;
+    font-family: inherit;
+    text-align: center;
+    font-size: 14px;
+    color: white;
+    box-shadow: lightblue;
+    border-radius: 0 5px 5px 0;
+    z-index: 10;
+    max-height: 4rem;
+    }
+#home {
+    top: 5rem;
+    }
+
+#patients-list {
+    top: 9rem;
+    }   
+#find-agency {
+    top: 13rem;
+    }   
+    
