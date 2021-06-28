@@ -70,7 +70,6 @@
        <div class="container">
             <div class="row" style = 'width:100%; height:15%'>
                 <div class = "col-md-2">
-                    <a href="{{ url_for('discharge') }}" style='float:left' class="btn-two blue rounded small" style='left:10'>All Patients</a>
                 </div>
                 <div class="col-md-6">
                     <div class="card-body"><br><br>
@@ -148,8 +147,8 @@
                       {% endfor %}
                       <th></th>
                       <th></th>
+                      <th></th>
                       <th class="compare-button"><button type="submit" name="compare" id ="compare-btn" class="btn-two blue rounded small">Compare</button></th>
-                      <th class="compare-button"><button type="submit" name="readmission" id ="readmission-btn" class="btn-two blue rounded small">Re-admission</button></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -165,8 +164,11 @@
                       <td width = '5%'><button type="button" class="btn-two red rounded small" onclick="removeRec('{{row[0]-1}}');">
                         <i class="bi bi-trash"></i>
                       </button></td>
+                      <td><button type="button" class="btn-two white rounded small" style="vertical-align: middle; color: rgb(36, 36, 36);" onclick="window.location.href = '/readmission' ">
+                        Re-admission Analytics
+                      </button></td>
                       <td class="compare-checkbox align-middle"><input type="checkbox" name="{{row[1]}}"></td>
-                      <td class="compare-checkbox align-middle"><input type="checkbox" name="{{row[1]}}"></td>
+                      
 
                     </tr>
                     {% endfor %}
