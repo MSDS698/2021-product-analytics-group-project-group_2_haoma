@@ -1,5 +1,0 @@
-API Reference: Recommender 
-=================================
-.. automodule:: app.recommender
-	:members:
-	:undoc-members:

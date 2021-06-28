@@ -90,10 +90,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code_routes.html">API Reference: Routes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code_funcs.html">API Reference: Funcs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../code_pipeline.html">API Reference: Pipeline</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../code_preprocess.html">API Reference: Preprocess</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../code_recommender.html">API Reference: Recommender</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../code_classes.html">API Reference: Classes</a></li>
 </ul>
 
             
@@ -160,14 +156,19 @@
            <div itemprop="articleBody">
             
   <h1>Source code for app.routes</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">flask_login.utils</span> <span class="kn">import</span> <span class="n">login_user</span><span class="p">,</span> <span class="n">logout_user</span><span class="p">,</span> \
+<span></span><span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">parse_version</span>
+<span class="kn">from</span> <span class="nn">app.funcs</span> <span class="kn">import</span> <span class="n">return_agency_data</span>
+<span class="kn">from</span> <span class="nn">flask_login.utils</span> <span class="kn">import</span> <span class="n">login_user</span><span class="p">,</span> <span class="n">logout_user</span><span class="p">,</span> \
                               <span class="n">current_user</span><span class="p">,</span> <span class="n">login_required</span>
 <span class="kn">from</span> <span class="nn">werkzeug.utils</span> <span class="kn">import</span> <span class="n">secure_filename</span>
 <span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">app</span><span class="p">,</span> <span class="n">funcs</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">recommender_instance</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">abort</span>
+<span class="kn">from</span> <span class="nn">app.constants</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">abort</span><span class="p">,</span> <span class="n">flash</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">app.readmission</span> <span class="kn">import</span> <span class="n">gender_line</span><span class="p">,</span> <span class="n">service_pie</span><span class="p">,</span> <span class="n">age_hist</span><span class="p">,</span> <span class="n">readmission_compare_line</span>
+
 
 <div class="viewcode-block" id="index"><a class="viewcode-back" href="../../code_routes.html#app.routes.index">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
 <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/index&#39;</span><span class="p">)</span>
@@ -185,36 +186,59 @@
 
 <div class="viewcode-block" id="get_table"><a class="viewcode-back" href="../../code_routes.html#app.routes.get_table">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/_get_table&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">get_table</span><span class="p">():</span>
-    <span class="n">df_rec</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;df_rec&#39;</span><span class="p">)</span>
-    <span class="n">json_df</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">df_rec</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;split&quot;</span><span class="p">))</span>
+    <span class="n">zipcode</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">funcs</span><span class="o">.</span><span class="n">get_hh_agencies</span><span class="p">(</span><span class="n">zipcode</span><span class="p">)</span>
+    <span class="n">json_df</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;split&quot;</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">my_table</span><span class="o">=</span><span class="n">json_df</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">],</span>
                    <span class="n">columns</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">)}</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">json_df</span><span class="p">[</span><span class="s2">&quot;columns&quot;</span><span class="p">]])</span></div>
 
-
 <div class="viewcode-block" id="register"><a class="viewcode-back" href="../../code_routes.html#app.routes.register">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/register&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">register</span><span class="p">():</span>
+    <span class="s2">&quot;User registration page&quot;</span>
     <span class="n">form</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">RegisterForm</span><span class="p">()</span>
     <span class="n">user_exists</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">agency_invalid</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">password_invalid</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">username_invalid</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
+        <span class="n">account_type</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">account_type</span><span class="o">.</span><span class="n">data</span>
         <span class="n">username</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">username</span><span class="o">.</span><span class="n">data</span>
         <span class="n">password</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">password</span><span class="o">.</span><span class="n">data</span>
         <span class="n">matching_user_count</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span> \
                                                 <span class="o">.</span><span class="n">count</span><span class="p">()</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">matching_user_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="n">user</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">User</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">account_type</span> <span class="o">==</span> <span class="s2">&quot;agency&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">recommender_instance</span><span class="o">.</span><span class="n">check_provider_name</span><span class="p">(</span><span class="n">username</span><span class="p">)):</span>
+            <span class="n">agency_invalid</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span><span class="p">(</span><span class="n">matching_user_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">user_exists</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">User</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">account_type</span><span class="p">)</span>
             <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
             <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
             <span class="n">login_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;discharge&#39;</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">user_exists</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">account_type</span> <span class="o">==</span> <span class="s2">&quot;discharge planner&quot;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;discharge&#39;</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;agency&#39;</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">form</span><span class="o">.</span><span class="n">validate</span><span class="p">():</span>
+        <span class="n">account_type</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">account_type</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">username</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">password</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">password</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="n">password_invalid</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">username</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">username_invalid</span> <span class="o">=</span> <span class="kc">True</span>
+
     <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;register.html&#39;</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span>
                            <span class="n">loggedin</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">,</span>
-                           <span class="n">user_exists</span><span class="o">=</span><span class="n">user_exists</span><span class="p">)</span></div>
+                           <span class="n">user_exists</span><span class="o">=</span><span class="n">user_exists</span><span class="p">,</span>
+                           <span class="n">agency_invalid</span><span class="o">=</span><span class="n">agency_invalid</span><span class="p">,</span>
+                           <span class="n">username_too_short</span><span class="o">=</span><span class="n">username_invalid</span><span class="p">,</span>
+                           <span class="n">password_too_short</span><span class="o">=</span><span class="n">password_invalid</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="login"><a class="viewcode-back" href="../../code_routes.html#app.routes.login">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">login</span><span class="p">():</span>
+    <span class="s2">&quot;User login page&quot;</span>
     <span class="n">form</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">LoginForm</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
         <span class="n">username</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">username</span><span class="o">.</span><span class="n">data</span>
@@ -222,7 +246,10 @@
         <span class="n">user</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">check_password</span><span class="p">(</span><span class="n">password</span><span class="p">):</span>
             <span class="n">login_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;discharge&#39;</span><span class="p">))</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">account_type</span> <span class="o">==</span> <span class="s2">&quot;discharge planner&quot;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;discharge&#39;</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;agency&#39;</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;login.html&#39;</span><span class="p">,</span>
                            <span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span>
                            <span class="n">loggedin</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">)</span></div>
@@ -231,6 +258,8 @@
 <div class="viewcode-block" id="discharge"><a class="viewcode-back" href="../../code_routes.html#app.routes.discharge">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/discharge&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@login_required</span>
 <span class="k">def</span> <span class="nf">discharge</span><span class="p">():</span>
+    <span class="s2">&quot;Discharge planner dashboard page&quot;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">account_type</span> <span class="o">!=</span> <span class="s2">&quot;discharge planner&quot;</span><span class="p">):</span> <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">)</span>
     <span class="n">patient_upload_form</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">PatientUploadForm</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">validate_on_submit</span><span class="p">():</span>
         <span class="n">file</span> <span class="o">=</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">data</span>
@@ -247,6 +276,9 @@
         <span class="n">last</span> <span class="o">=</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">data</span>
         <span class="n">zipcode</span> <span class="o">=</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">zipcode</span><span class="o">.</span><span class="n">data</span>
         <span class="n">services</span> <span class="o">=</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">gender</span> <span class="o">=</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">gender</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">age</span> <span class="o">=</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">age</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">urgent</span> <span class="o">=</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">urgent</span><span class="o">.</span><span class="n">data</span>
 
         <span class="c1"># Change e.g. [&#39;1&#39;, &#39;3&#39;, &#39;4&#39;] to</span>
         <span class="c1"># [True, False, True, True, False, False]</span>
@@ -258,64 +290,328 @@
         <span class="n">summary</span> <span class="o">=</span> <span class="n">patient_info</span><span class="p">[</span><span class="s1">&#39;summary&#39;</span><span class="p">]</span>
 
         <span class="n">df</span> <span class="o">=</span> <span class="n">recommender_instance</span><span class="o">.</span><span class="n">filter_zipcode</span><span class="p">(</span><span class="n">zipcode</span><span class="p">)</span>
-        <span class="n">recommendations</span><span class="p">,</span> <span class="n">df_rec</span> <span class="o">=</span> <span class="n">recommender_instance</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="n">df</span><span class="p">,</span>
-                                                                 <span class="n">boolservices</span><span class="p">,</span>
-                                                                 <span class="n">path</span><span class="p">)</span>
+        <span class="n">df_agency</span><span class="p">,</span> <span class="n">df_rec</span> <span class="o">=</span> <span class="n">recommender_instance</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="n">df</span><span class="p">,</span>
+                                                           <span class="n">boolservices</span><span class="p">,</span>
+                                                           <span class="n">path</span><span class="p">)</span>
 
         <span class="n">patient</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">Patient</span><span class="p">(</span><span class="n">planner_username</span><span class="o">=</span><span class="n">planner_username</span><span class="p">,</span>
                                   <span class="n">first</span><span class="o">=</span><span class="n">first</span><span class="p">,</span>
                                   <span class="n">last</span><span class="o">=</span><span class="n">last</span><span class="p">,</span>
                                   <span class="n">insurance</span><span class="o">=</span><span class="n">insurance</span><span class="p">,</span>
                                   <span class="n">summary</span><span class="o">=</span><span class="n">summary</span><span class="p">,</span>
-                                  <span class="n">recommendations</span><span class="o">=</span><span class="n">recommendations</span><span class="p">,</span>
+                                  <span class="n">recommendations</span><span class="o">=</span><span class="n">df_agency</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
                                   <span class="n">boolservices</span><span class="o">=</span><span class="n">boolservices</span><span class="p">,</span>
                                   <span class="n">zipcode</span><span class="o">=</span><span class="n">zipcode</span><span class="p">,</span>
-                                  <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+                                  <span class="n">age</span><span class="o">=</span><span class="n">age</span><span class="p">,</span>
+                                  <span class="n">urgent</span><span class="o">=</span><span class="n">urgent</span><span class="p">,</span>
+                                  <span class="n">gender</span><span class="o">=</span><span class="n">gender</span><span class="p">,</span>
+                                  <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
+                                  <span class="n">rec_status</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">]</span><span class="o">*</span><span class="mi">20</span><span class="p">)</span>
 
         <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">patient</span><span class="p">)</span>
         <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;code/app/upload_temp/recs&#39;</span><span class="p">)):</span> <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;code/app/upload_temp/recs&#39;</span><span class="p">)</span>
+        <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;code/app/upload_temp/dfs&#39;</span><span class="p">)):</span> <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;code/app/upload_temp/dfs&#39;</span><span class="p">)</span>
         <span class="n">df_rec</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;code/app/upload_temp/recs/</span><span class="si">{</span><span class="n">patient</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">df_agency</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;code/app/upload_temp/recs/dash</span><span class="si">{</span><span class="n">patient</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;discharge&#39;</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">validate</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cant validate&#39;</span><span class="p">)</span>
+        <span class="n">planner_username</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">username</span>
+        <span class="n">first</span> <span class="o">=</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">last</span> <span class="o">=</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">zipcode</span> <span class="o">=</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">zipcode</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">services</span> <span class="o">=</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">gender</span> <span class="o">=</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">gender</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">age</span> <span class="o">=</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">age</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">urgent</span> <span class="o">=</span> <span class="n">patient_upload_form</span><span class="o">.</span><span class="n">urgent</span><span class="o">.</span><span class="n">data</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">planner_username</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">first</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">last</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">zipcode</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">services</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">gender</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">urgent</span><span class="p">)</span>
+
+        <span class="k">pass</span>
 
     <span class="n">patients</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">Patient</span><span class="o">.</span><span class="n">query</span><span class="o">.</span> \
         <span class="n">filter_by</span><span class="p">(</span><span class="n">planner_username</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">active_patients</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patients</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;A&#39;</span> <span class="ow">or</span> <span class="n">p</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;Z&#39;</span><span class="p">]</span>
+    <span class="n">history_patients</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patients</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;M&#39;</span> <span class="ow">or</span> <span class="n">p</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;R&#39;</span><span class="p">]</span>
+    <span class="n">table_keys</span><span class="p">,</span> <span class="n">table_names</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">Patient</span><span class="o">.</span><span class="n">get_display_columns</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;discharge.html&#39;</span><span class="p">,</span>
                            <span class="n">loggedin</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">,</span>
                            <span class="n">username</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
-                           <span class="n">patients</span><span class="o">=</span><span class="n">patients</span><span class="p">,</span>
-                           <span class="n">table_keys</span><span class="o">=</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span>
-                                       <span class="n">classes</span><span class="o">.</span><span class="n">Patient</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span>
-                           <span class="n">table_names</span><span class="o">=</span><span class="n">classes</span><span class="o">.</span><span class="n">Patient</span><span class="o">.</span><span class="n">get_column_names</span><span class="p">(),</span>
+                           <span class="n">active_patients</span><span class="o">=</span><span class="n">active_patients</span><span class="p">,</span>
+                           <span class="n">history_patients</span><span class="o">=</span><span class="n">history_patients</span><span class="p">,</span>
+                           <span class="n">table_keys</span><span class="o">=</span><span class="n">table_keys</span><span class="p">,</span>
+                           <span class="n">table_names</span><span class="o">=</span><span class="n">table_names</span><span class="p">,</span>
                            <span class="n">patient_upload_form</span><span class="o">=</span><span class="n">patient_upload_form</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="agency"><a class="viewcode-back" href="../../code_routes.html#app.routes.agency">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/agency&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">agency</span><span class="p">():</span>
+    <span class="s2">&quot;Agency user&#39;s request dashboard&quot;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">account_type</span> <span class="o">!=</span> <span class="s2">&quot;agency&quot;</span><span class="p">):</span> <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">)</span>
+    <span class="n">agency_requests</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">AgencyRequest</span><span class="o">.</span><span class="n">query</span><span class="o">.</span> \
+        <span class="n">filter_by</span><span class="p">(</span><span class="n">agency_name</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">username</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">agency_requests</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FOR:&quot;</span><span class="p">,</span> <span class="n">current_user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+    <span class="n">requested_patients</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">accepted_patients</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">pending_patients</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">readmitted_patients</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">agency_request</span> <span class="ow">in</span> <span class="n">agency_requests</span><span class="p">:</span>
+        <span class="n">patient</span> <span class="o">=</span> <span class="n">agency_request</span><span class="o">.</span><span class="n">patient</span>
+        <span class="n">patient_info</span> <span class="o">=</span> <span class="p">[{</span>
+            <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="n">agency_request</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s1">&#39;insurance&#39;</span><span class="p">:</span> <span class="n">patient</span><span class="o">.</span><span class="n">insurance</span><span class="p">,</span>
+            <span class="s1">&#39;summary&#39;</span><span class="p">:</span> <span class="n">patient</span><span class="o">.</span><span class="n">summary</span><span class="p">,</span>
+            <span class="s1">&#39;first name&#39;</span><span class="p">:</span> <span class="n">patient</span><span class="o">.</span><span class="n">first</span><span class="p">,</span>
+            <span class="s1">&#39;last name&#39;</span><span class="p">:</span> <span class="n">patient</span><span class="o">.</span><span class="n">last</span><span class="p">,</span>
+            <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="n">patient</span><span class="o">.</span><span class="n">age</span><span class="p">,</span>
+            <span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="n">patient</span><span class="o">.</span><span class="n">gender</span><span class="p">,</span>
+            <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="n">patient</span><span class="o">.</span><span class="n">zipcode</span><span class="p">,</span>
+            <span class="s1">&#39;urgent&#39;</span><span class="p">:</span> <span class="n">patient</span><span class="o">.</span><span class="n">urgent</span><span class="p">,</span>
+            <span class="s1">&#39;first&#39;</span><span class="p">:</span> <span class="n">patient</span><span class="o">.</span><span class="n">first</span><span class="p">,</span>
+            <span class="s1">&#39;last&#39;</span><span class="p">:</span> <span class="n">patient</span><span class="o">.</span><span class="n">last</span><span class="p">,</span>
+            <span class="s1">&#39;zipcode&#39;</span><span class="p">:</span> <span class="n">patient</span><span class="o">.</span><span class="n">zipcode</span><span class="p">,</span>
+            <span class="s1">&#39;referral date&#39;</span><span class="p">:</span> <span class="n">patient</span><span class="o">.</span><span class="n">referral_date</span>
+        <span class="p">}]</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">patient</span><span class="o">.</span><span class="n">rec_status</span><span class="p">[[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">rec</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">patient</span><span class="o">.</span><span class="n">recommendations</span><span class="p">)</span> <span class="k">if</span> <span class="n">rec</span> <span class="o">==</span> <span class="n">agency_request</span><span class="o">.</span><span class="n">agency_name</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">patient_info</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">patient</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;Z&#39;</span><span class="p">:</span>
+            <span class="n">readmitted_patients</span> <span class="o">+=</span> <span class="n">patient_info</span>
+        <span class="k">elif</span><span class="p">(</span><span class="n">status</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;W&#39;</span><span class="p">]):</span>
+            <span class="n">requested_patients</span> <span class="o">+=</span> <span class="n">patient_info</span>
+        <span class="k">elif</span><span class="p">(</span><span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;M&#39;</span><span class="p">):</span>
+            <span class="n">accepted_patients</span> <span class="o">+=</span> <span class="n">patient_info</span>
+        <span class="k">elif</span> <span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span>
+            <span class="n">pending_patients</span> <span class="o">+=</span> <span class="n">patient_info</span>
+        
+
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;agency.html&#39;</span><span class="p">,</span>
+                           <span class="n">loggedin</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">,</span>
+                           <span class="n">username</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
+                           <span class="n">table_keys</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;request_id&#39;</span><span class="p">,</span> <span class="s1">&#39;first name&#39;</span><span class="p">,</span> 
+                                       <span class="s1">&#39;last name&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;insurance&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">,</span> 
+                                       <span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="s1">&#39;urgent&#39;</span><span class="p">],</span>
+                           <span class="n">requested_patients</span><span class="o">=</span><span class="n">requested_patients</span><span class="p">,</span>
+                           <span class="n">accepted_patients</span><span class="o">=</span><span class="n">accepted_patients</span><span class="p">,</span>
+                           <span class="n">pending_patients</span><span class="o">=</span><span class="n">pending_patients</span><span class="p">,</span>
+                           <span class="n">readmitted_patients</span><span class="o">=</span><span class="n">readmitted_patients</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="patient"><a class="viewcode-back" href="../../code_routes.html#app.routes.patient">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/patient&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@login_required</span>
 <span class="k">def</span> <span class="nf">patient</span><span class="p">():</span>
+    <span class="s2">&quot;Discharge planner&#39;s patient-recommendations dashboard&quot;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">account_type</span> <span class="o">!=</span> <span class="s2">&quot;discharge planner&quot;</span><span class="p">):</span> <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">)</span>
     <span class="nb">id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
     <span class="n">patient</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">Patient</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
     <span class="k">if</span><span class="p">(</span><span class="n">patient</span><span class="o">.</span><span class="n">planner_username</span> <span class="o">!=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">username</span><span class="p">):</span>
         <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">)</span>
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">recommender_instance</span><span class="o">.</span><span class="n">filter_zipcode</span><span class="p">(</span><span class="n">patient</span><span class="o">.</span><span class="n">zipcode</span><span class="p">)</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;code/app/upload_temp/recs/</span><span class="si">{</span><span class="n">patient</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;code/app/upload_temp/recs/</span><span class="si">{</span><span class="n">patient</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">):</span>
         <span class="n">df_rec</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;code/app/upload_temp/recs/</span><span class="si">{</span><span class="n">patient</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">df_agency</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;code/app/upload_temp/recs/dash</span><span class="si">{</span><span class="n">patient</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">df_rec</span> <span class="o">=</span> <span class="n">recommender_instance</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="n">df</span><span class="p">,</span>
+        <span class="n">df_agency</span><span class="p">,</span> <span class="n">df_rec</span> <span class="o">=</span> <span class="n">recommender_instance</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="n">df</span><span class="p">,</span>
                                                 <span class="n">patient</span><span class="o">.</span><span class="n">boolservices</span><span class="p">,</span>
                                                 <span class="n">patient</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
 
-    <span class="n">scores</span> <span class="o">=</span> <span class="n">recommender_instance</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">patient</span><span class="o">.</span><span class="n">recommendations</span><span class="p">,</span>
-                                              <span class="n">patient</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
-    <span class="n">score_keys</span> <span class="o">=</span> <span class="n">recommender_instance</span><span class="o">.</span><span class="n">score_keys</span>
-    <span class="n">score_names</span> <span class="o">=</span> <span class="n">recommender_instance</span><span class="o">.</span><span class="n">get_column_names</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">&gt;</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error with number of agencies selected&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">resulting_agencies</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">df_agency</span><span class="p">[</span><span class="s1">&#39;preventable_readmission&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df_agency</span><span class="p">[</span><span class="s1">&#39;preventable_readmission&#39;</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df_agency</span><span class="p">[</span><span class="n">df_agency</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">resulting_agencies</span><span class="p">)]</span>
+            <span class="n">patient_name</span> <span class="o">=</span> <span class="n">patient</span><span class="o">.</span><span class="n">first</span>
+            <span class="n">num_agencies</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">resulting_agencies</span><span class="p">)</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">all_scores</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span><span class="o">-</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">)],</span> <span class="n">df</span><span class="o">.</span><span class="n">score</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+            <span class="n">all_timely</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span><span class="o">-</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">)],</span> <span class="n">df</span><span class="o">.</span><span class="n">timely_manner</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+            <span class="n">all_ppr</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span><span class="o">-</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">)],</span> <span class="n">df</span><span class="o">.</span><span class="n">preventable_readmission</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;num_agencies&#39;</span><span class="p">:</span> <span class="n">num_agencies</span><span class="p">,</span>
+                <span class="s1">&#39;patient_name&#39;</span><span class="p">:</span> <span class="n">patient_name</span><span class="p">,</span>
+                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">names</span><span class="p">),</span>
+                <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">all_scores</span><span class="p">),</span>
+                <span class="s1">&#39;daily&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">([</span><span class="n">df</span><span class="p">[</span><span class="n">agency_df_keys</span><span class="p">[</span><span class="s1">&#39;daily_activities&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_agencies</span><span class="p">)]),</span>
+                <span class="s1">&#39;symptom&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">([</span><span class="n">df</span><span class="p">[</span><span class="n">agency_df_keys</span><span class="p">[</span><span class="s1">&#39;daily_activities&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_agencies</span><span class="p">)]),</span>
+                <span class="s1">&#39;timely&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">all_timely</span><span class="p">),</span>
+                <span class="s1">&#39;ppr&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">all_ppr</span><span class="p">),</span>
+                <span class="s1">&#39;dtc&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">return_agency_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">agency_df_keys</span><span class="p">[</span><span class="s1">&#39;dtc&#39;</span><span class="p">])),</span>
+                <span class="s1">&#39;er&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">return_agency_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">agency_df_keys</span><span class="p">[</span><span class="s1">&#39;er&#39;</span><span class="p">])),</span>
+                <span class="s1">&#39;readmitted&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">return_agency_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">agency_df_keys</span><span class="p">[</span><span class="s1">&#39;readmitted&#39;</span><span class="p">])),</span>
+                <span class="s1">&#39;falling&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">return_agency_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">agency_df_keys</span><span class="p">[</span><span class="s1">&#39;falling&#39;</span><span class="p">])),</span>
+                <span class="s1">&#39;depression&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">return_agency_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">agency_df_keys</span><span class="p">[</span><span class="s1">&#39;depression&#39;</span><span class="p">])),</span>
+                <span class="s1">&#39;pneumonia&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">return_agency_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">agency_df_keys</span><span class="p">[</span><span class="s1">&#39;pneumonia&#39;</span><span class="p">])),</span>
+                <span class="s1">&#39;flu&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">return_agency_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">agency_df_keys</span><span class="p">[</span><span class="s1">&#39;flu&#39;</span><span class="p">])),</span>
+                <span class="s1">&#39;timely_med&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">return_agency_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">agency_df_keys</span><span class="p">[</span><span class="s1">&#39;timely_med&#39;</span><span class="p">])),</span>
+                <span class="s1">&#39;taught_med&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">return_agency_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">agency_df_keys</span><span class="p">[</span><span class="s1">&#39;taught_med&#39;</span><span class="p">])),</span>
+                <span class="s1">&#39;diabetes&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">return_agency_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">agency_df_keys</span><span class="p">[</span><span class="s1">&#39;diabetes&#39;</span><span class="p">])),</span>
+            <span class="p">}</span>
+
+            <span class="n">colors</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;colors&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">dashboard_colors</span><span class="p">),</span>
+                <span class="s1">&#39;bg_colors&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">background_colors</span><span class="p">)</span>
+            <span class="p">}</span>
+
+            <span class="n">col_first_size</span> <span class="o">=</span> <span class="mi">5</span>
+            <span class="n">col_size</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">num_agencies</span> <span class="o">==</span> <span class="mi">3</span><span class="p">):</span>
+                <span class="n">col_first_size</span> <span class="o">=</span> <span class="mi">4</span>
+                <span class="n">col_size</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="k">elif</span><span class="p">(</span><span class="n">num_agencies</span> <span class="o">==</span> <span class="mi">4</span><span class="p">):</span>
+                <span class="n">col_first_size</span> <span class="o">=</span> <span class="mi">4</span>
+                <span class="n">col_size</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="k">elif</span><span class="p">(</span><span class="n">num_agencies</span> <span class="o">==</span> <span class="mi">5</span><span class="p">):</span>
+                <span class="n">col_first_size</span> <span class="o">=</span> <span class="n">col_size</span> <span class="o">=</span> <span class="mi">2</span>
+
+            <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;dashboard.html&quot;</span><span class="p">,</span>
+                                <span class="n">loggedin</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">,</span>
+                                <span class="n">dashboard_key_order</span><span class="o">=</span><span class="n">dashboard_key_order</span><span class="p">,</span>
+                                <span class="n">dashboard_key_order_json</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">dashboard_key_order</span><span class="p">),</span>
+                                <span class="n">dashboard_chart_types</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">dashboard_chart_types</span><span class="p">),</span>
+                                <span class="n">dashboard_barchart_labels</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">dashboard_barchart_labels</span><span class="p">),</span>
+                                <span class="n">dashboard_chart_titles</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">dashboard_chart_titles</span><span class="p">),</span>
+                                <span class="n">dashboard_info</span><span class="o">=</span><span class="n">dashboard_info</span><span class="p">,</span>
+                                <span class="n">show_haoma_desc</span><span class="o">=</span><span class="n">num_agencies</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">,</span>
+                                <span class="n">col_first_size</span><span class="o">=</span><span class="n">col_first_size</span><span class="p">,</span>
+                                <span class="n">col_size</span><span class="o">=</span><span class="n">col_size</span><span class="p">,</span>
+                                <span class="n">name_arr</span><span class="o">=</span><span class="n">names</span><span class="p">,</span>
+                                <span class="n">colors_arr</span><span class="o">=</span><span class="n">dashboard_colors</span><span class="p">,</span>
+                                <span class="o">**</span><span class="n">colors</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">)</span>
+
+
+    <span class="n">rec_status</span> <span class="o">=</span> <span class="n">patient</span><span class="o">.</span><span class="n">rec_status</span><span class="p">[:</span><span class="mi">20</span><span class="p">]</span>
+    <span class="n">df_available</span><span class="p">,</span> <span class="n">df_requested</span><span class="p">,</span> <span class="n">df_confirmed</span><span class="p">,</span> <span class="n">df_denied</span><span class="p">,</span> <span class="n">df_removed</span><span class="p">,</span> <span class="n">df_matched</span> <span class="o">=</span> <span class="n">df_rec</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="n">e</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">rec_status</span><span class="p">]],</span>\
+                                                                      <span class="n">df_rec</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="n">e</span> <span class="o">==</span> <span class="s2">&quot;W&quot;</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">rec_status</span><span class="p">]],</span>\
+                                                                      <span class="n">df_rec</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="n">e</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">rec_status</span><span class="p">]],</span>\
+                                                                      <span class="n">df_rec</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="n">e</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">rec_status</span><span class="p">]],</span>\
+                                                                      <span class="n">df_rec</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="n">e</span> <span class="o">==</span> <span class="s2">&quot;R&quot;</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">rec_status</span><span class="p">]],</span>\
+                                                                      <span class="n">df_rec</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="n">e</span> <span class="o">==</span> <span class="s2">&quot;M&quot;</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">rec_status</span><span class="p">]]</span>
+    <span class="c1"># Manipulating boolean services</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nursing care&#39;</span><span class="p">,</span> <span class="s1">&#39;physical therapy&#39;</span><span class="p">,</span> <span class="s1">&#39;occupational therapy&#39;</span><span class="p">,</span> <span class="s1">&#39;speech therapy&#39;</span><span class="p">,</span> <span class="s1">&#39;medical social services&#39;</span><span class="p">,</span> <span class="s1">&#39;home health aide&#39;</span><span class="p">]</span>
+    <span class="n">specific_services</span> <span class="o">=</span> <span class="p">[</span><span class="n">services</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">patient</span><span class="o">.</span><span class="n">boolservices</span><span class="p">)</span> <span class="k">if</span> <span class="n">b</span><span class="p">]</span>
+
+    <span class="c1"># Cleaner columns</span>
+    <span class="n">clean_dict</span> <span class="o">=</span>  <span class="p">{</span><span class="s1">&#39;rank&#39;</span> <span class="p">:</span> <span class="s1">&#39;Rank&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Name&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;ppr&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;dtc&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;falling&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;depression&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;flu&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;pneumonia&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;diabetes&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;moving&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;getting_in_bed&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;bathing&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;breathing&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;wounds&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;skin_integrity&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
+
+<span class="c1">#     df_rec.columns</span>
+
     <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;patient.html&#39;</span><span class="p">,</span>
                            <span class="n">loggedin</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">,</span>
                            <span class="n">patient</span><span class="o">=</span><span class="n">patient</span><span class="p">,</span>
-                           <span class="n">scores</span><span class="o">=</span><span class="n">scores</span><span class="p">,</span>
-                           <span class="n">score_keys</span><span class="o">=</span><span class="n">score_keys</span><span class="p">,</span>
-                           <span class="n">score_names</span><span class="o">=</span><span class="n">score_names</span><span class="p">,</span>
-                           <span class="n">data</span><span class="o">=</span><span class="n">df_rec</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">table_id</span><span class="o">=</span><span class="s2">&quot;example&quot;</span><span class="p">))</span></div>
+                           <span class="n">columns</span><span class="o">=</span><span class="n">df_rec</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                           <span class="n">data_available</span><span class="o">=</span><span class="n">df_available</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                           <span class="n">data_requested</span><span class="o">=</span><span class="n">df_requested</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                           <span class="n">data_confirmed</span><span class="o">=</span><span class="n">df_confirmed</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                           <span class="n">data_denied</span><span class="o">=</span><span class="n">df_denied</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                           <span class="n">data_removed</span><span class="o">=</span><span class="n">df_removed</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                           <span class="n">data_matched</span><span class="o">=</span><span class="n">df_matched</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                           <span class="n">specific_services</span><span class="o">=</span><span class="n">specific_services</span><span class="p">)</span></div>
+
+
+
+
+<div class="viewcode-block" id="change_rec_status"><a class="viewcode-back" href="../../code_routes.html#app.routes.change_rec_status">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/_change_rec_status&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">change_rec_status</span><span class="p">():</span>
+    <span class="s2">&quot;Endpoint for changing the status of a recommendation&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">patient_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s1">&#39;patient_id&#39;</span><span class="p">]</span>
+        <span class="n">patient</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">Patient</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">patient_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">patient</span><span class="o">.</span><span class="n">planner_username</span> <span class="o">!=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">username</span><span class="p">):</span>
+            <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">)</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>
+        <span class="k">if</span><span class="p">(</span><span class="s1">&#39;idx&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">):</span>
+            <span class="n">patient</span><span class="o">.</span><span class="n">update_rec_status</span><span class="p">(</span><span class="n">idx</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s1">&#39;idx&#39;</span><span class="p">]),</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">)</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;M&#39;</span><span class="p">):</span>
+                <span class="n">patient</span><span class="o">.</span><span class="n">update_rec_status</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">patient</span><span class="o">.</span><span class="n">update_rec_status</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;success&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">}),</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ContentType&#39;</span><span class="p">:</span><span class="s1">&#39;application/json&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="request_rec"><a class="viewcode-back" href="../../code_routes.html#app.routes.request_rec">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/_request_rec&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">request_rec</span><span class="p">():</span>
+    <span class="s2">&quot;Endpoint for adding a new agency request&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">patient_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s1">&#39;patient_id&#39;</span><span class="p">]</span>
+        <span class="n">patient</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">Patient</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">patient_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">patient</span><span class="o">.</span><span class="n">planner_username</span> <span class="o">!=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">username</span><span class="p">):</span>
+            <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">)</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s1">&#39;idx&#39;</span><span class="p">])</span>
+        <span class="n">patient</span><span class="o">.</span><span class="n">update_rec_status</span><span class="p">(</span><span class="n">idx</span><span class="o">=</span><span class="n">idx</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s2">&quot;W&quot;</span><span class="p">)</span>
+        <span class="n">agency_request</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">AgencyRequest</span><span class="p">(</span><span class="n">patient_id</span><span class="o">=</span><span class="n">patient_id</span><span class="p">,</span> <span class="n">planner_username</span><span class="o">=</span><span class="n">patient</span><span class="o">.</span><span class="n">planner_username</span><span class="p">,</span> <span class="n">agency_name</span><span class="o">=</span><span class="n">patient</span><span class="o">.</span><span class="n">recommendations</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">agency_request</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;success&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">}),</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ContentType&#39;</span><span class="p">:</span><span class="s1">&#39;application/json&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="remove_patient"><a class="viewcode-back" href="../../code_routes.html#app.routes.remove_patient">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/_remove_patient&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">remove_patient</span><span class="p">():</span>
+    <span class="s2">&quot;Endpoint for deleting a patient, performed by discharge planner&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+        <span class="n">patient</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">Patient</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">patient</span><span class="o">.</span><span class="n">planner_username</span> <span class="o">!=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">username</span><span class="p">):</span>
+            <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">patient</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;success&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">}),</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ContentType&#39;</span><span class="p">:</span><span class="s1">&#39;application/json&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="respond_request"><a class="viewcode-back" href="../../code_routes.html#app.routes.respond_request">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/_respond_request&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">respond_request</span><span class="p">():</span>
+    <span class="s2">&quot;Endpoint for responding to recommendation, performed by agency&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">request_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s1">&#39;request_id&#39;</span><span class="p">]</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>
+        <span class="n">agency_request</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">AgencyRequest</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">agency_request</span><span class="o">.</span><span class="n">agency_name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">!=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">username</span><span class="o">.</span><span class="n">upper</span><span class="p">()):</span>
+            <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">)</span>
+        <span class="n">agency_request</span><span class="o">.</span><span class="n">acknowledge</span><span class="p">()</span>
+        <span class="n">patient</span> <span class="o">=</span> <span class="n">classes</span><span class="o">.</span><span class="n">Patient</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">agency_request</span><span class="o">.</span><span class="n">patient_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="n">rec_idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">rec</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">patient</span><span class="o">.</span><span class="n">recommendations</span><span class="p">):</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">rec</span> <span class="o">==</span> <span class="n">current_user</span><span class="o">.</span><span class="n">username</span><span class="o">.</span><span class="n">upper</span><span class="p">()):</span>
+                <span class="n">rec_idx</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="k">break</span>
+        <span class="n">patient</span><span class="o">.</span><span class="n">update_rec_status</span><span class="p">(</span><span class="n">rec_idx</span><span class="p">,</span> <span class="n">status</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;success&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">}),</span> <span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ContentType&#39;</span><span class="p">:</span><span class="s1">&#39;application/json&#39;</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="logout"><a class="viewcode-back" href="../../code_routes.html#app.routes.logout">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/logout&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
@@ -326,6 +622,19 @@
     <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;logout.html&#39;</span><span class="p">,</span>
                            <span class="n">loggedin</span><span class="o">=</span><span class="n">current_user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">,</span>
                            <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="readmission"><a class="viewcode-back" href="../../code_routes.html#app.routes.readmission">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/readmission&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">readmission</span><span class="p">():</span>
+    <span class="n">gender_line_graph</span> <span class="o">=</span> <span class="n">gender_line</span><span class="p">()</span>
+    <span class="n">service_pie_graph</span> <span class="o">=</span> <span class="n">service_pie</span><span class="p">()</span>
+    <span class="n">age_hist_graph</span> <span class="o">=</span> <span class="n">age_hist</span><span class="p">()</span>
+    <span class="n">compare_readmission_line_graph</span> <span class="o">=</span> <span class="n">readmission_compare_line</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;readmission.html&#39;</span><span class="p">,</span> 
+                            <span class="n">gender_line_graph</span><span class="o">=</span><span class="n">gender_line_graph</span><span class="p">,</span>
+                            <span class="n">service_pie_graph</span><span class="o">=</span><span class="n">service_pie_graph</span><span class="p">,</span>
+                            <span class="n">age_hist_graph</span><span class="o">=</span><span class="n">age_hist_graph</span><span class="p">,</span>
+                            <span class="n">compare_readmission_line_graph</span><span class="o">=</span><span class="n">compare_readmission_line_graph</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

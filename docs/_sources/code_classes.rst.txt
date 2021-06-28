@@ -1,5 +1,0 @@
-API Reference: Classes 
-=================================
-.. automodule:: app.classes
-	:members:
-	:undoc-members:

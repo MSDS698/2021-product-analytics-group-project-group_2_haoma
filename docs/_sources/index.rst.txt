@@ -15,10 +15,6 @@ Welcome to Haoma's documentation!
    tutorial
    code_routes
    code_funcs
-   code_pipeline
-   code_preprocess
-   code_recommender
-   code_classes
 
 
 Indices and tables

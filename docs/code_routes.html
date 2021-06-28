@@ -92,10 +92,6 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference: Routes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="code_funcs.html">API Reference: Funcs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="code_pipeline.html">API Reference: Pipeline</a></li>
-<li class="toctree-l1"><a class="reference internal" href="code_preprocess.html">API Reference: Preprocess</a></li>
-<li class="toctree-l1"><a class="reference internal" href="code_recommender.html">API Reference: Recommender</a></li>
-<li class="toctree-l1"><a class="reference internal" href="code_classes.html">API Reference: Classes</a></li>
 </ul>
 
             
@@ -166,9 +162,22 @@
   <div class="section" id="module-app.routes">
 <span id="api-reference-routes"></span><h1>API Reference: Routes<a class="headerlink" href="#module-app.routes" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
+<dt id="app.routes.agency">
+<code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">agency</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#agency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.agency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Agency user’s request dashboard</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="app.routes.change_rec_status">
+<code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">change_rec_status</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#change_rec_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.change_rec_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint for changing the status of a recommendation</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="app.routes.discharge">
 <code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">discharge</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#discharge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.discharge" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Discharge planner dashboard page</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="app.routes.get_table">
@@ -184,7 +193,8 @@
 <dl class="py function">
 <dt id="app.routes.login">
 <code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">login</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.login" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>User login page</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="app.routes.logout">
@@ -194,12 +204,37 @@
 <dl class="py function">
 <dt id="app.routes.patient">
 <code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">patient</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#patient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.patient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Discharge planner’s patient-recommendations dashboard</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="app.routes.readmission">
+<code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">readmission</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#readmission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.readmission" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt id="app.routes.register">
 <code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">register</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.register" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>User registration page</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="app.routes.remove_patient">
+<code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">remove_patient</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#remove_patient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.remove_patient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint for deleting a patient, performed by discharge planner</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="app.routes.request_rec">
+<code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">request_rec</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#request_rec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.request_rec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint for adding a new agency request</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="app.routes.respond_request">
+<code class="sig-prename descclassname"><span class="pre">app.routes.</span></code><code class="sig-name descname"><span class="pre">respond_request</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/routes.html#respond_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.routes.respond_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint for responding to recommendation, performed by agency</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="app.routes.zipcode_search">

@@ -90,10 +90,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code_routes.html">API Reference: Routes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code_funcs.html">API Reference: Funcs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../code_pipeline.html">API Reference: Pipeline</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../code_preprocess.html">API Reference: Preprocess</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../code_recommender.html">API Reference: Recommender</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../code_classes.html">API Reference: Classes</a></li>
 </ul>
 
             
@@ -174,7 +170,13 @@
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">app.preprocess</span> <span class="kn">import</span> <span class="o">*</span>
 
+<div class="viewcode-block" id="return_agency_data"><a class="viewcode-back" href="../../code_funcs.html#app.funcs.return_agency_data">[docs]</a><span class="k">def</span> <span class="nf">return_agency_data</span><span class="p">(</span><span class="n">df3</span><span class="p">,</span> <span class="n">column</span><span class="p">):</span>
+    <span class="n">all_data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span><span class="o">-</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">)],</span>
+                        <span class="n">df3</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+    <span class="k">return</span> <span class="n">all_data</span></div>
+    
 
 <div class="viewcode-block" id="get_hh_agencies"><a class="viewcode-back" href="../../code_funcs.html#app.funcs.get_hh_agencies">[docs]</a><span class="k">def</span> <span class="nf">get_hh_agencies</span><span class="p">(</span><span class="n">zipcode</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="s2">&quot;Get a df of Home Health agencies that cover a given zipcode.&quot;</span>
@@ -236,7 +238,39 @@
     <span class="n">extracted_info</span><span class="p">[</span><span class="s1">&#39;summary&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;summary example&quot;</span>
     <span class="k">return</span> <span class="n">extracted_info</span></div>
 
-<span class="c1"># get_hh_agencies()</span>
+<div class="viewcode-block" id="get_top_agencies"><a class="viewcode-back" href="../../code_funcs.html#app.funcs.get_top_agencies">[docs]</a><span class="k">def</span> <span class="nf">get_top_agencies</span><span class="p">():</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="s2">&quot;haoma-bucket&quot;</span><span class="p">,</span>
+                                 <span class="n">Key</span><span class="o">=</span><span class="s2">&quot;HH_Provider_Oct2020.csv&quot;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Body&quot;</span><span class="p">))</span>
+    <span class="n">df_cal</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;State&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;CA&#39;</span><span class="p">]</span>
+    <span class="n">df_cal</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df_cal</span> <span class="o">=</span> <span class="n">df_cal</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="o">~</span><span class="n">df_cal</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Footnote&#39;</span><span class="p">)]</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="s2">&quot;haoma-bucket&quot;</span><span class="p">,</span>
+                             <span class="n">Key</span><span class="o">=</span><span class="s2">&quot;HH_Zip_Oct2020.csv&quot;</span><span class="p">)</span>
+    <span class="n">df_zip</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Body&quot;</span><span class="p">))</span>
+    <span class="c1"># Hyperparameters</span>
+    <span class="n">tier_weights</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;star&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;flagged&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                         <span class="s1">&#39;ppr&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;dtc&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+    <span class="n">num_agencies</span> <span class="o">=</span> <span class="mi">50</span>
+    
+    <span class="n">cms_nums</span> <span class="o">=</span> <span class="n">df_zip</span><span class="p">[</span><span class="n">df_zip</span><span class="p">[</span><span class="s1">&#39; ZIP Code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">94014</span><span class="p">][</span><span class="s1">&#39;CMS Certification Number (CCN)&#39;</span><span class="p">]</span>
+    <span class="n">df_filter</span> <span class="o">=</span> <span class="n">df_cal</span><span class="p">[</span><span class="n">df_cal</span><span class="p">[</span><span class="s1">&#39;CMS Certification Number (CCN)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">cms_nums</span><span class="p">))]</span>
+    <span class="n">bool_services</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+    <span class="n">flagged_qtopic</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">pipe_prep</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([(</span><span class="s1">&#39;Drop Unnecessary Columns&#39;</span><span class="p">,</span> <span class="n">Drop</span><span class="p">()),</span>
+                              <span class="p">(</span><span class="s1">&#39;Rename Columns&#39;</span><span class="p">,</span> <span class="n">Rename</span><span class="p">()),</span>
+                              <span class="p">(</span><span class="s1">&#39;Filter Offered Services&#39;</span><span class="p">,</span>
+                               <span class="n">FilterByService</span><span class="p">(</span><span class="n">bool_services</span><span class="p">)),</span>
+                              <span class="p">(</span><span class="s1">&#39;Impute Values&#39;</span><span class="p">,</span> <span class="n">custom_imputer</span><span class="p">()),</span>
+                              <span class="p">(</span><span class="s1">&#39;Normalize/Reverse Asc. Columns&#39;</span><span class="p">,</span>
+                               <span class="n">change_ascending_cols</span><span class="p">()),</span>
+                              <span class="p">(</span><span class="s1">&#39;Recommend&#39;</span><span class="p">,</span> <span class="n">Recommend</span><span class="p">(</span><span class="n">tier_weights</span><span class="p">,</span>
+                                                      <span class="n">flagged_qtopic</span><span class="p">,</span>
+                                                      <span class="n">num_agencies</span><span class="p">))])</span>
+    <span class="n">df</span><span class="p">,</span> <span class="n">df_rec</span> <span class="o">=</span> <span class="n">pipe_prep</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df_filter</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+    <span class="n">df_rec</span><span class="p">[</span><span class="s1">&#39;rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_rec</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">df_rec</span> <span class="o">=</span> <span class="n">df_rec</span><span class="p">[[</span><span class="s1">&#39;rank&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">df_rec</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span>
+    <span class="k">return</span> <span class="n">df</span></div>
 </pre></div>
 
            </div>

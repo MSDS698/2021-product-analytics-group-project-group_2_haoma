@@ -23,14 +23,3 @@ Requirements
 |     toml==0.10.2
 |     Werkzeug==2.0.1
 |     WTForms==2.3.3
-|     awsebcli==3.20.0
-|     boto3==1.17.91
-|     flask-login==0.5.0
-|     flask-sqlalchemy==2.5.1
-|     matplotlib==3.4.2
-|     pdf2image==1.15.1
-|     pip-chill==1.0.1
-|     psycopg2==2.8.6
-|     pytesseract==0.3.7
-|     sklearn==0.0
-|     en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
