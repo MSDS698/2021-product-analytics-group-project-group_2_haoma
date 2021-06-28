@@ -200,7 +200,7 @@ def agency():
     "Agency user's request dashboard"
     if(current_user.account_type != "agency"): abort(401)
     agency_requests = classes.AgencyRequest.query. \
-        filter_by(agency_name=current_user.username).all()
+        filter_by(agency_name=current_user.username.upper()).all()
     print(agency_requests)
     print("FOR:", current_user.username)
     requested_patients = []
