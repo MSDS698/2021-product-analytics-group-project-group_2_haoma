@@ -12,8 +12,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
     
+
+
 <div>
 <body>
+    <div id="mySidenav" class="sidenav">
+        <a id="home" href="{{ url_for('index') }}">
+        <div class="icon"><i class=" ri-home-heart-line" style="font-size:x-large;"></i></div>
+        Home
+        </a>
+        <a id="patients-list" href="{{ url_for('discharge') }}">
+        <div class="icon"><i class="ri-list-check-2" style="font-size:x-large;"></i></div>
+        Patients
+        </a>
+        <a id="find-agency" href="{{ url_for('zipcode_search') }}">
+        <div class="icon"><i class="ri-hospital-line" style="font-size:x-large;"></i></div>
+        Agency
+        </a>
+    </div>
     <div class="agency-header">   
         <div class="container">
             <div class="row">
