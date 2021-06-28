@@ -1,30 +1,58 @@
 {% extends "headerbase.html" %}
-{% block content %}
 
+{% block content %}
+<br>
 <link href="https://fonts.googleapis.com/css?family=Fira+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
     
+
+
 <div>
 <body>
-</br>
-    <div class="agency-header"> 
+
+    <div id="mySidenav" class="sidenav">
+        <a id="home" href="{{ url_for('index') }}">
+        <center><img src="{{ url_for('static', filename='haoma_logo_only.png') }}"  width = '75%' class="img-fluid" alt=""><br></center>
+        </a>
+        <a id="patients-list" href="{{ url_for('discharge') }}">
+            <div class="icon"><i class="ri-list-check-2" style="font-size:xx-large;"></i></div>
+            <div class = 'text' style='line-height:.05'>Patients</div>
+        </a>
+        <a id="find-agency" href="{{ url_for('zipcode_search') }}">
+            <div class="icon"><i class="ri-hospital-line" style="font-size:xx-large;"></i></div>
+            <div class = 'text' style='line-height:.05'>Agency</div>
+        </a>
+    </div>
+    
+    
+    <div class="agency-header">   
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6">
+                </div>
+                <div class="col-xl-6">
+                    <div class="card bg-light mb-3">
+                        <h5 class="card-header" style="font-family:Lato;text-align:center"><b>Personalized Haoma Score for {{patient_name}}</b></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     
         <div class="container">
             <div class="row">    
-                <div class="col-{{col_first_size}}">
+                <div class="col-xl-6">
                     <div class="card-body">
-                        <h1 class="align-middle" style="font-family:tahoma;color:#376b69;text-align:center"><br><b>Haoma Compare</b></h1>
-                        {% if show_haoma_desc %}  
-                        <!-- <h3 class="align-middle" style="text-align:center">Based on Official Medicare Surveys</h3> -->
-                        {% endif %}
+                        <h1 class="align-middle" style="font-family:Lato;color:#376b69;font-weight:700;text-align:center"><br><b>Haoma Compare</b></h1>
+                        <h3 class="align-middle" style="font-family:Lato;text-align:center">Based on Official Medicare Surveys</h3>
                         <p class="card-text">
                         </p>
                     </div>
                 </div>
                 {% for i in range(num_agencies) %}
-                <div class="col-{{col_size}}">
+                <div class="col-md-2">
                     <div class="card card-style mb-3">
                         <div class="card-body">
                             <div class="chart-container" style="position: relative;">
@@ -39,15 +67,15 @@
     
         <div class="container">
             <div class="row">    
-                <div class="col-{{col_first_size}}">
+                <div class="col-xl">
                     <div class="card bg-white mb-3">
                     <h5 class="card-header">&nbsp;</h5>
                     </div>
                 </div>
                 {% for i in range(num_agencies) %}
-                <div class="col-{{col_size}}">
+                <div class="col-xl">
                     <div class="card bg-light mb-3">
-                    <h5 class="card-header" style="color: {{colors_arr[i]}};">{{name_arr[i].title()}}</h5>
+                    <h5 class="card-header" style="font-family:Lato;font-weight:400;color: {{colors_arr[i]}};text-align:center"><b>{{name_arr[i][:-1][0:26].title()}}</b></h5>
                     </div>
                 </div>
                 {% endfor %}
@@ -59,23 +87,20 @@
         {% for k in dashboard_key_order %}
         <div class="container">
             <div class="row">   
-                <div class="col-{{col_first_size}}">
-                    <div class="card card-body" style="position: relative; height: {{dashboard_info[k]['height_desc']}};">
+                <div class="col-md-3">
+                    <div class="card card-body" style="font-family:Lato;position: relative; height: {{dashboard_info[k]['height_desc']}};">
                         <div class="chart-container">
-                            <h5 class="card-title"><b>{{dashboard_info[k]['title']}}</b></h5>
-                            <div>
-                                {{dashboard_info[k]['body']|safe}}
-                            </div>
-                            
+                            <h5 class="card-title" style="font-family:Lato;font-weight:400"><b>{{dashboard_info[k]['title']}}</b></h5>
+                            <p class="card-text" style="font-family:Lato;">{{dashboard_info[k]['body']|safe}}</p>
                         </div>
                     </div>
                 </div>
                 {% for i in range(num_agencies) %}
-                <div class="col-{{col_size}}">
+                <div class="col-md-3">
                     <div class="card card-style mb-2">
                         <div class="card-body">
-                            <div class="chart-container" style="position: relative;">
-                                <canvas id="{{k}}{{i}}" style="height: 100%; width: 100%;"></canvas>
+                            <div class="chart-container" style="font-family:Lato;position: relative; height: {{dashboard_info[k]['height_data']}};">
+                                <canvas id="{{k}}{{i}}" height = "{{dashboard_info[k]['height_perc']}}"></canvas>
                             </div>
                         </div>
                     </div>
@@ -87,7 +112,6 @@
     </div>
 </body>
     
-</center>
 {% block javascript %}
 <script>
     const colors = JSON.parse({{colors | tojson }});
@@ -122,7 +146,7 @@
         const score_canvas = document.getElementById(`score${i}`);
         const score_ctx = score_canvas.getContext('2d');
         const score_data = {
-            labels: [name[i]],
+            labels: ['Percentage'],
             datasets: [
                 {
                 label: `Dataset ${i+1}`,
@@ -137,7 +161,7 @@
             data: score_data,
             options: {
                 plugin_denominator:  130,
-                plugin_height: 1.7,
+                plugin_height: 1.8,
                 responsive: true,
                 plugin_text: Math.round(score[i][0]) + '%',
                 legend: {
@@ -152,9 +176,9 @@
                 },
                 layout: {
                     padding: {
-                        left: 0,
-                        right: 0,
-                        bottom: 0
+                        left: 10,
+                        right: 10,
+                        bottom: 10
                     },
                 },
                 cutoutPercentage: 60,
@@ -175,7 +199,7 @@
                 };
                 new Chart(ctx, {
                     type: 'bar',
-                    data: card_data,
+                    data: card_data, 
                     options: {
                         scales: {
                             xAxes: [{
@@ -199,12 +223,18 @@
                             text: dashboard_chart_titles[k],
                             fontSize: 15,
                             position: 'top'
-                        }
+                        },
+                        layout: {
+                            padding: {
+                                top: 40,
+                                bottom: 20
+                            },
+                        },
                     }
                 });
             } else {
                 const card_data = {
-                    labels: [name[i]],
+                    labels: ['Percentage'],
                     datasets: [
                         {
                             label: `Dataset ${i+1}`,
@@ -218,12 +248,9 @@
                     data: card_data,
                     options: {
                         plugin_denominator: 120,
-                        plugin_height: 2,
+                        plugin_height: 1.8,
                         responsive: true,
                         plugin_text: Math.round(data[j][i][0]) + '%',
-                        legend: {
-                            display: false
-                        },
                         legend: {
                             display: false
                         },
@@ -233,9 +260,9 @@
                         },
                         layout: {
                             padding: {
-                                left: 0,
-                                right: 0,
-                                bottom: 0
+                                top:25,
+                                left: 20,
+                                right: 20
                             },
                         },
                         cutoutPercentage: 60,
@@ -255,7 +282,7 @@ Chart.pluginService.register({
             ctx.restore();
 
             var denominator = chart.options.plugin_denominator;
-            var fontSize = ((height + 1 * num_agencies) / 100).toFixed(2);
+            var fontSize = (height / denominator).toFixed(2);
             ctx.font = fontSize + "em sans-serif";
             ctx.textBaseline = "middle";
 
@@ -271,6 +298,5 @@ Chart.pluginService.register({
 
 </script>
     
-</body>
 {% endblock %}
 {% endblock %}

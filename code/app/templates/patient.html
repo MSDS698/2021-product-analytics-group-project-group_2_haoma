@@ -1,4 +1,5 @@
 {% extends "headerbase.html" %}
+
 {% block content %}
 <html>
 
@@ -6,39 +7,67 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-<!--     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet"> -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/patient.css') }}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/discharge.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+<!--   <link href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet"> -->
+  <link href="{{ url_for('static', filename='vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/patient.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/discharge.css') }}">
 
-    <script type="text/javascript">
-        let patient_id = {{ patient.id }};
-        function removeRec(idx) {
-          $.post("{{url_for('change_rec_status')}}", { idx: idx, status: "R", patient_id: patient_id }, function (response) {
-            location.reload();
-          })
-        }
-        function requestRec(idx) {
-          $.post("{{url_for('request_rec')}}", { idx: idx, patient_id: patient_id }, function (response) {
-            location.reload();
-          })
-        }
-    </script>
-    </head>
+    <!--   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+ -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
+  <script type="text/javascript">
+    let patient_id = {{ patient['id'] }};
+    let idx = null;
+    function removeRec(idx) {
+      $.post("{{url_for('change_rec_status')}}", { idx: idx, status: "R", patient_id: patient_id }, function (response) {
+        location.reload();
+      })
+    }
+    function acceptRec(idx) {
+      $.post("{{url_for('change_rec_status')}}", { idx: idx, status: "M", patient_id: patient_id }, function (response) {
+        location.reload();
+      })
+    }
+    function restoreRec(idx) {
+      $.post("{{url_for('change_rec_status')}}", { idx: idx, status: "A", patient_id: patient_id }, function (response) {
+        location.reload();
+      })
+    }
+    function requestRec(idx) {
+      $.post("{{url_for('request_rec')}}", { idx: idx, patient_id: patient_id }, function (response) {
+        location.reload();
+      })
+    }
+  </script>
+</head>
 
 <body>
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap.min.js"></script><br><br>
     <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><br><br>
 
+    <div id="mySidenav" class="sidenav">
+        <a id="home" href="{{ url_for('index') }}">
+        <center><img src="{{ url_for('static', filename='haoma_logo_only.png') }}"  width = '75%' class="img-fluid" alt=""><br></center>
+        </a>
+        <a id="patients-list" href="{{ url_for('discharge') }}">
+            <div class="icon"><i class="ri-list-check-2" style="font-size:xx-large;"></i></div>
+            <div class = 'text' style='line-height:.05'>Patients</div>
+        </a>
+        <a id="find-agency" href="{{ url_for('zipcode_search') }}">
+            <div class="icon"><i class="ri-hospital-line" style="font-size:xx-large;"></i></div>
+            <div class = 'text' style='line-height:.05'>Agency</div>
+        </a>
+    </div>
+    
+    
     <div class="container">
-      <div class="header">
-<!--         <h3 class="text-muted"> -->
-<!--             <div><a href="{{ url_for('discharge') }}" class="btn-two blue rounded small" style='left:10'>All Patients</a></div> -->
-            
-<!--             <center> -->
+      <div class="header"><br>
+       <div class="container">
             <div class="row" style = 'width:100%; height:15%'>
                 <div class = "col-md-2">
                     <a href="{{ url_for('discharge') }}" style='float:left' class="btn-two blue rounded small" style='left:10'>All Patients</a>
@@ -51,19 +80,14 @@
                 </div>
                 <div class="col-md-4">
                     <br><br>
-                    <img src="{{ url_for('static', filename='more-med-char.png') }}" height="100%" class="card-img-right"><br>
+                    <img src="{{ url_for('static', filename='more-med-chars.png') }}" height="100%" class="card-img-right"><br>
                 </div>
                 <div class="col-sm-12">
                     <br><br>
                     <div style='border-bottom:1px solid #ccc;'></div>
                 </div>
-            </div>
-<!--         </center>
-             -->
-<!--             <div align="center" style="color:#211F1F;font-size:35px">
-                <strong>{{patient.first}}'s recommendations:</strong>
-            </div> -->
-          <br><br><br>
+              </div></div>
+                    <br><br>
             <br>
             <div align="left" style="color:#211F1F;font-size:22px">
             <br>Below are top 20 agencies for {{patient.first}} that serve <p style="display:inline;color:#376b69;font-family:Lato;font-weight:400"><strong>{{patient.zipcode}}</strong></p> and offer
@@ -79,7 +103,6 @@
             {% endif %}
             </div>
             <br><br>
-<!--           </h3> -->
       </div>
       <ul class="nav nav-tabs" id="status" role="tablist">
         <li class="nav-item" role="presentation">
@@ -101,6 +124,10 @@
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="removed-tab" style = 'color:#25787a' data-bs-toggle="tab" data-bs-target="#removed" type="button"
             role="tab" aria-controls="removed" aria-selected="false">Removed</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="matched-tab" style = 'color:#25787a' data-bs-toggle="tab" data-bs-target="#matched" type="button"
+            role="tab" aria-controls="matched" aria-selected="false">Matched</button>
         </li>
       </ul>
 
@@ -129,7 +156,7 @@
                     <tr>
                       
                       {% for cell in row %}
-                      <td style="vertical-align: middle;">{{cell|title}}</td>
+                      <td class="align-middle">{{cell|title}}</td>
                       {% endfor %}
                       <td><button type="button" class="btn-two green rounded small" style="vertical-align: middle;" onclick="requestRec('{{row[0]-1}}');">
                         Request
@@ -137,7 +164,7 @@
                       <td width = '5%'><button type="button" class="btn-two red rounded small" onclick="removeRec('{{row[0]-1}}');">
                         <i class="bi bi-trash"></i>
                       </button></td>
-                      <td class="compare-checkbox"><input type="checkbox" name="{{row[1]}}"></td>
+                      <td class="compare-checkbox align-middle"><input type="checkbox" name="{{row[1]}}"></td>
 
                     </tr>
                     {% endfor %}
@@ -160,18 +187,17 @@
                     {% for col_name in columns %}
                     <th scope="col">{{col_name}}</th>
                     {% endfor %}
-                    <th></th>
-                    <th class="compare-button"><button type="submit" name="compare" class="btn-two blue small">Compare</button></th>
+                      <th></th>
+                      <th></th>                   
                   </tr>
                 </thead>
                 <tbody>
                   {% for row in data_requested %}
                   <tr>
                     {% for cell in row %}
-                    <td>{{cell}}</td>
+                    <td class="align-middle">{{cell}}</td>
                     {% endfor %}
-                    <td></td>
-                    <td class="compare-checkbox"><input type="checkbox" name="{{row[1]}}"></td>
+    
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -188,14 +214,23 @@
                   {% for col_name in columns %}
                   <th scope="col">{{col_name}}</th>
                   {% endfor %}
+                      <th></th>
+                      <th></th>
+                  <th class="compare-button"><button type="submit" name="compare" class="btn-two blue rounded small">Compare</button></th>
                 </tr>
               </thead>
               <tbody>
                 {% for row in data_confirmed %}
                 <tr>
                   {% for cell in row %}
-                  <td>{{cell}}</td>
+                  <td class="align-middle">{{cell}}</td>
                   {% endfor %}
+                  <td></td>
+                  <td class="align-middle"><button type="button" class="btn-two green rounded small" data-bs-toggle="modal" data-bs-target="#acceptRecModal" 
+                    onclick="idx={{row[0]-1}};document.getElementById('acceptRecModalLabel').innerHTML='Accept Recommendation '+(idx+1);return false;">
+                    Accept
+                  </button></td>
+                 <td class="compare-checkbox align-middle"><input type="checkbox" name="{{row[1]}}"></td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -211,13 +246,15 @@
                   {% for col_name in columns %}
                   <th scope="col">{{col_name}}</th>
                   {% endfor %}
+                      <th></th>
+                      <th></th>
                 </tr>
               </thead>
               <tbody>
                 {% for row in data_denied %}
                 <tr>
                   {% for cell in row %}
-                  <td>{{cell}}</td>
+                  <td class="align-middle">{{cell}}</td>
                   {% endfor %}
                 </tr>
                 {% endfor %}
@@ -234,13 +271,40 @@
                   {% for col_name in columns %}
                   <th scope="col">{{col_name}}</th>
                   {% endfor %}
+                      <th></th>
                 </tr>
               </thead>
               <tbody>
                 {% for row in data_removed %}
                 <tr>
                   {% for cell in row %}
-                  <td>{{cell}}</td>
+                  <td class="align-middle">{{cell}}</td>
+                  {% endfor %}
+                  <td class="align-middle"><button type="button" class="btn-two blue rounded small" style="vertical-align: middle;" onclick="restoreRec('{{row[0]-1}}');">
+                    Restore
+                  </button></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Matched Pane -->
+        <div class="tab-pane" id="matched" role="tabpanel" aria-labelledby="matched-tab">
+          <div class="container">
+            <table id="myTable6" style = "vertical-align:middle;font-family:Lato;font-weight:400;font-size:17" class="display table-hover table-striped" width="100%">
+              <thead>
+                <tr>
+                  {% for col_name in columns %}
+                  <th scope="col">{{col_name}}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in data_matched %}
+                <tr>
+                  {% for cell in row %}
+                  <td class="align-middle">{{cell}}</td>
                   {% endfor %}
                 </tr>
                 {% endfor %}
@@ -248,6 +312,19 @@
             </table>
           </div>
         </div>
+      </div>
+
+      <!-- Accept rec modal -->
+      <div class="modal fade" id="acceptRecModal" tabindex="-1" aria-labelledby="acceptRecModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="acceptRecModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <button class="btn-two green rounded small" onclick="acceptRec(idx);return false;">Accept</button>
+            </div>
+          </div>
       </div>
 
     </div>
@@ -270,7 +347,24 @@
           $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
         });    
 
+<script>
+    $('.display').DataTable({
+      responsive: false,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": false,
+        columnDefs: [
+           { orderable: false, targets: [-1, -2, -3]}
+        ]
+        });
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+          $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+        });    
+
 </script>
+    
+     <br><br><br> <br><br><br>
 </html>
 {% endblock %}
 

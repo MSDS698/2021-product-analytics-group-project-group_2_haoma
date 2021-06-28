@@ -38,8 +38,9 @@ dashboard_info = {
                     <li>Walking or Moving Around</li>
                 </ul>
             </div>""",
-        'height_desc': '15rem',
-        'height_data': '13rem',
+        'height_desc': '17rem',
+        'height_data': '15rem',
+        'height_perc': '250%'
     },
     'symptom': {
         'title': 'Treating Symptoms',
@@ -49,85 +50,98 @@ dashboard_info = {
                 <li>How often wounds improved</li>
                 <li>How often pressure ulcers didn't worsen</li>
             </ul>""",
-        'height_desc': '15rem',
-        'height_data': '13rem',
+        'height_desc': '17rem',
+        'height_data': '15rem',
+        'height_perc': '250%'
     },
     'timely': {
         'title': 'Timely Manner',
         'body': """How often did the agency begin their patients' care in a timely manner?""",
-        'height_desc': '19rem',
-        'height_data': '100%',
+        'height_desc': '16rem',
+        'height_data': '14rem',
+        'height_perc': '200%'
     },
     'ppr': {
         'title': 'Preventable Readmission',
         'body': """The risk-standardized rate of unplanned, potentially preventable readmissions for
                 patients within 30 days of discharge.""",
-        'height_desc': '19rem',
-        'height_data': '17rem',
+        'height_desc': '16rem',
+        'height_data': '14rem',
+        'height_perc': '200%'
     },
     'dtc': {
         'title': 'Discharge to Community',
         'body': """Percent of patients who were discharged to the community within 100 
                 days of the start of the episode, and remained in the community for 30 
-                consecutive days""",
-        'height_desc': '19rem',
-        'height_data': '17rem',
+                days""",
+         'height_desc': '16rem',
+        'height_data': '14rem',
+        'height_perc': '200%'
     },
     'er': {
         'title': 'ER Visits',
-        'body': """How often patients receiving home health care needed any urgent, 
+        'body': """How often patients needed any urgent, 
                 unplanned care in the hospital emergency room – without being 
                 admitted to the hospital""",
-        'height_desc': '19rem',
-        'height_data': '17rem',
+        'height_desc': '16rem',
+        'height_data': '14rem',
+        'height_perc': '200%'
     },
     'readmitted': {
         'title': 'Readmitted',
         'body': """How often home health patients did not have to be admitted to the hospital""",
-        'height_desc': '19rem',
-        'height_data': '17rem',
+        'height_desc': '16rem',
+        'height_data': '14rem',
+        'height_perc': '200%'
     },
     'falling': {
         'title': 'Risk of Falling',
         'body': """How often the home health team checked patients' risk of falling?""",
-        'height_desc': '19rem',
-        'height_data': '17rem',
+          'height_desc': '16rem',
+        'height_data': '14rem',
+        'height_perc': '200%'
     },
     'depression': {
         'title': 'Depression',
         'body': """How often the home health team checked patients for depression?""",
-        'height_desc': '19rem',
-        'height_data': '17rem',
+        'height_desc': '16rem',
+        'height_data': '14rem',
+        'height_perc': '200%'
     },
     'pneumonia': {
         'title': 'Pneumococcal Vaccine',
         'body': """How often the home health team made sure that their patients have received a pneumococcal vaccine (pneumonia shot)""",
-        'height_desc': '19rem',
-        'height_data': '17rem',
+        'height_desc': '16rem',
+        'height_data': '14rem',
+        'height_perc': '200%'
     },
     'flu': {
         'title': 'Flu Shot',
         'body': """How often the home health team determined whether patients received a flu shot for the current flu season""",
-        'height_desc': '19rem',
-        'height_data': '17rem',
+        'height_desc': '16rem',
+        'height_data': '14rem',
+        'height_perc': '200%'
     },
     'timely_med': {
         'title': 'Medication',
         'body': """How often patients got better at taking their drugs correctly by mouth""",
-        'height_desc': '19rem',
-        'height_data': '17rem',
+        'height_desc': '16rem',
+        'height_data': '14rem',
+        'height_perc': '200%'
     },
     'taught_med': {
         'title': 'Taught Meds',
         'body': """How often the home health team taught patients (or their family caregivers) about their drugs""",
-        'height_desc': '19rem',
-        'height_data': '17rem',
+        'height_desc': '16rem',
+        'height_data': '14rem',
+        'height_perc': '200%'
     },
     'diabetes': {
         'title': 'Diabetes and Foot Care',
         'body': """For patients with diabetes, how often the home health team got doctor's orders, gave foot care, and taught patients about foot care""",
-        'height_desc': '19rem',
-        'height_data': '17rem',
+        'height_desc': '16rem',
+        'height_data': '14rem',
+        'height_perc': '200%'
     },
 }
 

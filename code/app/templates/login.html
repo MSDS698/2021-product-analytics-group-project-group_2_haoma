@@ -1,14 +1,15 @@
 {% include "headerbase.html" %}
 {% extends "loginRegisterBase.html" %}
 
+
 {% block content %}
 {{form.csrf_token}}
 <h2>Login</h2>
 <br>
 {{form.username(class="form-control item", placeholder='Username')}}
 {{form.password(class="form-control item", placeholder='Password')}}
-{{form.submit(class="btn btn-block create-account")}}
+{{form.submit(class="btn btn-block create-account", onclick="gtag('event', 'login');")}}
 <br>
 <br>
-Don't have an account? <a href="/register">Register</a>
+Don't have an account? <a href="/register" onclick="gtag('event', 'sign_up');">Register</a>
 {%endblock%}
