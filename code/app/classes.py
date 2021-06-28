@@ -48,7 +48,8 @@ class Patient(db.Model):
     "Class for the patients table"
     __tablename__ = "patient"
     __table_args__ = {"schema": "public"}
-    display_columns = ["id", "first", "last", "age", "gender", "urgent", "referral_date", "insurance"]
+    display_columns = ["id", "first", "last", "age",
+                       "gender", "urgent", "referral_date", "insurance"]
     id = db.Column(db.Integer, primary_key=True)
     planner_username = db.Column(db.String(100), nullable=False)
     first = db.Column(db.String(100), nullable=False)
@@ -57,19 +58,24 @@ class Patient(db.Model):
     insurance = db.Column(db.String(100), nullable=False)
     summary = db.Column(db.Text(), nullable=False)
     recommendations = db.Column(db.ARRAY(db.String(100)))
-    rec_status = db.Column(db.ARRAY(db.String(1))) # "A" = available, "R" = removed, "C" = HHA confirmed, "D" = HHA denied, "W" = waiting for HHA confirmed, "M" = matched with HHA
-    status = db.Column(db.String(1), default='A') # "A" = active, "R" = removed, "M" = matched with HHA, "Z" = readmitted
+
+    # "A" = available, "R" = removed, "C" = HHA confirmed, "D" = HHA denied,
+    # "W" = waiting for HHA confirmed, "M" = matched with HHA
+    rec_status = db.Column(db.ARRAY(db.String(1)))
+
+    # "A" = active, "R" = removed, "M" = matched with HHA, "Z" = readmitted
+    status = db.Column(db.String(1), default='A')
 
     age = db.Column(db.Integer(), nullable=False)
     gender = db.Column(db.String(100))
     urgent = db.Column(db.Boolean(), default=False)
 
-    boolservices = db.Column(db.ARRAY(db.Boolean), nullable = False)
+    boolservices = db.Column(db.ARRAY(db.Boolean), nullable=False)
     zipcode = db.Column(db.Integer, nullable=False)
     path = db.Column(db.String(100), nullable=False)
     matched = db.Column(db.Boolean(), default=False)
-    agency_requests = db.relationship('AgencyRequest', backref='patient', lazy=True)
-
+    agency_requests = db.relationship('AgencyRequest',
+                                      backref='patient', lazy=True)
 
     def get_column_names():
         names = []
@@ -85,7 +91,7 @@ class Patient(db.Model):
 
     def update_rec_status(self, idx=None, status=None):
         rec_status = self.rec_status.copy()
-        if(idx == None):
+        if idx is None:
             self.status = status
         else:
             rec_status[idx] = status
@@ -98,11 +104,11 @@ class AgencyRequest(db.Model):
     __tablename__ = "agency_request"
     __table_args__ = {"schema": "public"}
     id = db.Column(db.Integer, primary_key=True)
-    patient_id = db.Column(db.Integer, db.ForeignKey('public.patient.id'), nullable=False)
+    patient_id = db.Column(db.Integer, db.ForeignKey('public.patient.id'),
+                           nullable=False)
     planner_username = db.Column(db.String(100), nullable=False)
     acknowledged = db.Column(db.Boolean(), default=False)
     agency_name = db.Column(db.String(100), nullable=False)
-
 
     def get_column_names():
         names = []
@@ -137,7 +143,9 @@ class RegisterForm(FlaskForm):
                            validators=[DataRequired(), Length(min=4)])
     password = PasswordField(label='Password',
                              validators=[DataRequired(), Length(min=8)])
-    account_type = SelectField(label="Register as a ", choices=["discharge planner", "agency"], validators=[DataRequired()])
+    account_type = SelectField(label="Register as a ",
+                               choices=["discharge planner", "agency"],
+                               validators=[DataRequired()])
     submit = SubmitField(label='Register')
 
 
@@ -155,13 +163,21 @@ class MultiCheckboxField(SelectMultipleField):
 
 class PatientUploadForm(FlaskForm):
     "Form for adding a patient"
-    first = StringField(label='First Name', validators=[DataRequired()], render_kw={"placeholder": "Jane"})
-    last = StringField(label='Last Name', validators=[DataRequired()], render_kw={"placeholder": "Doe"})
-    zipcode = IntegerField(label='Zip Code', validators=[DataRequired()], render_kw={"placeholder": "94105"})
+    first = StringField(label='First Name', validators=[DataRequired()],
+                        render_kw={"placeholder": "Jane"})
+    last = StringField(label='Last Name', validators=[DataRequired()],
+                       render_kw={"placeholder": "Doe"})
+    zipcode = IntegerField(label='Zip Code', validators=[DataRequired()],
+                           render_kw={"placeholder": "94105"})
 
-    age = IntegerField(label='Age', validators=[DataRequired()], render_kw={"placeholder": "24"})
-    gender = RadioField(label='Gender', validators=[DataRequired()], choices = ['Female', 'Male', 'Other'], render_kw={"placeholder": "Gender"})#label='Gender', choices=['Female', 'Male', 'Other'], validators=[DataRequired()])
-    urgent = BooleanField(label='Urgent')#, validators=[DataRequired()])
+    age = IntegerField(label='Age', validators=[DataRequired()],
+                       render_kw={"placeholder": "24"})
+    # label='Gender', choices=['Female', 'Male', 'Other'],
+    # validators=[DataRequired()])
+    gender = RadioField(label='Gender', validators=[DataRequired()],
+                        choices=['Female', 'Male', 'Other'],
+                        render_kw={"placeholder": "Gender"})
+    urgent = BooleanField(label='Urgent')  # validators=[DataRequired()])
 
     service = MultiCheckboxField('Services',
                                  choices=[('1', 'Nursing'),

@@ -14,11 +14,12 @@ import re
 import os
 from app.preprocess import *
 
+
 def return_agency_data(df3, column):
-    all_data = list(map(lambda x: [x, round(100-x,2)],
+    all_data = list(map(lambda x: [x, round(100-x, 2)],
                         df3[column].tolist()))
     return all_data
-    
+
 
 def get_hh_agencies(zipcode: str):
     "Get a df of Home Health agencies that cover a given zipcode."
@@ -80,9 +81,10 @@ def extract_patient_info(instance_path, filename, file) -> dict:
     extracted_info['summary'] = "summary example"
     return extracted_info
 
+
 def get_top_agencies():
     response = s3.get_object(Bucket="haoma-bucket",
-                                 Key="HH_Provider_Oct2020.csv")
+                             Key="HH_Provider_Oct2020.csv")
     df = pd.read_csv(response.get("Body"))
     df_cal = df[df['State'] == 'CA']
     df_cal.reset_index(drop=True, inplace=True)
@@ -92,23 +94,25 @@ def get_top_agencies():
     df_zip = pd.read_csv(response.get("Body"))
     # Hyperparameters
     tier_weights = {'star': 0, 'flagged': 2,
-                         'ppr': 2, 'dtc': 1}
+                    'ppr': 2, 'dtc': 1}
     num_agencies = 50
-    
-    cms_nums = df_zip[df_zip[' ZIP Code'] == 94014]['CMS Certification Number (CCN)']
-    df_filter = df_cal[df_cal['CMS Certification Number (CCN)'].isin(list(cms_nums))]
+
+    cms_nums = df_zip[df_zip[' ZIP Code']
+                      == 94014]['CMS Certification Number (CCN)']
+    df_filter = df_cal[df_cal['CMS Certification Number (CCN)']
+                       .isin(list(cms_nums))]
     bool_services = [True, True, True, True, True, True]
     flagged_qtopic = {}
     pipe_prep = Pipeline([('Drop Unnecessary Columns', Drop()),
-                              ('Rename Columns', Rename()),
-                              ('Filter Offered Services',
-                               FilterByService(bool_services)),
-                              ('Impute Values', custom_imputer()),
-                              ('Normalize/Reverse Asc. Columns',
-                               change_ascending_cols()),
-                              ('Recommend', Recommend(tier_weights,
-                                                      flagged_qtopic,
-                                                      num_agencies))])
+                          ('Rename Columns', Rename()),
+                          ('Filter Offered Services',
+                          FilterByService(bool_services)),
+                          ('Impute Values', custom_imputer()),
+                          ('Normalize/Reverse Asc. Columns',
+                          change_ascending_cols()),
+                          ('Recommend', Recommend(tier_weights,
+                                                  flagged_qtopic,
+                                                  num_agencies))])
     df, df_rec = pipe_prep.fit_transform(df_filter.copy())
     df_rec['rank'] = range(1, len(df_rec)+1)
     df_rec = df_rec[['rank'] + list(df_rec.columns[:-1])]
