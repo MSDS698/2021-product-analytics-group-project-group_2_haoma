@@ -443,13 +443,13 @@ def respond_request():
         request_id = request.form['request_id']
         status = request.form['status']
         agency_request = classes.AgencyRequest.query.filter_by(id=request_id).first()
-        if(agency_request.agency_name != current_user.username):
+        if(agency_request.agency_name.upper() != current_user.username.upper()):
             abort(401)
         agency_request.acknowledge()
         patient = classes.Patient.query.filter_by(id=agency_request.patient_id).first()
         rec_idx = 0
         for i,rec in enumerate(patient.recommendations):
-            if(rec == current_user.username):
+            if(rec == current_user.username.upper()):
                 rec_idx = i
                 break
         patient.update_rec_status(rec_idx, status)
