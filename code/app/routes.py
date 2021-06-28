@@ -9,6 +9,7 @@ from flask import render_template, url_for, jsonify, request, redirect, abort, f
 import os
 import json
 import pandas as pd
+from app.readmission import gender_line, service_pie, age_hist, readmission_compare_line
 
 
 @app.route('/')
@@ -463,3 +464,16 @@ def logout():
     return render_template('logout.html',
                            loggedin=current_user.is_authenticated,
                            username=username)
+
+
+@app.route('/readmission', methods=['GET', 'POST'])
+def readmission():
+    gender_line_graph = gender_line()
+    service_pie_graph = service_pie()
+    age_hist_graph = age_hist()
+    compare_readmission_line_graph = readmission_compare_line()
+    return render_template('readmission.html', 
+                            gender_line_graph=gender_line_graph,
+                            service_pie_graph=service_pie_graph,
+                            age_hist_graph=age_hist_graph,
+                            compare_readmission_line_graph=compare_readmission_line_graph)

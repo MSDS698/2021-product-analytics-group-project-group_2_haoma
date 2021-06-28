@@ -1,0 +1,57 @@
+{% include "headerbase.html" %}
+<head>
+    <script src="https://cdn.plot.ly/plotly-2.1.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <br>
+    <br>
+    <div class="container">
+        <div class="row text-left">
+            <h1>Re-admission Curated for <p style="display:inline;color:#cc3d33;font-family:Lato;font-weight:500"><strong>Grandma Rudy</strong></p></h1>
+            <h4>Agency: XYZ Home Health Agency</h4>
+        </div>
+        <br><br><br><br>
+        <div class="row">
+            <div class="col-md-6 align-items-stretch align-middle">
+                <h4><p style="display:inline;color:#cc3d33;font-family:Lato;font-weight:500"><strong>Grandma Rudy's Metric</strong></p></h4>
+                <h5>
+                Female<br>
+                74 years old<br>
+                Services: Nursing</h5>
+            </div>
+            <div class="shadow-lg col-md-6 border d-flex align-items-center">
+                <div class="row">
+                    <span class="align-middle"></span>
+                    <div class="col-md-7"><h2>Potentially Preventable Re-admission Rate</h2></div>
+                    <div class="col-md-4"><h1 class="display-3">4.3%</h1></div>
+                    </span> 
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br>
+
+    
+    <div class="shadow-sm container border rounded">
+        <div class="row">
+            <div class="col-md-7">{{gender_line_graph | safe}}</div>
+            <div class="col-md-5">{{compare_readmission_line_graph | safe}}</div>
+        </div>
+    </div>
+    <br>
+    <div class="container ">
+        <div class="row">
+            <div class="shadow-sm col-md-6 d flex border rounded">
+                {{age_hist_graph | safe}}
+            </div>
+            <div class="shadow-sm col-md-6 d flex border rounded">
+                {{service_pie_graph | safe}}
+            </div>
+        </div>
+    </div>
+    <br>
+</body>
