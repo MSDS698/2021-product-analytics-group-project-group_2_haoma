@@ -154,7 +154,7 @@
                                                 <td class="align-middle">{{patient[k]}}</td>
                                                 {% endfor %}
                                                 <td width="5%">
-                                                    <button type="button" class="btn-two green small" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
+                                                    <button type="button" class="btn-two green rounded small" onclick="window.location.href = '/patient?id={{patient.id}}';return false;">
                                                         View
                                                     </button>
                                                 </td>
@@ -162,7 +162,7 @@
                                                     <button type="button" class="btn-two red rounded small" data-bs-toggle="modal" data-bs-target="#deletePatientModal" onclick="patient_id={{patient['id']}};document.getElementById('deletePatientModalLabel').innerHTML='Delete Patient '+patient_id;return false;">
                                                     <i class="bi bi-trash"></i>
                                                 </button></td>
-                                                <td width="5%"><button type="button" class="btn-two red rounded small" data-bs-toggle="modal" data-bs-target="#readmitPatientModal"
+                                                <td width="5%"><button type="button" class="btn-two yellow rounded small" data-bs-toggle="modal" data-bs-target="#readmitPatientModal"
                                                     onclick="patient_id={{patient['id']}};document.getElementById('readmitPatientModalLabel').innerHTML='Readmit Patient '+patient_id;return false;">
                                                     Readmit
                                                 </button></td>
@@ -190,7 +190,7 @@
                   <h5 class="modal-title" id="deletePatientModalLabel"></h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <button class="btn btn-danger" onclick="removePatient(patient_id);return false;">Delete</button>
+                <button class="btn-two red rounded medium" onclick="removePatient(patient_id);return false;">Delete</button>
               </div>
             </div>
         </div>
@@ -203,7 +203,7 @@
                   <h5 class="modal-title" id="readmitPatientModalLabel"></h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <button class="btn btn-danger" onclick="readmitPatient(patient_id);return false;">Readmit</button>
+                <button class="btn-two red rounded medium" onclick="readmitPatient(patient_id);return false;">Readmit</button>
               </div>
             </div>
         </div>

@@ -190,6 +190,8 @@
                     {% for col_name in columns %}
                     <th scope="col">{{col_name}}</th>
                     {% endfor %}
+                      <th></th>
+                      <th></th>                   
                   </tr>
                 </thead>
                 <tbody>
@@ -198,6 +200,7 @@
                     {% for cell in row %}
                     <td class="align-middle">{{cell}}</td>
                     {% endfor %}
+    
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -214,8 +217,9 @@
                   {% for col_name in columns %}
                   <th scope="col">{{col_name}}</th>
                   {% endfor %}
-                  <th></th>
-                  <th class="compare-button"><button type="submit" name="compare" class="btn btn-primary">Compare</button></th>
+                      <th></th>
+                      <th></th>
+                  <th class="compare-button"><button type="submit" name="compare" class="btn-two blue rounded small">Compare</button></th>
                 </tr>
               </thead>
               <tbody>
@@ -225,11 +229,11 @@
                   <td class="align-middle">{{cell}}</td>
                   {% endfor %}
                   <td></td>
-                  <td class="compare-checkbox align-middle"><input type="checkbox" name="{{row[1]}}"></td>
-                  <td class="align-middle"><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#acceptRecModal" 
+                  <td class="align-middle"><button type="button" class="btn-two green rounded small" data-bs-toggle="modal" data-bs-target="#acceptRecModal" 
                     onclick="idx={{row[0]-1}};document.getElementById('acceptRecModalLabel').innerHTML='Accept Recommendation '+(idx+1);return false;">
                     Accept
                   </button></td>
+                 <td class="compare-checkbox align-middle"><input type="checkbox" name="{{row[1]}}"></td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -245,6 +249,8 @@
                   {% for col_name in columns %}
                   <th scope="col">{{col_name}}</th>
                   {% endfor %}
+                      <th></th>
+                      <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -268,7 +274,7 @@
                   {% for col_name in columns %}
                   <th scope="col">{{col_name}}</th>
                   {% endfor %}
-                  <th></th>
+                      <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -277,7 +283,7 @@
                   {% for cell in row %}
                   <td class="align-middle">{{cell}}</td>
                   {% endfor %}
-                  <td class="align-middle"><button type="button" class="btn btn-success" style="vertical-align: middle;" onclick="restoreRec('{{row[0]-1}}');">
+                  <td class="align-middle"><button type="button" class="btn-two blue rounded small" style="vertical-align: middle;" onclick="restoreRec('{{row[0]-1}}');">
                     Restore
                   </button></td>
                 </tr>
@@ -295,7 +301,6 @@
                   {% for col_name in columns %}
                   <th scope="col">{{col_name}}</th>
                   {% endfor %}
-                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -320,7 +325,7 @@
                 <h5 class="modal-title" id="acceptRecModalLabel"></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <button class="btn btn-success" onclick="acceptRec(idx);return false;">Accept</button>
+              <button class="btn-two green rounded small" onclick="acceptRec(idx);return false;">Accept</button>
             </div>
           </div>
       </div>
