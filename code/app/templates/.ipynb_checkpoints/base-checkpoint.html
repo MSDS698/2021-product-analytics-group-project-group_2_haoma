@@ -2,6 +2,15 @@
 <html lang="en">
 
 <head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-200386417-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+      
+    gtag('config', 'UA-200386417-1');
+  </script>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
@@ -120,10 +129,11 @@
 
         <div class="row content">
           <div class="col-lg-6 pt-4 pt-lg-0">
-            <p>
-              An integrated home health referral system aimed to mitigate existing inefficient communication streams, enable a streamlined discharge process, and optimize the time for a patient to get quality care. The system will primarily be a recommendation dashboard for discharge planners to quickly and seamlessly generate home health agency recommendations personalized to the patient, with clear and relevant comparison metrics. <br><br>
-              However, it will also act as a platform where all parties are integrated, having access to the same platform and database to eliminate prior discrepancies. Most of all, it’s a platform enabling patients to get personalized recommendations, faster care, and true transparency. <br><br>
-            </p>
+            Our product is an integrated home health referral system aimed to mitigate existing inefficient communication streams, enable a streamlined discharge process, and optimize the time for a patient to get care, as well as the quality. 
+            <br><br>
+            The system will primarily be a recommendation dashboard for discharge planners to quickly and seamlessly generate home health agency recommendations personalized to the patient, with clear and relevant comparison metrics. The use of real-time readmissions data ensures that the system continues to improve, optimizing for quality patient care.
+            <br><br>
+            It will also act as a platform where all parties are integrated, having access to the same platform and database to eliminate prior discrepancies. Most of all, it’s a platform enabling patients to get personalized recommendations, faster care, and true transparency.
 
               
           </div>
@@ -329,20 +339,21 @@
         <div class="faq-list">
           <ul>
             <li data-aos="fade-up">
-              <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" class="collapse" data-bs-target="#faq-list-1">What factors contribute to the Haoma Score? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+              <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" class="collapse" data-bs-target="#faq-list-1">How are the recommendations made? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
               <div id="faq-list-1" class="collapse show" data-bs-parent=".faq-list">
                 <p>
-                  The Haoma Score is the rating given to a home health agency particular to each patient. Our system flags certain keywords in the patient pdf and synthesizes general and flagged metrics to create a personalized rating. 
-                </p>
-              </div>
-            </li>
-
-            <li data-aos="fade-up" data-aos-delay="100">
-              <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-2" class="collapsed"> How are the recommendations made? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
-              <div id="faq-list-2" class="collapse" data-bs-parent=".faq-list">
-                <p>
-                 We begin by filtering out agencies that don't offer the services that the patient requires and do not offer service in the patients' region. Afterwards, we display the top 20 agencies using the agencys' Haoma Score.
-                </p>
+                  We begin by filtering out agencies that do not serve the patient's area or do not offer the services the patient requires. Afterwards, the patient's referral chart is used to create a personalized recommendation of the top 20 home health agencies based on curated, personalized metrics. The synthesized score from the personalized metrics is called the Haoma Score. In the future, our recommendation algorithm will use real-time readmissions information to provide a very high quality and personalized recommendation.
+                 </p>
+               </div>
+             </li>
+ 
+             <li data-aos="fade-up" data-aos-delay="100">
+               <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-2" class="collapsed"> What factors contribute to the Haoma Score? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+               <div id="faq-list-2" class="collapse" data-bs-parent=".faq-list">
+                 <p>
+ 
+               The Haoma Score is the rating given to a home health agency particular to each patient. Our system flags certain keywords in the patient pdf and synthesizes general and flagged metrics to create a personalized rating. 
+                 </p>
               </div>
             </li>
 
