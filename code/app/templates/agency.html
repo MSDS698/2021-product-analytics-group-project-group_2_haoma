@@ -83,10 +83,10 @@
                                                 {% for k in table_keys %}
                                                     <td class="align-middle">{{patient[k]}}</td>
                                                 {% endfor %}
-                            <td width="5%"><button type="button" class="btn-two green rounded small" onclick="ga('send', 'event', ['button'], ['Confirmation']);respondRequest({{patient['request_id']}}, 'C');return false;">
+                            <td width="5%"><button type="button" class="btn-two green rounded small" onclick="gtag('send', 'event', ['button'], ['Confirmation']);respondRequest({{patient['request_id']}}, 'C');return false;">
                                                     Confirm
                                                 </button></td>
-                            <td width="5%"><button type="button" class="btn-two red rounded small" onclick="ga('send', 'event', ['button'], ['Denial']);respondRequest({{patient['request_id']}}, 'D');return false;">
+                            <td width="5%"><button type="button" class="btn-two red rounded small" onclick="gtag('send', 'event', ['button'], ['Denial']);respondRequest({{patient['request_id']}}, 'D');return false;">
                                                     Deny
                                                 </button></td>
                                                 <td width="5%"><button type="button" class="btn-two blue rounded small">
