@@ -149,6 +149,7 @@
                       <th></th>
                       <th></th>
                       <th class="compare-button"><button type="submit" name="compare" id ="compare-btn" class="btn-two blue rounded small">Compare</button></th>
+                      <th class="compare-button"><button type="submit" name="readmission" id ="readmission-btn" class="btn-two blue rounded small">Re-admission</button></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -164,6 +165,7 @@
                       <td width = '5%'><button type="button" class="btn-two red rounded small" onclick="removeRec('{{row[0]-1}}');">
                         <i class="bi bi-trash"></i>
                       </button></td>
+                      <td class="compare-checkbox align-middle"><input type="checkbox" name="{{row[1]}}"></td>
                       <td class="compare-checkbox align-middle"><input type="checkbox" name="{{row[1]}}"></td>
 
                     </tr>
@@ -346,23 +348,6 @@
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
           $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
         }); 
-</script>   
-
-<script>
-    $('.display').DataTable({
-      responsive: false,
-        "bPaginate": false,
-        "bLengthChange": false,
-        "bFilter": true,
-        "bInfo": false,
-        columnDefs: [
-           { orderable: false, targets: [-1, -2, -3]}
-        ]
-        });
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-          $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
-        });    
-
 </script>
     
      <br><br><br> <br><br><br>
