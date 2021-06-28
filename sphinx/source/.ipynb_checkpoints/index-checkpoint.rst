@@ -12,6 +12,7 @@ Welcome to Haoma's documentation!
    
    introduction
    requirements
+   team
    tutorial
    code_routes
    code_funcs

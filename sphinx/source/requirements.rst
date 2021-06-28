@@ -1,25 +1,22 @@
 Requirements
 =====================================
-   
-|     attrs==21.2.0
-|     click==8.0.1
-|     Flask==1.1.2
-|     Flask-WTF==0.15.1
-|     iniconfig==1.1.1
-|     itsdangerous==2.0.1
-|     Jinja2==3.0.1
-|     MarkupSafe==2.0.1
-|     numpy==1.20.3
-|     packaging==20.9
-|     pandas==1.2.4
-|     pluggy==0.13.1
-|     py==1.10.0
-|     pyparsing==2.4.7
-|     pytest==6.2.4
-|     python-dateutil==2.8.1
-|     python-dotenv==0.17.1
-|     pytz==2021.1
-|     six==1.16.0
-|     toml==0.10.2
-|     Werkzeug==2.0.1
-|     WTForms==2.3.3
+
+|    awsebcli==3.20.0
+|    boto3==1.17.91
+|    flask-login==0.5.0
+|    flask-sqlalchemy==2.5.1
+|    flask-wtf==0.15.1
+|    matplotlib==3.4.2
+|    openpyxl==3.0.7
+|    pandas==1.2.4
+|    plotly==5.0.0
+|    paramiko==2.7.2
+|    pdf2image==1.15.1
+|    pip-chill==1.0.1
+|    psycopg2==2.8.6
+|    pytesseract==0.3.7
+|    pytest==6.2.4
+|    python-dotenv==0.17.1
+|    sklearn==0.0
+|    xlrd==2.0.1
+|    en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
