@@ -171,7 +171,7 @@ class PatientUploadForm(FlaskForm):
                            render_kw={"placeholder": "94105"})
 
     age = IntegerField(label='Age', validators=[DataRequired()],
-                       render_kw={"placeholder": "24"})
+                       render_kw={"placeholder": "65"})
     # label='Gender', choices=['Female', 'Male', 'Other'],
     # validators=[DataRequired()])
     gender = RadioField(label='Gender', validators=[DataRequired()],
